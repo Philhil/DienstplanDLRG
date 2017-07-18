@@ -35,6 +35,7 @@
                     <span>Dienste</span>
                 </a>
             </li>
+            @can('administration')
             <li class="header">Administration</li>
             <li>
                 <a href="javascript:void(0);">
@@ -48,20 +49,19 @@
                     <span>Dienste Einstellungen</span>
                 </a>
             </li>
-
-            <li class="header">Admin Einstellungen</li>
-            <li>
-                <a href="javascript:void(0);">
+            <li class="{{active('qualification.*')}}">
+                <a href="{{ action('QualificationController@index') }}">
                     <i class="material-icons">local_activity</i>
                     <span>Qualifikationen</span>
                 </a>
             </li>
-            <li>
-                <a href="javascript:void(0);">
+            <li class="{{active('user.*')}}">
+                <a href="{{ action('UserController@index') }}">
                     <i class="material-icons">person</i>
                     <span>Benutzer</span>
                 </a>
             </li>
+            @endcan
         </ul>
     </div>
     <!-- #Menu -->

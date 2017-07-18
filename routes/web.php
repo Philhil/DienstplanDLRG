@@ -18,4 +18,11 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/', function (){return redirect('/home');});
     Route::get('/home', 'HomeController@index')->name('home');
+
+    Route::resource('qualification', 'QualificationController');
+    Route::resource('user', 'UserController');
+    Route::match(['get', 'post'], 'user/approve/{id}', 'UserController@approve_user');
+
+    Route::post('qualification_user/create', 'QualificationController@createQualification_User');
+    Route::match(['get', 'post'], 'qualification_user/delete/{user_id}/{qualification_id}', 'QualificationController@deleteQualification_User');
 });

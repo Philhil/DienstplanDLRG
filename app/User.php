@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -15,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'first_name', 'email', 'password',
+        'name', 'first_name', 'email', 'approved', 'role',
     ];
 
     /**
@@ -26,4 +27,23 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function isAdmin()
+    {
+        return $this->role == "admin";
+    }
+
+    public function qualifications()
+    {
+        return $this->belongsToMany(Qualification::class, 'qualification_users')->orderBy('name');
+    }
+
+    public function qualificationsNotAssignedToUser()
+    {
+        $id = $this->id;
+        return Qualification::leftJoin('qualification_users',function ($join) use ($id) {
+            $join->on('qualifications.id', '=', 'qualification_users.qualification_id');
+            $join->on('qualification_users.user_id', '=', DB::raw("'". $id. "'"));
+        })->whereNull('qualification_users.qualification_id')->select('qualifications.*')->orderBy('qualifications.name');
+    }
 }

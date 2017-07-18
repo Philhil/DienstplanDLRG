@@ -13,7 +13,7 @@ class CreateUserQualificationTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_qualification', function (Blueprint $table) {
+        Schema::create('qualification_users', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('qualification_id')->unsigned();

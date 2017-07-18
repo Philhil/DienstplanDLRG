@@ -2,10 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreQualification;
+use App\Qualification;
+use App\Qualification_user;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Validator;
 
 class QualificationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if(!Auth::user()->can('administration')) {
+                abort(402, "Nope.");
+            }
+
+            return $next($request);
+        });
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +29,8 @@ class QualificationController extends Controller
      */
     public function index()
     {
-        //
+        $qualifications = \App\Qualification::orderBy('name')->get();
+        return view('qualification.index')->with('qualifications', $qualifications);
     }
 
     /**
@@ -23,7 +40,8 @@ class QualificationController extends Controller
      */
     public function create()
     {
-        //
+        $qualification = new Qualification();
+        return view('qualification.create', compact('qualification'));
     }
 
     /**
@@ -32,9 +50,11 @@ class QualificationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreQualification $request)
     {
-        //
+        Qualification::updateOrCreate($request->only('id'), $request->except(['id']));
+
+        return redirect(action('QualificationController@index'));
     }
 
     /**
@@ -45,7 +65,6 @@ class QualificationController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -56,7 +75,8 @@ class QualificationController extends Controller
      */
     public function edit($id)
     {
-        //
+        $qualification = Qualification::findorFail($id);
+        return view('qualification.create', compact('qualification'));
     }
 
     /**
@@ -68,7 +88,6 @@ class QualificationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
     }
 
     /**
@@ -79,6 +98,19 @@ class QualificationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Qualification::findOrFail($id)->delete();
+        return redirect(action('QualificationController@index'));
+    }
+
+    public function createQualification_User(Request $request)
+    {
+        Qualification_user::create($request->all());
+        return "true";
+    }
+
+    public function deleteQualification_User(Request $request, $user_id, $qualification_id)
+    {
+        Qualification_user::where(['user_id' => $user_id, 'qualification_id' => $qualification_id])->delete();
+        return "true";
     }
 }
