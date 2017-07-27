@@ -35,8 +35,21 @@
                     <span>Dienste</span>
                 </a>
             </li>
+            <li class="{{active('news.index')}} {{active('news.edit')}}">
+                <a href="{{ action('NewsController@index') }}">
+                    <i class="material-icons">forum</i>
+                    <span>Nachrichten</span>
+                </a>
+            </li>
             @can('administration')
             <li class="header {{active('service.edit')}}">Administration</li>
+
+            <li class="{{active('user.*')}}">
+                <a href="{{ action('UserController@index') }}">
+                    <i class="material-icons">person</i>
+                    <span>Benutzer</span>
+                </a>
+            </li>
             <li class="{{active('position.list_notAuthorized')}}">
                 <a href="{{action('PositionController@index_notAuthorized')}}">
                     <i class="material-icons">check_circle</i>
@@ -49,16 +62,16 @@
                     <span>Dienst anlegen</span>
                 </a>
             </li>
+            <li class="{{active('news.create')}}">
+                <a href="{{ action('NewsController@create') }}">
+                    <i class="material-icons">chat</i>
+                    <span>Nachricht erstellen</span>
+                </a>
+            </li>
             <li class="{{active('qualification.*')}}">
                 <a href="{{ action('QualificationController@index') }}">
                     <i class="material-icons">local_activity</i>
                     <span>Qualifikationen</span>
-                </a>
-            </li>
-            <li class="{{active('user.*')}}">
-                <a href="{{ action('UserController@index') }}">
-                    <i class="material-icons">person</i>
-                    <span>Benutzer</span>
                 </a>
             </li>
             @endcan

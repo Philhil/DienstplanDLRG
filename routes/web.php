@@ -20,11 +20,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
 
     Route::resource('qualification', 'QualificationController');
+
     Route::resource('user', 'UserController');
-    Route::resource('service', 'ServiceController');
-
-
     Route::match(['get', 'post'], 'user/approve/{id}', 'UserController@approve_user');
+
+    Route::resource('service', 'ServiceController');
+    Route::get('service/{service}/delete', 'ServiceController@delete')->name('service.delete');
+
+    Route::resource('news', 'NewsController');
+    Route::get('news/{news}/delete', 'NewsController@delete')->name('news.delete');
+
 
     Route::post('qualification_user/create', 'QualificationController@createQualification_User');
     Route::match(['get', 'post'], 'qualification_user/delete/{user_id}/{qualification_id}', 'QualificationController@deleteQualification_User');
@@ -32,6 +37,5 @@ Route::group(['middleware' => ['auth']], function () {
     Route::match(['get', 'post'], 'position/{id}/subscribe', 'PositionController@subscribe');
     Route::match(['get', 'post'], 'position/{id}/authorize', 'PositionController@authorizePos');
     Route::match(['get', 'post'], 'position/{id}/deauthorize', 'PositionController@deauthorizePos');
-
     Route::match(['get', 'post'], 'position/list_notAuthorized', 'PositionController@index_notAuthorized')->name('position.list_notAuthorized');;
 });
