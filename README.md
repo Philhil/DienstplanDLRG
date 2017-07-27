@@ -12,8 +12,10 @@ Please refrain from using the `master` branch for anything else but development 
 Use the most recent release instead. You can list all releases by running `git tag`
 and switch to one by running `git checkout *name*`.
 
+## License
+The Laravel framework is open-sourced software licensed under the MIT license.
 
-##Setup on Debian based Linux (Server).
+## Setup on Debian based Linux (Server).
 _People with other Distros like me with Gentoo should know what to do_
 
 * <code>apt-get install mariadb-server nginx php phpunit php-mysql php-mbstring php-zip php-mcrypt </code>
@@ -29,7 +31,7 @@ _People with other Distros like me with Gentoo should know what to do_
 
 **If you run this in production please make sure to use TLS ( [LetsEncrypt for Ubuntu Fanboys](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-16-04) )**
 
-###Mysql (mariadb) and Laravel
+### Mysql (mariadb) and Laravel
 
  <code>mysql_secure_installation</code>
 
