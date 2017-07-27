@@ -22,7 +22,6 @@ script:
 services:
   - mysql
   - memcached
-  - redis-server
 
 cache:
   directories:
