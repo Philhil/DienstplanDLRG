@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -17,7 +18,8 @@ class ExampleTest extends TestCase
     public function testBasicTest()
     {
         $response = $this->get('/');
+        $response->assertRedirect('login');
 
-        $response->assertStatus(200);
+        //$response->assertStatus(200);
     }
 }
