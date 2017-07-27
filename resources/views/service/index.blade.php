@@ -19,8 +19,8 @@
                                     <i class="material-icons">more_vert</i>
                                 </a>
                                 <ul class="dropdown-menu pull-right">
-                                    <li><a href="service/{{$service->id}}/edit" class=" waves-effect waves-block"><i class="material-icons">mode_edit</i>Bearbeiten</a></li>
-                                    <li><a href="javascript:void(0);" class=" waves-effect waves-block"><i class="material-icons">delete</i> Löschen</a></li>
+                                    <li><a href="{{action('ServiceController@edit', $service->id) }}" class=" waves-effect waves-block"><i class="material-icons">mode_edit</i>Bearbeiten</a></li>
+                                    <li><a href="{{action('ServiceController@delete', $service->id) }}" class=" waves-effect waves-block"><i class="material-icons">delete</i> Löschen</a></li>
                                 </ul>
                             </li>
                         </ul>

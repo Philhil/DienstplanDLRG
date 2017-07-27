@@ -122,6 +122,37 @@ class ServiceController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(!Auth::user()->can('administration')) {
+            abort(402, "Nope.");
+        }
+
+        $service = Service::findOrFail($id);
+        $service->date = Carbon::createFromFormat('d m Y', $request->get('date'));
+        $service->comment = $request->get('comment');
+        $service->hastoauthorize = $request->get('hastoauthorize');
+        $service->save();
+
+        //Delete all Positions and recreate 
+        Position::where('service_id', '=', $id)->forceDelete();
+        if ($request->get('qualification')) {
+            $qualifications = $request->get('qualification');
+            $users = $request->get('user');
+            $position_comment = $request->get('position_comment');
+            for ($i = 0; $i < count($qualifications); $i++ ) {
+                $position = new Position();
+                $position->service_id = $service->id;
+                $position->qualification_id = $qualifications[$i];
+                if ($users[$i] == "null") {
+                    $position->user_id = null;
+                } else {
+                    $position->user_id = $users[$i];
+                }
+                $position->comment = $position_comment[$i];
+
+                $position->save();
+            }
+        }
+
         return redirect(action('ServiceController@index'));
     }
 
@@ -133,6 +164,17 @@ class ServiceController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(!Auth::user()->can('administration')) {
+            abort(402, "Nope.");
+        }
+
+        Service::findOrFail($id)->forceDelete();
+
+        return redirect(action('ServiceController@index'));
+    }
+
+    public function delete($id)
+    {
+        return $this->destroy($id);
     }
 }
