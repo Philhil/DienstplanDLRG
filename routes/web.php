@@ -13,6 +13,10 @@
 
 Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout');
+Route::get('/auth/success', [
+    'as'   => 'auth.success',
+    'uses' => 'Auth\RegisterController@success'
+]);
 
 Route::group(['middleware' => ['auth']], function () {
 
