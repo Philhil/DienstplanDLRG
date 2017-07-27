@@ -81,8 +81,8 @@
     <!-- Footer -->
     <div class="legal">
         <div class="copyright">
-            Design: &copy; 2016 - 2017 <a href="javascript:void(0);">AdminBSB - Material Design</a>. <br>
-            Programming: &copy; 2017 - <?php echo date('Y') ?> <a href="javascript:void(0);">Philippe Käufer</a>.
+            Design: &copy; 2016 - 2017 <a href="https://github.com/gurayyarar/AdminBSBMaterialDesign">AdminBSB - Material Design</a>. <br>
+            Programming: &copy; 2017 - <?php echo date('Y') ?> <a href="https://github.com/Philhil/DienstplanDLRG">Philippe Käufer</a>.
         </div>
         <div class="version">
             <b>Version: </b> 1.0.5

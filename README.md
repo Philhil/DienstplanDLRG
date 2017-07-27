@@ -1,1 +1,79 @@
 # DienstplanDLRG
+This Project is a Laravel based web application to manage volunteer services at the German Life Saving Society (DLRG) of Stuttgart.
+
+## Issues & Feature requests
+
+Before opening an issue, make sure to check whether any existing issues
+(open or closed) match. If you're suggesting a new feature, text me first or talk direktly to me.
+
+## Use a release!
+
+Please refrain from using the `master` branch for anything else but development purposes!
+Use the most recent release instead. You can list all releases by running `git tag`
+and switch to one by running `git checkout *name*`.
+
+
+##Setup on Debian based Linux (Server).
+_People with other Distros like me with Gentoo should know what to do_
+
+* <code>apt-get install mariadb-server nginx php phpunit php-mysql php-mbstring php-zip php-mcrypt </code>
+
+* Clone this Project in your web dir like <code>/var/www/</code>
+
+* File Permissons:
+```bash
+  sudo chown -R www-data:www-data /path/to/your/root/directory
+  sudo find /path/to/your/root/directory -type f -exec chmod 644 {} \;  
+  sudo find /path/to/your/root/directory -type d -exec chmod 755 {} \;
+```
+
+**If you run this in production please make sure to use TLS ( [LetsEncrypt for Ubuntu Fanboys](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-16-04) )**
+
+###Mysql (mariadb) and Laravel
+
+ <code>mysql_secure_installation</code>
+
+ <code>mysql -u root -p</code>
+
+```sql
+CREATE DATABASE IF NOT EXISTS dlrg;
+CREATE USER 'dlrgadmin'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON dsx41.* To 'dlrgadmin'@'localhost';
+```
+
+#### .env File
+<code>cp .env.example .env</code>
+
+Set the parameters in .env
+```bash
+DB_HOST=localhost
+DB_DATABASE=dlrg
+DB_USERNAME=dlrgadmin
+DB_PASSWORD=password
+
+MAIL_DRIVER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=465
+MAIL_USERNAME=mailuser
+MAIL_PASSWORD=pass
+MAIL_ENCRYPTION=tls
+```
+
+
+#### Setup Laravel Environment
+<code>php composer.phar install</code>
+
+<code>php artisan key:generate</code>
+
+<code>php artisan migrate</code>
+
+#### Create Superadmin
+<code>php artisan tinker</code>
+
+```bash
+\App\User::create(['name' => 'LastName','first_name' => 'Phil','email' => 'phil@philhil.de', 'password' => Hash::make('test'), 'role' => 'admin', 'approved' => '1']);
+```
+
+#### Cron
+<code>crontab -e</code> and paste:
+<code>* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1</code>
