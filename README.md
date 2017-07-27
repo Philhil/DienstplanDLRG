@@ -1,3 +1,7 @@
+<p align="center">
+<a href="https://travis-ci.org/Philhil/DienstplanDLRG"><img src="https://travis-ci.org/Philhil/DienstplanDLRG.svg" alt="Build Status"></a>
+</p>
+
 # DienstplanDLRG
 This Project is a Laravel based web application to manage volunteer services at the German Life Saving Society (DLRG) of Stuttgart.
 

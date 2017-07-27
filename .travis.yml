@@ -10,16 +10,17 @@ before_script:
   - composer install --no-interaction
   - php artisan key:generate
   - php artisan migrate
-  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
-  - npm install --global gulp-cli
-  - npm install
-  - gulp --production
 
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS travis;'
+  -  if [[ $TRAVIS_PHP_VERSION != 7.1 ]] ; then phpenv config-rm xdebug.ini; fi
+  - echo \"extension = memcached.so\" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - printf \"\\n\" | pecl install -f redis,
+  - travis_retry composer self-update
+
 
 script:
-  - phpdbg -qrr vendor/bin/phpunit --coverage-clover=coverage.xml
+  - vendor/bin/phpunit
 
 services:
   - mysql
