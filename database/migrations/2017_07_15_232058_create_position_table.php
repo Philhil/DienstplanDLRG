@@ -24,7 +24,7 @@ class CreatePositionTable extends Migration
 
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('qualification_id')->references('id')->on('users');
+            $table->foreign('qualification_id')->references('id')->on('qualifications')->onDelete('cascade');
         });
     }
 

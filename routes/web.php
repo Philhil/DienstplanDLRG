@@ -21,8 +21,17 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('qualification', 'QualificationController');
     Route::resource('user', 'UserController');
+    Route::resource('service', 'ServiceController');
+
+
     Route::match(['get', 'post'], 'user/approve/{id}', 'UserController@approve_user');
 
     Route::post('qualification_user/create', 'QualificationController@createQualification_User');
     Route::match(['get', 'post'], 'qualification_user/delete/{user_id}/{qualification_id}', 'QualificationController@deleteQualification_User');
+
+    Route::match(['get', 'post'], 'position/{id}/subscribe', 'PositionController@subscribe');
+    Route::match(['get', 'post'], 'position/{id}/authorize', 'PositionController@authorizePos');
+    Route::match(['get', 'post'], 'position/{id}/deauthorize', 'PositionController@deauthorizePos');
+
+    Route::match(['get', 'post'], 'position/list_notAuthorized', 'PositionController@index_notAuthorized')->name('position.list_notAuthorized');;
 });

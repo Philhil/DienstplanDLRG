@@ -18,7 +18,7 @@
                 </div>
                 <div class="content">
                     <div class="text">Geleistete Dienste</div>
-                    <div class="number count-to" data-from="0" data-to="125" data-speed="1000" data-fresh-interval="20">125</div>
+                    <div class="number count-to" data-from="0" data-to="{{$positions_user_past}}" data-speed="1000" data-fresh-interval="20">{{$positions_user_past}}</div>
                 </div>
             </div>
 
@@ -28,7 +28,7 @@
                 </div>
                 <div class="content">
                     <div class="text">Total Geleistete Dienste</div>
-                    <div class="number count-to" data-from="0" data-to="125" data-speed="1000" data-fresh-interval="20">125</div>
+                    <div class="number count-to" data-from="0" data-to="{{$positions_total_past}}" data-speed="1000" data-fresh-interval="20">{{$positions_total_past}}</div>
                 </div>
             </div>
 
@@ -38,7 +38,7 @@
                 </div>
                 <div class="content">
                     <div class="text">Noch nicht besetzte Dienste</div>
-                    <div class="number count-to" data-from="0" data-to="125" data-speed="1000" data-fresh-interval="20">125</div>
+                    <div class="number count-to" data-from="0" data-to="{{$positions_free}}" data-speed="1000" data-fresh-interval="20">{{$positions_free}}</div>
                 </div>
             </div>
         </div>
@@ -49,26 +49,12 @@
                         <i class="material-icons">stars</i> Hall of Fame
                     </div>
                     <ul class="dashboard-stat-list">
-                        <li>
-                            Mr. A
-                            <span class="pull-right"><b>12</b> <small>Dienste</small></span>
-                        </li>
-                        <li>
-                            Mr. B
-                            <span class="pull-right"><b>15</b> <small>Dienste</small></span>
-                        </li>
-                        <li>
-                            Mr. C
-                            <span class="pull-right"><b>90</b> <small>Dienste</small></span>
-                        </li>
-                        <li>
-                            Mr. D
-                            <span class="pull-right"><b>342</b> <small>Dienste</small></span>
-                        </li>
-                        <li>
-                            Mr. E
-                            <span class="pull-right"><b>4 225</b> <small>Dienste</small></span>
-                        </li>
+                        @foreach($top_users as $top_pos)
+                            <li>
+                                {{substr($top_pos->user->first_name, 0, 1)}}. {{$top_pos->user->name}}
+                                <span class="pull-right"><b>{{$top_pos->aggregate}}</b> <small>Dienste</small></span>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
             </div>

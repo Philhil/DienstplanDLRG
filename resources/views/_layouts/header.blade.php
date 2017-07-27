@@ -1,14 +1,3 @@
-<!-- Search Bar -->
-<div class="search-bar">
-    <div class="search-icon">
-        <i class="material-icons">search</i>
-    </div>
-    <input type="text" placeholder="START TYPING...">
-    <div class="close-search">
-        <i class="material-icons">close</i>
-    </div>
-</div>
-<!-- #END# Search Bar -->
 <!-- Top Bar -->
 <nav class="navbar">
     <div class="container-fluid">
@@ -19,197 +8,69 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <!-- Call Search -->
-                <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
-                <!-- #END# Call Search -->
                 <!-- Notifications -->
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
                         <i class="material-icons">notifications</i>
-                        <span class="label-count">7</span>
+                        <span class="label-count">{{\Illuminate\Support\Facades\Auth::user()->authorizedpositions()->count()}}</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">NOTIFICATIONS</li>
+                        <li class="header">Zukünftige Dienste von <br>{{\Illuminate\Support\Facades\Auth::user()->first_name}} {{\Illuminate\Support\Facades\Auth::user()->name}}</li>
                         <li class="body">
                             <ul class="menu">
+                                @foreach(\Illuminate\Support\Facades\Auth::user()->authorizedpositions()->get() as $position)
                                 <li>
                                     <a href="javascript:void(0);">
-                                        <div class="icon-circle bg-light-green">
-                                            <i class="material-icons">person_add</i>
+                                        <div class="icon-circle bg-green">
+                                            <i class="material-icons">forward</i>
                                         </div>
                                         <div class="menu-info">
-                                            <h4>12 new members joined</h4>
+                                            <h4> {{$position->service->date->format('d.m.Y')}} <small>{{$position->comment}}</small></h4>
                                             <p>
-                                                <i class="material-icons">access_time</i> 14 mins ago
+                                                <i class="material-icons">recent_actors</i> {{$position->qualification->name}}
                                             </p>
                                         </div>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="icon-circle bg-cyan">
-                                            <i class="material-icons">add_shopping_cart</i>
-                                        </div>
-                                        <div class="menu-info">
-                                            <h4>4 sales made</h4>
-                                            <p>
-                                                <i class="material-icons">access_time</i> 22 mins ago
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="icon-circle bg-red">
-                                            <i class="material-icons">delete_forever</i>
-                                        </div>
-                                        <div class="menu-info">
-                                            <h4><b>Nancy Doe</b> deleted account</h4>
-                                            <p>
-                                                <i class="material-icons">access_time</i> 3 hours ago
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="icon-circle bg-orange">
-                                            <i class="material-icons">mode_edit</i>
-                                        </div>
-                                        <div class="menu-info">
-                                            <h4><b>Nancy</b> changed name</h4>
-                                            <p>
-                                                <i class="material-icons">access_time</i> 2 hours ago
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="icon-circle bg-blue-grey">
-                                            <i class="material-icons">comment</i>
-                                        </div>
-                                        <div class="menu-info">
-                                            <h4><b>John</b> commented your post</h4>
-                                            <p>
-                                                <i class="material-icons">access_time</i> 4 hours ago
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="icon-circle bg-light-green">
-                                            <i class="material-icons">cached</i>
-                                        </div>
-                                        <div class="menu-info">
-                                            <h4><b>John</b> updated status</h4>
-                                            <p>
-                                                <i class="material-icons">access_time</i> 3 hours ago
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="icon-circle bg-purple">
-                                            <i class="material-icons">settings</i>
-                                        </div>
-                                        <div class="menu-info">
-                                            <h4>Settings updated</h4>
-                                            <p>
-                                                <i class="material-icons">access_time</i> Yesterday
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
+                                @endforeach
                             </ul>
                         </li>
                         <li class="footer">
-                            <a href="javascript:void(0);">View All Notifications</a>
+                            <a href="{{ action('ServiceController@index') }}">Alle Dienste</a>
                         </li>
                     </ul>
                 </li>
-                <!-- #END# Notifications -->
-                <!-- Tasks -->
+                <!-- #END# MyServices -->
+                <!-- MyQualifications-->
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
-                        <i class="material-icons">flag</i>
-                        <span class="label-count">9</span>
+                        <i class="material-icons">local_activity</i>
+                        <span class="label-count">{{\Illuminate\Support\Facades\Auth::user()->qualifications->count()}}</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">TASKS</li>
+                        <li class="header">Qualifikationen</li>
                         <li class="body">
-                            <ul class="menu tasks">
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <h4>
-                                            Footer display issue
-                                            <small>32%</small>
-                                        </h4>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-pink" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 32%">
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <h4>
-                                            Make new buttons
-                                            <small>45%</small>
-                                        </h4>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-cyan" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <h4>
-                                            Create new dashboard
-                                            <small>54%</small>
-                                        </h4>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-teal" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 54%">
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <h4>
-                                            Solve transition issue
-                                            <small>65%</small>
-                                        </h4>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 65%">
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <h4>
-                                            Answer GitHub questions
-                                            <small>92%</small>
-                                        </h4>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-purple" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 92%">
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
+                            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 254px;"><ul class="menu tasks" style="overflow: hidden; width: auto; height: 254px;">
+                                @foreach(\Illuminate\Support\Facades\Auth::user()->qualifications as $qualification)
+                                    <li>
+                                        <a href="javascript:void(0);" class=" waves-effect waves-block">
+                                            <h4>
+                                                {{$qualification->name}}
+                                            </h4>
+                                        </a>
+                                    </li>
+                                @endforeach
+                                </ul><div class="slimScrollBar" style="background: rgba(0, 0, 0, 0.498039); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 0px; z-index: 99; right: 1px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 0px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>
                         </li>
                         <li class="footer">
-                            <a href="javascript:void(0);">View All Tasks</a>
+                            <a href="javascript:void(0);" class=" waves-effect waves-block"></a>
                         </li>
                     </ul>
                 </li>
-                <!-- #END# Tasks -->
-                <li class="pull-right"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i class="material-icons">more_vert</i></a></li>
+                <!-- #END# MyQualifications-->
+                <li><a href="{{action('UserController@show', \Illuminate\Support\Facades\Auth::user()->id)}}"><i class="material-icons">person</i></a></li>
+
+                <li class="pull-right"><a href="{{ route('logout') }}" class="js-right-sidebar" data-close="true"><i class="material-icons">input</i></a></li>
             </ul>
         </div>
     </div>

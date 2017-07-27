@@ -11,7 +11,7 @@
             <div class="btn-group user-helper-dropdown">
                 <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                 <ul class="dropdown-menu pull-right">
-                    <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profil</a></li>
+                    <li><a href="{{action('UserController@show', \Illuminate\Support\Facades\Auth::user()->id)}}"><i class="material-icons">person</i>Profil</a></li>
                     <li role="seperator" class="divider"></li>
                     <li><a href="{{ route('logout') }}"><i class="material-icons">input</i>Logout</a></li>
                 </ul>
@@ -22,31 +22,31 @@
     <!-- Menu -->
     <div class="menu">
         <ul class="list">
-            <li class="header">Navigation</li>
+            <li class="header {{active('user.show')}}">Navigation</li>
             <li class="{{active('home')}}">
                 <a href="{{ action('HomeController@index') }}">
                     <i class="material-icons">home</i>
                     <span>Home</span>
                 </a>
             </li>
-            <li>
-                <a href="javascript:void(0);">
+            <li class="{{active('service.index')}}">
+                <a href="{{ action('ServiceController@index') }}">
                     <i class="material-icons">assignment</i>
                     <span>Dienste</span>
                 </a>
             </li>
             @can('administration')
-            <li class="header">Administration</li>
-            <li>
-                <a href="javascript:void(0);">
+            <li class="header {{active('service.edit')}}">Administration</li>
+            <li class="{{active('position.list_notAuthorized')}}">
+                <a href="{{action('PositionController@index_notAuthorized')}}">
                     <i class="material-icons">check_circle</i>
                     <span>Dienste bestätigen</span>
                 </a>
             </li>
-            <li>
-                <a href="javascript:void(0);">
-                    <i class="material-icons">settings_applications</i>
-                    <span>Dienste Einstellungen</span>
+            <li class="{{active('service.create')}}">
+                <a href="{{ action('ServiceController@create') }}">
+                    <i class="material-icons">note_add</i>
+                    <span>Dienst anlegen</span>
                 </a>
             </li>
             <li class="{{active('qualification.*')}}">

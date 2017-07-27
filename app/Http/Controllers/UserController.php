@@ -52,7 +52,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user =  Auth::user();
+        return view('user.profile')->with('user', $user);
     }
 
     /**
@@ -78,11 +79,13 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (Auth::user()->can('administration'))
+        if (Auth::user()->can('administration') && Auth::user()->id != $id)
         {
             $user = User::findorFail($id);
             $user->fill($request->except(['id', '_token', 'password']));
             $user->save();
+
+            return redirect(action('UserController@index'));
         }
         else
         {
@@ -95,9 +98,10 @@ class UserController extends Controller
             }
 
             $user->save();
+
+            return redirect(action('HomeController@index'));
         }
 
-        return redirect(action('UserController@index'));
     }
 
     /**

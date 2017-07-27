@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'first_name', 'email', 'approved', 'role',
+        'name', 'first_name', 'email', 'approved', 'role', 'password',
     ];
 
     /**
@@ -45,5 +45,24 @@ class User extends Authenticatable
             $join->on('qualifications.id', '=', 'qualification_users.qualification_id');
             $join->on('qualification_users.user_id', '=', DB::raw("'". $id. "'"));
         })->whereNull('qualification_users.qualification_id')->select('qualifications.*')->orderBy('qualifications.name');
+    }
+
+    public function hasqualification($qualificationid)
+    {
+        if($this->belongsToMany(Qualification::class, 'qualification_users')->where('qualification_id', '=', $qualificationid)->count() > 0){
+            return true;
+        }
+        return false;
+    }
+
+    public function positions()
+    {
+        return $this->hasMany(Position::class);
+    }
+    
+    public function authorizedpositions()
+    {
+        return $this->hasMany(Position::class)->where('isauthorized','=',true)->join('services', 'positions.service_id', '=', 'services.id')
+            ->orderBy('services.date')->with('qualification');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserQualificationTable extends Migration
+class CreateQualificationUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -38,6 +38,6 @@ class CreateUserQualificationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_qualification');
+        Schema::dropIfExists('qualification_users');
     }
 }
