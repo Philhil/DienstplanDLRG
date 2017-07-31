@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserApproved;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -129,6 +130,8 @@ class UserController extends Controller
         $user = User::findorFail($id);
         $user->approved = true;
         $user->save();
+
+        event(new UserApproved($user, Auth::user()));
 
         return redirect(action('UserController@index'));
     }

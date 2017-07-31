@@ -2,9 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Events\UserApproved;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Mail\UserApprove;
+use Illuminate\Support\Facades\Mail;
 
 class UserApproved
 {
@@ -24,8 +23,8 @@ class UserApproved
      * @param  UserApproved  $event
      * @return void
      */
-    public function handle(UserApproved $event)
+    public function handle(\App\Events\UserApproved $event)
     {
-        //
+        Mail::to($event->user)->queue(new UserApprove($event->user, $event->authorizedby));
     }
 }
