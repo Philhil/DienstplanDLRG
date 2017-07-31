@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PositionAuthorized;
 use App\Position;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PositionController extends Controller
@@ -36,6 +36,8 @@ class PositionController extends Controller
                 $position->user_id = Auth::user()->id;
                 if ($service->hastoauthorize == false) {
                     $position->isauthorized = true;
+
+                    event(new PositionAuthorized($position, null));
                 }
                 $position->save();
                 return $position;
@@ -60,6 +62,8 @@ class PositionController extends Controller
         $position = Position::findOrFail($id);
         $position->isauthorized = true;
         $position->save();
+
+        event(new PositionAuthorized($position, Auth::user()));
 
         return $position;
     }

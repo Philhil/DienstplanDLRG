@@ -2,9 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Events\PositionAuthorized;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Mail\PositionAssigned;
+use Illuminate\Support\Facades\Mail;
 
 class PositionAuthorized
 {
@@ -24,8 +23,9 @@ class PositionAuthorized
      * @param  PositionAuthorized  $event
      * @return void
      */
-    public function handle(PositionAuthorized $event)
+    public function handle(\App\Events\PositionAuthorized $event)
     {
-        //
+        $position = $event->position;
+        Mail::to($position->user()->get())->queue(new PositionAssigned($position, $event->authorizedby));
     }
 }
