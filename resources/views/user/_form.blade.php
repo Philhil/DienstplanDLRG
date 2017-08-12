@@ -25,6 +25,18 @@
 
 <div class="row clearfix">
     <div class="col-sm-10">
+        <div class="form-group {{ $errors->has('mobilenumber') ? 'has-error' : ''}}">
+            <div class="form-line">
+                {{ Form::label('mobilenumber', 'Handy Nr.:') }}
+                {{ Form::text('mobilenumber', null, ['class' => 'form-control', 'placeholder' => 'Handy Nr.']) }}
+                {!! $errors->first('mobilenumber', '<p class="help-block">:message</p>') !!}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row clearfix">
+    <div class="col-sm-10">
         <div class="form-group {{ $errors->has('email') ? 'has-error' : ''}}">
             <div class="form-line">
                 {{ Form::label('email', 'E-Mail:') }}

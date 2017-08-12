@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->boolean('approved')->default(false);
             $table->enum('role', ['admin', 'benutzer'])->default('benutzer');
             $table->uuid('image')->nullable();
+            $table->string('mobilenumber')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
