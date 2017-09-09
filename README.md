@@ -40,9 +40,9 @@ _People with other Distros like me with Gentoo should know what to do_
  <code>mysql -u root -p</code>
 
 ```sql
-CREATE DATABASE IF NOT EXISTS dlrg;
-CREATE USER 'dlrgadmin'@'localhost' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON dsx41.* To 'dlrgadmin'@'localhost';
+CREATE DATABASE IF NOT EXISTS dlrgdienstplan;
+CREATE USER 'dlrgdienstplan'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON dlrgdienstplan.* To 'dlrgdienstplan'@'localhost';
 ```
 
 #### .env File
@@ -51,8 +51,8 @@ GRANT ALL PRIVILEGES ON dsx41.* To 'dlrgadmin'@'localhost';
 Set the parameters in .env
 ```bash
 DB_HOST=localhost
-DB_DATABASE=dlrg
-DB_USERNAME=dlrgadmin
+DB_DATABASE=dlrgdienstplan
+DB_USERNAME=dlrgdienstplan
 DB_PASSWORD=password
 
 MAIL_DRIVER=smtp
@@ -61,6 +61,9 @@ MAIL_PORT=465
 MAIL_USERNAME=mailuser
 MAIL_PASSWORD=pass
 MAIL_ENCRYPTION=tls
+
+FACEBOOK_CLIENTID = 000
+FACEBOOK_CLIENTSECRET = 000
 ```
 
 
@@ -75,22 +78,9 @@ MAIL_ENCRYPTION=tls
 <code>php artisan tinker</code>
 
 ```bash
-\App\User::create(['name' => 'LastName','first_name' => 'Phil','email' => 'phil@philhil.de', 'password' => Hash::make('test'), 'role' => 'admin', 'approved' => '1']);
+\App\User::create(['name' => 'LastName','first_name' => 'FirstName','email' => 'email@domain.de', 'password' => Hash::make('test'), 'role' => 'admin', 'approved' => '1']);
 ```
 
 #### Cron and Autostart
 <code>crontab -e</code> and paste:
 <pre>* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1</pre>
-
-<code>sudo update-rc.d redis-server enable</code>
-Supervisor: create /etc/supervisor/conf.d/laravel-worker.conf
-<pre>
-[program:laravel-worker]
-process_name=%(program_name)s_%(process_num)02d
-command=php /var/www/DienstplanDLRG/artisan queue:work redis --sleep=3 --tries=3
-autostart=true
-autorestart=true
-numprocs=1
-redirect_stderr=true
-stdout_logfile=/var/log/supervisor/laravel-worker.log
-</pre>
