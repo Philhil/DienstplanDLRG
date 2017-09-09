@@ -13,14 +13,12 @@ before_script:
 
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS travis;'
-  - echo \"extension = memcached.so\" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 script:
   - vendor/bin/phpunit
 
 services:
   - mysql
-  - memcached
 
 cache:
   directories:
