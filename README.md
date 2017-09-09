@@ -20,7 +20,7 @@ The Laravel framework is open-sourced software licensed under the MIT license.
 ## Setup on Debian based Linux (Server).
 _People with other Distros like me with Gentoo should know what to do_
 
-* <code>apt-get install mariadb-server nginx php phpunit php-mysql php-mbstring php-zip php-mcrypt redis-server supervisor</code>
+* <code>apt-get install mariadb-server nginx php phpunit php-mysql php-mbstring php-zip php-mcrypt</code>
 
 * Clone this Project in your web dir like <code>/var/www/</code>
 
