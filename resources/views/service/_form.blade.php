@@ -77,7 +77,7 @@
                                 <select class="bootstrap-select show-tick" data-live-search="true" name="user[]">
                                     <option value="null">-- Bitte wählen --</option>
                                     @foreach($users as $key => $user)
-                                        <option @if($user->hasqualification($qualifications[$key]->id))class="bg-green" @endif  value="{{$user->id}}" @if($position->user_id == $user->id) selected @endif>{{$user->name}}</option>
+                                        <option @if($user->hasqualification($position->qualification_id))class="bg-green" @endif  value="{{$user->id}}" @if($position->user_id == $user->id) selected @endif>{{$user->name}}</option>
                                     @endforeach
                                 </select>
                             </td>
