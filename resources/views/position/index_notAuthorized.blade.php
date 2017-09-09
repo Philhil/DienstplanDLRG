@@ -24,20 +24,25 @@
                     <tbody>
 
                     @foreach($positions as $position)
-                        <tr>
-                            <td>{{$position->service->date->format('d m Y')}}</td>
-                            <td>{{$position->qualification->name}}</td>
-                            <td>{{$position->user->first_name}} {{$position->user->name}}</td>
-                            <td>
-                                <button type="button" positionid="{{$position->id}}" class="btn btn-success btn-authorize waves-effect">
-                                    <i class="material-icons">check</i>
-                                </button>
+                        @foreach($position->candidatures as $candidature)
+                            {{--has user already approved position in this service?--}}
+                            @if(!$position->service->hasUserPositions($candidature->user_id))
+                            <tr>
+                                <td>{{$position->service->date->format('d m Y')}}</td>
+                                <td>{{$position->qualification->name}}</td>
+                                <td>{{$candidature->user->first_name}} {{$candidature->user->name}}</td>
+                                <td>
+                                    <button type="button" candidatureid="{{$candidature->id}}" class="btn btn-success btn-authorize waves-effect">
+                                        <i class="material-icons">check</i>
+                                    </button>
 
-                                <button type="submit" positionid="{{$position->id}}" class="btn btn-danger waves-effect btn-deauthorize">
-                                    <i class="material-icons">delete</i>
-                                </button>
-                            </td>
-                        </tr>
+                                    <button type="submit" candidatureid="{{$candidature->id}}" class="btn btn-danger waves-effect btn-deauthorize">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                </td>
+                            </tr>
+                            @endif
+                        @endforeach
                     @endforeach
                     </tbody>
                 </table>
@@ -52,7 +57,7 @@
             $('.btn-authorize').on('click', function () {
                 $.ajax({
                     type: "POST",
-                    url: '/position/'+$(this).attr('positionid')+'/authorize',
+                    url: '/position/'+$(this).attr('candidatureid')+'/authorize',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
@@ -62,7 +67,7 @@
                         } else {
                             showNotification("alert-success", "Zuordnung freigegeben", "top", "center", "", "");
 
-                            $(".btn-authorize[positionid="+data.id+"]").parent().parent().remove();
+                            $(".btn-authorize[candidatureid="+data.id+"]").parent().parent().remove();
                         }
                     }
                 });
@@ -71,7 +76,7 @@
             $('.btn-deauthorize').on('click', function () {
                 $.ajax({
                     type: "POST",
-                    url: '/position/'+$(this).attr('positionid')+'/deauthorize',
+                    url: '/position/'+$(this).attr('candidatureid')+'/deauthorize',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
@@ -81,7 +86,7 @@
                         } else {
                             showNotification("alert-success", "Zuordnung aufgehoben", "top", "center", "", "");
 
-                            $(".btn-deauthorize[positionid="+data.id+"]").parent().parent().remove();
+                            $(".btn-deauthorize[candidatureid="+data.id+"]").parent().parent().remove();
                         }
                     }
                 });

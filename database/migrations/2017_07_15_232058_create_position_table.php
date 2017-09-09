@@ -18,7 +18,6 @@ class CreatePositionTable extends Migration
             $table->integer('service_id')->unsigned();
             $table->integer('user_id')->unsigned()->nullable();
             $table->integer('qualification_id')->unsigned()->nullable();
-            $table->boolean('isauthorized')->default(false);
             $table->string('comment')->nullable();
             $table->timestamps();
 

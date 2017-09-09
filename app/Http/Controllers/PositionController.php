@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\PositionAuthorized;
 use App\Position;
+use App\PositionCandidature;
 use Illuminate\Support\Facades\Auth;
 
 class PositionController extends Controller
@@ -15,7 +16,8 @@ class PositionController extends Controller
      */
     public function index_notAuthorized()
     {
-        $positions = Position::where([['isauthorized', '=', false],['user_id', '!=', null]])->with('service')->with('user')->with('qualification')->get();
+        $positions = Position::has('candidatures')->where(['user_id' =>  null])->with('qualification')->with('service')->with('candidatures')->with('candidatures.user')->get();
+
         return view('position.index_notAuthorized', compact('positions'));
     }
 
@@ -32,14 +34,17 @@ class PositionController extends Controller
         if ($position->user_id == null)
         {
             $service = $position->service()->first();
-            if (Auth::user()->hasqualification($position->qualification()->first()->id) && !$service->hasUserPositions(Auth::user()->id)){
-                $position->user_id = Auth::user()->id;
+            if (Auth::user()->hasqualification($position->qualification()->first()->id)){
+
                 if ($service->hastoauthorize == false) {
-                    $position->isauthorized = true;
+                    $position->user_id = Auth::user()->id;
 
                     event(new PositionAuthorized($position, null));
+                    $position->save();
                 }
-                $position->save();
+                else {
+                    \App\PositionCandidature::updateOrCreate(['user_id' => Auth::user()->id, 'position_id' => $position->id]);
+                }
                 return $position;
             }
         }
@@ -59,13 +64,25 @@ class PositionController extends Controller
             abort(402, "Nope.");
         }
 
-        $position = Position::findOrFail($id);
-        $position->isauthorized = true;
-        $position->save();
+        $candidature = PositionCandidature::findOrFail($id);
 
-        event(new PositionAuthorized($position, Auth::user()));
+        $position = Position::findOrFail($candidature->position_id);
 
-        return $position;
+        if ($position->user_id == null)
+        {
+            $service = $position->service()->first();
+            if(!$service->hasUserPositions($candidature->user_id))
+            {
+                $position->user_id = $candidature->user_id;
+                $position->save();
+
+                event(new PositionAuthorized($position, Auth::user()));
+
+                return $position;
+            }
+        }
+
+        return "false";
     }
 
     /**
@@ -80,10 +97,9 @@ class PositionController extends Controller
             abort(402, "Nope.");
         }
 
-        $position = Position::findOrFail($id);
-        $position->user_id = null;
-        $position->save();
+        $candidature = PositionCandidature::findOrFail($id);
+        $candidature->forceDelete();
 
-        return $position;
+        return $candidature;
     }
 }

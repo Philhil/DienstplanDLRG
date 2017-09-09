@@ -20,7 +20,13 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $services = Service::where('date','>=', DB::raw('CURDATE()'))->orderBy('date')->with('positions.qualification')->with('positions.user')->get();
+        if(Auth::user()->can('administration'))
+        {
+            $services = Service::where('date','>=', DB::raw('CURDATE()'))->orderBy('date')->with('positions.qualification')->with('positions.user')->with('positions.candidatures')->with('positions.candidatures.user')->get();
+        } else
+        {
+            $services = Service::where('date','>=', DB::raw('CURDATE()'))->orderBy('date')->with('positions.qualification')->with('positions.user')->with('positions.candidatures')->get();
+        }
 
         return view('service.index', compact('services'));
     }

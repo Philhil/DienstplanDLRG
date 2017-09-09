@@ -55,6 +55,14 @@ class User extends Authenticatable
         return false;
     }
 
+    public function hascandidate($positionid)
+    {
+        if($this->hasMany(PositionCandidature::class)->where('positioncandidatures.position_id', '=', $positionid)->count() > 0){
+            return true;
+        }
+        return false;
+    }
+
     public function positions()
     {
         return $this->hasMany(Position::class);
@@ -62,7 +70,7 @@ class User extends Authenticatable
     
     public function authorizedpositions()
     {
-        return $this->hasMany(Position::class)->where('isauthorized','=',true)->join('services', 'positions.service_id', '=', 'services.id')
+        return $this->hasMany(Position::class)->join('services', 'positions.service_id', '=', 'services.id')
             ->orderBy('services.date')->with('qualification');
     }
 }

@@ -27,7 +27,7 @@
                     @endif
                 </div>
                 <div class="body">
-                    <div class="table-responsive">
+                    <div class="table-responsive table-bordered">
                         <table class="table">
                             <tr>
                                 @foreach($service->positions as $position)
@@ -38,22 +38,52 @@
 
                                 @foreach($service->positions as $position)
                                     <td>
+
+                                        {{-- show candidates if nobody is approved --}}
+                                        @if(!isset($position->user))
+                                            @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
+                                                @foreach($position->candidatures as $candidate)
+                                                <row>
+                                                    <div class="col-md-12">
+                                                        <span class="badge bg-orange">
+                                                            {{substr ($candidate->user->first_name, 0, 1)}}. {{$candidate->user->name}}
+                                                            <button type="button" class="btn btn-xs bg-green btn-authorize" candidateid="{{$candidate->id}}"><i class="material-icons">check</i></button>
+                                                        </span>
+                                                    </div>
+                                                </row>
+                                                @endforeach
+                                            @else
+                                                <span class="badge bg-orange">{{count($position->candidatures)}}</span>
+                                            @endif
+                                        @endif
                                         @if(isset($position->user))
-                                            <span class="badge @if(!$position->isauthorized) bg-orange @elseif($position->user->id == \Illuminate\Support\Facades\Auth::user()->id) bg-light-green @else bg-green @endif">
+                                            <span class="badge @if($position->user->id == \Illuminate\Support\Facades\Auth::user()->id) bg-light-green @else bg-green @endif">
                                                 {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
-                                                @if(\Illuminate\Support\Facades\Auth::user()->isAdmin() && !$position->isauthorized)
-                                                    <button type="button" class="btn btn-xs bg-green btn-authorize" positionid="{{$position->id}}"><i class="material-icons">check</i></button>
-                                                @endif
                                             </span>
+                                            {{-- user has a Candidature for that pos --}}
+                                        @elseif(\Illuminate\Support\Facades\Auth::user()->hascandidate($position->id))
+                                            <button type="button" class="btn bg-orange waves-effect btn-subscribe" positionid="{{$position->id}}" disabled><i class="material-icons">check_circle</i>
+                                                bereits gemeldet
+                                            </button>
+                                            {{-- Has user this qualification? and Has user already a Position at this service --}}
                                         @elseif(\Illuminate\Support\Facades\Auth::user()->hasqualification($position->qualification()->first()->id) && !$service->hasUserPositions(Auth::user()->id))
-                                            <button type="button" class="btn bg-deep-orange waves-effect btn-subscribe" positionid="{{$position->id}}"><i class="material-icons">touch_app</i> Eintragen</button></button>
+                                            <button type="button" class="btn bg-deep-orange waves-effect btn-subscribe" positionid="{{$position->id}}"><i class="material-icons">touch_app</i>
+                                            @if($service->hastoauthorize) Melden
+                                                @else Eintragen
+                                                @endif
+                                            </button>
                                         @else
-                                            <button type="button" class="btn bg-deep-orange waves-effect btn-subscribe" positionid="{{$position->id}}" disabled><i class="material-icons">touch_app</i> Eintragen</button></button>
+                                            <button type="button" class="btn bg-deep-orange waves-effect btn-subscribe" positionid="{{$position->id}}" disabled><i class="material-icons">touch_app</i>
+                                                @if($service->hastoauthorize) Melden
+                                                @else Eintragen
+                                                @endif
+                                            </button>
                                         @endif
                                         @if($position->comment)
                                             <br>
                                             <smal>({{$position->comment}})</smal>
                                         @endif
+
                                     </td>
                                 @endforeach
                             </tr>
@@ -85,10 +115,10 @@
                             tr = $(".btn-subscribe[positionid="+data.id+"]").parent();
                             $(".btn-subscribe[positionid="+data.id+"]").remove();
 
-                            if (data.isauthorized == "true" || data.isauthorized == true) {
+                            if (data.user_id == "null") {
                                 $(tr).html('<span class="badge bg-light-green">{{substr(\Illuminate\Support\Facades\Auth::user()->first_name, 0, 1)}}. {{\Illuminate\Support\Facades\Auth::user()->name}}</span>');
                             } else {
-                                $(tr).html('<span class="badge bg-orange">{{substr(\Illuminate\Support\Facades\Auth::user()->first_name, 0, 1)}}. {{\Illuminate\Support\Facades\Auth::user()->name}}</span>');
+                                $(tr).html('<button type="button" class="btn bg-orange waves-effect btn-subscribe" positionid="7" disabled=""><i class="material-icons">check_circle</i>bereits gemeldet</button>');
                             }
                         }
                     }
@@ -98,7 +128,7 @@
             $('.btn-authorize').on('click', function () {
                 $.ajax({
                     type: "POST",
-                    url: '/position/'+$(this).attr('positionid')+'/authorize',
+                    url: '/position/'+$(this).attr('candidateid')+'/authorize',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },

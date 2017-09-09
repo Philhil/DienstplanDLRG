@@ -20,4 +20,9 @@ class Position extends Model
     {
         return $this->belongsTo(Service::class);
     }
+
+    public function candidatures()
+    {
+        return $this->hasMany(PositionCandidature::class);
+    }
 }

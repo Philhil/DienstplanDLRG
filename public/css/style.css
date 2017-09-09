@@ -5514,7 +5514,8 @@ fieldset[disabled] .form-control {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -ms-border-radius: 2px;
-  border-radius: 2px; }
+  border-radius: 2px;
+  font-size: 16px;}
 
 .list-group-item {
   -webkit-border-radius: 0;
