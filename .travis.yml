@@ -27,5 +27,3 @@ cache:
 
 env:
   - TRAVIS_NODE_VERSION="4"
-
-group: deprecated-2017Q3
