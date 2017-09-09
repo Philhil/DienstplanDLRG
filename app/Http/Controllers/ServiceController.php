@@ -44,7 +44,13 @@ class ServiceController extends Controller
 
         $service = new Service();
         $qualifications = Qualification::orderBy('name')->get();
-        $positions = new Position();
+        $positions = new \Illuminate\Database\Eloquent\Collection();
+
+        foreach (Qualification::where(['isservicedefault' => true])->get() as $quali)
+        {
+            $positions->push(new Position(['qualification_id' => $quali->id]));
+        }
+
         $users = User::orderBy('name')->get();
         return view('service.create', compact('service', 'positions', 'qualifications', 'users'));
     }

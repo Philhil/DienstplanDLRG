@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Position extends Model
 {
+
+    protected $fillable = [
+        'qualification_id', 'service_id'
+    ];
+
     public function qualification()
     {
         return $this->belongsTo(Qualification::class);
