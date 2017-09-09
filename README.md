@@ -20,7 +20,7 @@ The Laravel framework is open-sourced software licensed under the MIT license.
 ## Setup on Debian based Linux (Server).
 _People with other Distros like me with Gentoo should know what to do_
 
-* <code>apt-get install mariadb-server nginx php phpunit php-mysql php-mbstring php-zip php-mcrypt</code>
+* <code>apt-get install mariadb-server nginx php phpunit php-mysql php-mbstring php-zip php-mcrypt redis-server supervisor</code>
 
 * Clone this Project in your web dir like <code>/var/www/</code>
 
@@ -84,3 +84,16 @@ FACEBOOK_CLIENTSECRET = 000
 #### Cron and Autostart
 <code>crontab -e</code> and paste:
 <pre>* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1</pre>
+		
+ <code>sudo update-rc.d redis-server enable</code>		
+ Supervisor: create /etc/supervisor/conf.d/laravel-worker.conf		
+ <pre>		
+ [program:laravel-worker]		
+ process_name=%(program_name)s_%(process_num)02d		
+ command=php /var/www/DienstplanDLRG/artisan queue:work redis --sleep=3 --tries=3		
+ autostart=true		
+ autorestart=true		
+ numprocs=1		
+ redirect_stderr=true		
+ stdout_logfile=/var/log/supervisor/laravel-worker.log		
+ </pre>
