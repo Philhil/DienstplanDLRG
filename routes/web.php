@@ -18,6 +18,10 @@ Route::get('/auth/success', [
     'uses' => 'Auth\RegisterController@success'
 ]);
 
+Route::get('/redirect', 'SocialAuthController@redirect');
+Route::get('/callback', 'SocialAuthController@callback');
+
+
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/', function (){return redirect('/home');});

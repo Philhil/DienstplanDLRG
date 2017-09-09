@@ -35,4 +35,10 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'facebook' => [
+        'client_id' => env('FACEBOOK_CLIENTID'),
+        'client_secret' => env('FACEBOOK_CLIENTSECRET'),
+        'redirect' => env('APP_URL') . '/callback',
+    ],
+
 ];
