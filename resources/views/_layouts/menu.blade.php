@@ -85,7 +85,7 @@
             Programming: &copy; 2017 - <?php echo date('Y') ?> <a href="https://github.com/Philhil/DienstplanDLRG">Philippe Käufer</a>.
         </div>
         <div class="version">
-            <b>Version: </b> 1.0.5
+            <b>Version: </b> 2017.1
         </div>
     </div>
     <!-- #Footer -->
