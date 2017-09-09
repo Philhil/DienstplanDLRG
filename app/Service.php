@@ -19,6 +19,10 @@ class Service extends Model
         'date',
     ];
 
+    protected $attributes = array(
+        'hastoauthorize' => 1,
+    );
+
 
     public function positions()
     {

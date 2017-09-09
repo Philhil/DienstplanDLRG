@@ -16,7 +16,7 @@ class CreateServiceTable extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamp('date');
-            $table->boolean('hastoauthorize');
+            $table->boolean('hastoauthorize')->default(true);
             $table->text('comment')->nullable();
             $table->timestamps();
         });

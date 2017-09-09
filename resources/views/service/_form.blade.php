@@ -23,7 +23,7 @@
             <div class="col-sm-10">
                 <div class="form-group {{ $errors->has('hastoauthorize') ? 'has-error' : ''}}">
                     {{Form::hidden('hastoauthorize',0)}}
-                    {{ Form::checkbox('hastoauthorize', 1, old('hastoauthorize'), ['class' => 'filled-in', 'id' => "hastoauthorize"]) }}
+                    {{ Form::checkbox('hastoauthorize', 1, old('hastoauthorize') or $service->hastoauthorize != 0 ? true : false, ['class' => 'filled-in', 'id' => "hastoauthorize"]) }}
                     {{ Form::label('hastoauthorize', 'Muss freigegeben werden') }}
                     {!! $errors->first('hastoauthorize', '<p class="help-block">:message</p>') !!}
                 </div>
