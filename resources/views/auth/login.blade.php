@@ -108,8 +108,8 @@
 
                     <div class="row">
                         <div class="col-xs-8 p-t-5">
-                            <input type="checkbox" name="rememberme" {{ old('remember') ? 'checked' : '' }} id="rememberme" class="filled-in chk-col-pink">
-                            <label for="rememberme">Angemeldet bleiben</label>
+                            <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }} id="remember" class="filled-in chk-col-pink">
+                            <label for="remember">Angemeldet bleiben</label>
                         </div>
                         <div class="col-xs-4">
                             <button class="btn btn-block bg-pink waves-effect" type="submit">Anmelden</button>

@@ -24,7 +24,7 @@ Route::get('/callback', 'SocialAuthController@callback');
 
 Route::group(['middleware' => ['auth']], function () {
 
-    Route::get('/', function (){return redirect('/home');});
+    Route::get('/', function (){return redirect('/service');});
     Route::get('/home', 'HomeController@index')->name('home');
 
     Route::resource('qualification', 'QualificationController');
