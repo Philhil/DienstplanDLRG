@@ -78,6 +78,12 @@
                     <div class="msg">Anmelden um loszulegen</div>
                     {{ csrf_field() }}
 
+                    <noscript>
+                        <div class="msg">
+                            <span class="badge bg-red">JavaScript muss für diese Seite aktiviert sein!</span>
+                        </div>
+                    </noscript>
+
                     <div class="input-group form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                         <span class="input-group-addon">
                             <i class="material-icons">person</i>
