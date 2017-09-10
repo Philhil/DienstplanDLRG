@@ -18,6 +18,7 @@ class CreateQualificationTable extends Migration
             $table->string('name');
             $table->string('short');
             $table->boolean('isservicedefault');
+            $table->integer('defaultcount')->default(1);
             $table->timestamps();
         });
     }

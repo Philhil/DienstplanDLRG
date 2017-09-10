@@ -42,6 +42,13 @@
                                     {!! $errors->first('isservicedefault', '<p class="help-block">:message</p>') !!}
                                 </div>
                             </div>
+                            <div class="form-group {{ $errors->has('defaultcount') ? 'has-error' : ''}}">
+                                <div class="form-line">
+                                    {{ Form::label('defaultcount', 'Anzahl der default Qualifikation:') }}
+                                    {{ Form::number('defaultcount', 1, ['class' => 'form-control']) }}
+                                    {!! $errors->first('defaultcount', '<p class="help-block">:message</p>') !!}
+                                </div>
+                            </div>
                         </div>
                     </div>
 

@@ -48,7 +48,10 @@ class ServiceController extends Controller
 
         foreach (Qualification::where(['isservicedefault' => true])->get() as $quali)
         {
-            $positions->push(new Position(['qualification_id' => $quali->id]));
+            for ($i = 0; $i < $quali->defaultcount; $i++)
+            {
+                $positions->push(new Position(['qualification_id' => $quali->id]));
+            }
         }
 
         $users = User::orderBy('name')->get();
