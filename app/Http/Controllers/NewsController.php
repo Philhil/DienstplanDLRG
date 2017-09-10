@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OnCreateNews;
 use App\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +49,8 @@ class NewsController extends Controller
 
         $news = new News($request->all());
         $news->save();
+
+        event(new OnCreateNews($news));
 
         return redirect(action('NewsController@index'));
     }

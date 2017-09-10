@@ -2,11 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Events\NewsCreate;
+use App\Mail\NewsToMail;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Mail;
 
-class NewsCreate
+class OnCreateNews
 {
     /**
      * Create the event listener.
@@ -21,11 +22,11 @@ class NewsCreate
     /**
      * Handle the event.
      *
-     * @param  NewsCreate  $event
+     * @param  OnCreateNews  $event
      * @return void
      */
-    public function handle(NewsCreate $event)
+    public function handle(\App\Events\OnCreateNews $event)
     {
-        //
+        Mail::to(env('MAIL_LIST'))->queue(new NewsToMail($event->news));
     }
 }

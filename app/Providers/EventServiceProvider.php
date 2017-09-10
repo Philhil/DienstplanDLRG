@@ -21,14 +21,14 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\PositionDelete',
         ],
 
-        'App\Events\NewsCreate' => [
-            'App\Listeners\NewsCreate',
+        'App\Events\OnCreateNews' => [
+            'App\Listeners\OnCreateNews',
         ],
 
-        'App\Events\QualificationAssigned' => [
+/*        'App\Events\QualificationAssigned' => [
             'App\Listeners\QualificationAssigned',
         ],
-
+*/
         'App\Events\UserApproved' => [
             'App\Listeners\UserApproved',
         ],
