@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Position;
 use App\Service;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -37,5 +36,12 @@ class HomeController extends Controller
             ->where('services.date', '<', DB::raw('CURDATE()'))->selectRaw('user_id, count(*) as aggregate')->groupBy('user_id')->get();
 
         return view('home.index', compact('positions_user_past', 'positions_total_past', 'positions_free', 'top_users'));
+    }
+
+    public function mailtest(){
+        $tableheader = \App\Qualification::where('isservicedefault', true)->get();
+        $services = Service::where([['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)]])->orderBy('date')->with('positions.qualification')->get();
+
+        return view('email.serviceslist', compact('tableheader', 'services'));
     }
 }

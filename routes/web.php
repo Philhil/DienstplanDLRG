@@ -21,11 +21,11 @@ Route::get('/auth/success', [
 Route::get('/redirect', 'SocialAuthController@redirect');
 Route::get('/callback', 'SocialAuthController@callback');
 
-
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/', function (){return redirect('/service');});
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/mailtest', 'HomeController@mailtest');
 
     Route::resource('qualification', 'QualificationController');
 

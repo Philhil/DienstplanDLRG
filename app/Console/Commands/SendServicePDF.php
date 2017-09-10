@@ -2,9 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Mail\PositionAssigned;
-use App\Position;
-use App\User;
+use App\Mail\ServicesList;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
@@ -41,7 +39,6 @@ class SendServicePDF extends Command
      */
     public function handle()
     {
-        echo "Test";
-
+        Mail::to(env('MAIL_LIST'))->queue(new ServicesList());
     }
 }
