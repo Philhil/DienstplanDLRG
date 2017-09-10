@@ -25,8 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('dlrg:SendServicePDF')->weekly()->mondays()->at('07:00');
     }
 
     /**
