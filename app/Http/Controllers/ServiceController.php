@@ -68,7 +68,7 @@ class ServiceController extends Controller
         }
 
         $service = new Service();
-        $service->date = Carbon::createFromFormat('d m Y', $request->get('date'));
+        $service->date = Carbon::createFromFormat('d m Y', $request->get('date'))->startOfDay();
         $service->comment = $request->get('comment');
         $service->hastoauthorize = $request->get('hastoauthorize');
         $service->save();
