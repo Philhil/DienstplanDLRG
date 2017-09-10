@@ -47,7 +47,7 @@
                                                     <div class="col-md-12">
                                                         <span class="badge bg-orange">
                                                             {{substr ($candidate->user->first_name, 0, 1)}}. {{$candidate->user->name}}
-                                                            <button type="button" class="btn btn-xs bg-green btn-authorize" candidateid="{{$candidate->id}}"><i class="material-icons">check</i></button>
+                                                            <button type="button" class="btn btn-xs bg-green btn-authorize" positionid="{{$position->id}}" candidateid="{{$candidate->id}}"><i class="material-icons">check</i></button>
                                                         </span>
                                                     </div>
                                                 </row>
@@ -125,7 +125,10 @@
                 });
             });
 
+            @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
             $('.btn-authorize').on('click', function () {
+                $(this).removeAttr('positionid');
+
                 $.ajax({
                     type: "POST",
                     url: '/position/'+$(this).attr('candidateid')+'/authorize',
@@ -138,15 +141,15 @@
                         } else {
                             showNotification("alert-success", "Zuordnung freigegeben", "top", "center", "", "");
 
-                            span = $(".btn-authorize[positionid="+data.id+"]").parent();
-                            $(".btn-authorize[positionid="+data.id+"]").remove();
+                            $($(".btn-authorize[positionid="+data.id+"]").closest('row')).remove();
 
-                            $(span).removeClass('bg-orange');
-                            $(span).addClass('bg-green');
+                            $($(".btn-subscribe[positionid="+data.id+"]").parent()).find("span").removeClass('bg-orange').addClass('bg-green').find('button').remove();
+                            $(".btn-subscribe[positionid="+data.id+"]").remove();
                         }
                     }
                 });
             });
+            @endif
         });
     </script>
 @endsection
