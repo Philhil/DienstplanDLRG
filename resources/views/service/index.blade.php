@@ -43,14 +43,16 @@
                                         @if(!isset($position->user))
                                             @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
                                                 @foreach($position->candidatures as $candidate)
-                                                <row>
-                                                    <div class="col-md-12">
-                                                        <span class="badge bg-orange">
-                                                            {{substr ($candidate->user->first_name, 0, 1)}}. {{$candidate->user->name}}
-                                                            <button type="button" class="btn btn-xs bg-green btn-authorize" positionid="{{$position->id}}" candidateid="{{$candidate->id}}"><i class="material-icons">check</i></button>
-                                                        </span>
-                                                    </div>
-                                                </row>
+                                                    @if(!$service->hasUserPositions($candidate->user_id))
+                                                        <row>
+                                                            <div class="col-md-12">
+                                                                <span class="badge bg-orange">
+                                                                    {{substr ($candidate->user->first_name, 0, 1)}}. {{$candidate->user->name}}
+                                                                    <button type="button" class="btn btn-xs bg-green btn-authorize" positionid="{{$position->id}}" candidateid="{{$candidate->id}}"><i class="material-icons">check</i></button>
+                                                                </span>
+                                                            </div>
+                                                        </row>
+                                                    @endif
                                                 @endforeach
                                             @else
                                                 <span class="badge bg-orange">{{count($position->candidatures)}}</span>
