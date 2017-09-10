@@ -18,7 +18,16 @@ class SocialAuthController extends Controller
 
     public function callback()
     {
-        return $this->createOrGetUser(Socialite::driver('facebook')->user());
+        try
+        {
+            $user = Socialite::driver('facebook')->user();
+        } catch (\Exception $e) {
+            return redirect('login')
+                ->withErrors([
+                    'email' => 'Die nötigen Daten können nicht von Facebook abrufen werden oder es wurde der App nicht zugestimmt.'
+                ]);
+        }
+        return $this->createOrGetUser($user);
     }
 
     public function createOrGetUser(ProviderUser $providerUser)
