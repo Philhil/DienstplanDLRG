@@ -32,6 +32,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row clearfix">
+                        <div class="col-sm-3">
+                            <div class="form-group {{ $errors->has('isservicedefault') ? 'has-error' : ''}}">
+                                <div class="form-line">
+                                    {{ Form::hidden('isservicedefault',0)}}
+                                    {{ Form::checkbox('isservicedefault', 1, old('isservicedefault') or $qualification->isservicedefault != 0 ? true : false, ['class' => 'filled-in', 'id' => "isservicedefault"]) }}
+                                    {{ Form::label('isservicedefault', 'Soll die Qualifikation bei anlegen von einem Service automatisch erstellt werden?') }}
+                                    {!! $errors->first('isservicedefault', '<p class="help-block">:message</p>') !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="row clearfix">
                         <div class="col-sm-1">
