@@ -6,6 +6,7 @@ use App\Events\PositionAuthorized;
 use App\Position;
 use App\PositionCandidature;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PositionController extends Controller
 {
@@ -16,8 +17,8 @@ class PositionController extends Controller
      */
     public function index_notAuthorized()
     {
-        $positions = Position::has('candidatures')->where(['user_id' =>  null])->with('qualification')->with('service')->with('candidatures')->with('candidatures.user')->get();
-
+        $positions = Position::has('candidatures')->join('services', 'services.id', '=', 'service_id')->where('services.date','>=', DB::raw('CURDATE()'))
+            ->where(['user_id' =>  null])->orderby('service_id')->with('qualification')->with('service')->with('candidatures')->with('candidatures.user')->select('positions.*')->get();
         return view('position.index_notAuthorized', compact('positions'));
     }
 
