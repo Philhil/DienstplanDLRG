@@ -89,7 +89,7 @@ FACEBOOK_CLIENTSECRET = 000
  <pre>		
  [program:laravel-worker]		
  process_name=%(program_name)s_%(process_num)02d		
- command=php /var/www/DienstplanDLRG/artisan queue:work --sleep=3 --tries=3		
+ command=php /var/www/DienstplanDLRG/artisan queue:work --tries=3		
  autostart=true		
  autorestart=true		
  numprocs=1		
