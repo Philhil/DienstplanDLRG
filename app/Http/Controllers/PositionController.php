@@ -38,10 +38,15 @@ class PositionController extends Controller
             if (Auth::user()->hasqualification($position->qualification()->first()->id)){
 
                 if ($service->hastoauthorize == false) {
-                    $position->user_id = Auth::user()->id;
+                    //has user already approved position in this service?
+                    if(!$position->service->hasUserPositions(Auth::user()->id)) {
+                        $position->user_id = Auth::user()->id;
 
-                    event(new PositionAuthorized($position, null));
-                    $position->save();
+                        event(new PositionAuthorized($position, null));
+                        $position->save();
+                    } else {
+                        return "false";
+                    }
                 }
                 else {
                     \App\PositionCandidature::updateOrCreate(['user_id' => Auth::user()->id, 'position_id' => $position->id]);
