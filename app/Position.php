@@ -30,4 +30,9 @@ class Position extends Model
     {
         return $this->hasMany(PositionCandidature::class);
     }
+
+    public function candidaturesOfUser($user_id)
+    {
+        return $this->candidatures()->where('user_id', $user_id);
+    }
 }

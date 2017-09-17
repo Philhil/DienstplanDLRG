@@ -84,6 +84,14 @@ class PositionController extends Controller
 
                 event(new PositionAuthorized($position, Auth::user()));
 
+                //Delete all other candidates of this Position
+                PositionCandidature::where('position_id', '=', $position->id)->forceDelete();
+                //Delete all other candidates of this user in the same service
+                foreach (Position::where('service_id', '=', $service->id)->get() as $pos)
+                {
+                    $pos->candidaturesOfUser($candidature->user_id)->forceDelete();
+                }
+
                 return $position;
             }
         }
