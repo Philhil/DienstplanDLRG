@@ -27,7 +27,7 @@
                         @foreach($position->candidatures as $candidature)
                             {{--has user already approved position in this service?--}}
                             @if(!$position->service->hasUserPositions($candidature->user_id))
-                            <tr>
+                            <tr positionid="{{$position->id}}">
                                 <td>{{$position->service->date->format('d m Y')}}</td>
                                 <td>{{$position->qualification->name}}</td>
                                 <td>{{$candidature->user->first_name}} {{$candidature->user->name}}</td>
@@ -67,7 +67,7 @@
                         } else {
                             showNotification("alert-success", "Zuordnung freigegeben", "top", "center", "", "");
 
-                            $(".btn-authorize[candidatureid="+data.id+"]").parent().parent().remove();
+                            $('tr[positionid='+data.id+']').remove();
                         }
                     }
                 });
@@ -86,7 +86,7 @@
                         } else {
                             showNotification("alert-success", "Zuordnung aufgehoben", "top", "center", "", "");
 
-                            $(".btn-deauthorize[candidatureid="+data.id+"]").parent().parent().remove();
+                            $('tr[positionid='+data.position_id+']').remove();
                         }
                     }
                 });
