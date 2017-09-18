@@ -25,13 +25,21 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\OnCreateNews',
         ],
 
-/*        'App\Events\QualificationAssigned' => [
-            'App\Listeners\QualificationAssigned',
+        'App\Events\QualificationAssigne' => [
+            'App\Listeners\QualificationAssignedListener',
         ],
-*/
+
         'App\Events\UserApproved' => [
             'App\Listeners\UserApproved',
         ],
+
+        'App\Events\UserRegistered' => [
+            'App\Listeners\UserRegisteredListener',
+        ],
+
+/*        'App\Events\NewPositioncandidature' => [
+            'App\Listeners\NewPositioncandidatureListener',
+        ],*/
     ];
 
     /**
