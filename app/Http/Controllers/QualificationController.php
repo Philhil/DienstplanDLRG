@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\QualificationAssigned;
 use App\Http\Requests\StoreQualification;
 use App\Qualification;
 use App\Qualification_user;
@@ -104,7 +105,9 @@ class QualificationController extends Controller
 
     public function createQualification_User(Request $request)
     {
-        Qualification_user::create($request->all());
+        $qualuser = Qualification_user::create($request->all());
+
+        event(new QualificationAssigned($qualuser, Auth::user()));
         return "true";
     }
 

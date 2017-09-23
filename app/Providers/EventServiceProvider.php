@@ -25,7 +25,7 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\OnCreateNews',
         ],
 
-        'App\Events\QualificationAssigne' => [
+        'App\Events\QualificationAssigned' => [
             'App\Listeners\QualificationAssignedListener',
         ],
 
