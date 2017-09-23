@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('dlrg:SendServicePDF')->cron('0 7 * * 1');
+        $schedule->command('SendServicePDF')->cron('0 7 * * 1');
     }
 
     /**

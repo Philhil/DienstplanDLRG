@@ -13,7 +13,7 @@ class SendServicePDF extends Command
      *
      * @var string
      */
-    protected $signature = 'dlrg:SendServicePDF';
+    protected $signature = 'SendServicePDF';
 
     /**
      * The console command description.
