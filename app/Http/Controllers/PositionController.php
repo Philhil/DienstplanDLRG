@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewPositioncandidature;
 use App\Events\PositionAuthorized;
 use App\Position;
 use App\PositionCandidature;
@@ -49,7 +50,8 @@ class PositionController extends Controller
                     }
                 }
                 else {
-                    \App\PositionCandidature::updateOrCreate(['user_id' => Auth::user()->id, 'position_id' => $position->id]);
+                    $positionCandidature = \App\PositionCandidature::Create(['user_id' => Auth::user()->id, 'position_id' => $position->id]);
+                    event(new NewPositioncandidature($positionCandidature));
                 }
                 return $position;
             }

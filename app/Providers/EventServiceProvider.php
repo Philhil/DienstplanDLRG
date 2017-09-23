@@ -37,9 +37,9 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\UserRegisteredListener',
         ],
 
-/*        'App\Events\NewPositioncandidature' => [
+        'App\Events\NewPositioncandidature' => [
             'App\Listeners\NewPositioncandidatureListener',
-        ],*/
+        ],
     ];
 
     /**
