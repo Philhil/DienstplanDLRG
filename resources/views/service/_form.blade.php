@@ -4,99 +4,96 @@
     {{ Form::model($service->toArray() + $positions->toArray(), ['action' => ['ServiceController@store', 'id' => $service->id]]) }}
 @endif
 
-<div class="row clearfix">
-    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
 
-        <div class="row clearfix">
-            <div class="col-sm-10">
-                <div class="form-group {{ $errors->has('date') ? 'has-error' : ''}}">
-                    <div class="form-line">
-                        {{ Form::label('date', 'Datum:') }}
-                        {{ Form::text('date', old('date', !empty($service->date) ? $service->date->format('d m Y') : ''), ['id' => 'datepicker', 'class' => 'datepicker form-control', 'placeholder'=>'Datum auswählen...', 'required'=>"true"]) }}
-                        {!! $errors->first('date', '<p class="help-block">:message</p>') !!}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row clearfix">
-            <div class="col-sm-10">
-                <div class="form-group {{ $errors->has('hastoauthorize') ? 'has-error' : ''}}">
-                    {{Form::hidden('hastoauthorize',0)}}
-                    {{ Form::checkbox('hastoauthorize', 1, old('hastoauthorize') or $service->hastoauthorize != 0 ? true : false, ['class' => 'filled-in', 'id' => "hastoauthorize"]) }}
-                    {{ Form::label('hastoauthorize', 'Muss freigegeben werden') }}
-                    {!! $errors->first('hastoauthorize', '<p class="help-block">:message</p>') !!}
-                </div>
-            </div>
-        </div>
-
-        <div class="row clearfix">
-            <div class="col-sm-10">
-                <div class="form-group {{ $errors->has('comment') ? 'has-error' : ''}}">
-                    <div class="form-line">
-                        {{ Form::label('comment', 'Bemerkung:') }}
-                        {{ Form::textarea('comment', old('comment'), ['placeholder' => "Bemerkung...", 'rows' => 2, 'class' => 'form-control no-resize']) }}
-                        {!! $errors->first('comment', '<p class="help-block">:message</p>') !!}
-                    </div>
+    <div class="row clearfix">
+        <div class="col-sm-10">
+            <div class="form-group {{ $errors->has('date') ? 'has-error' : ''}}">
+                <div class="form-line">
+                    {{ Form::label('date', 'Datum:') }}
+                    {{ Form::text('date', old('date', !empty($service->date) ? $service->date->format('d m Y') : ''), ['id' => 'datepicker', 'class' => 'datepicker form-control', 'placeholder'=>'Datum auswählen...', 'required'=>"true"]) }}
+                    {!! $errors->first('date', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+    <div class="row clearfix">
+        <div class="col-sm-10">
+            <div class="form-group {{ $errors->has('hastoauthorize') ? 'has-error' : ''}}">
+                {{Form::hidden('hastoauthorize',0)}}
+                {{ Form::checkbox('hastoauthorize', 1, old('hastoauthorize') or $service->hastoauthorize != 0 ? true : false, ['class' => 'filled-in', 'id' => "hastoauthorize"]) }}
+                {{ Form::label('hastoauthorize', 'Muss freigegeben werden') }}
+                {!! $errors->first('hastoauthorize', '<p class="help-block">:message</p>') !!}
+            </div>
+        </div>
+    </div>
 
-        <div class="row clearfix">
-            <div class="col-sm-12 text-center">
-                <div class="form-group">
-                    <button type="button" class="btn btn-danger waves-effect btn-success" id="add_qualification"><i class="material-icons">add</i><span> Position Hinzufügen</span> </button>
+    <div class="row clearfix">
+        <div class="col-sm-10">
+            <div class="form-group {{ $errors->has('comment') ? 'has-error' : ''}}">
+                <div class="form-line">
+                    {{ Form::label('comment', 'Bemerkung:') }}
+                    {{ Form::textarea('comment', old('comment'), ['placeholder' => "Bemerkung...", 'rows' => 2, 'class' => 'form-control no-resize']) }}
+                    {!! $errors->first('comment', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <div class="body table-responsive" style="padding-bottom: 100px">
-            <table class="table table-striped" id="tblPositions">
-                <thead>
-                <tr>
-                    <th>Qualifikation</th>
-                    <th>Person</th>
-                    <th>Kommentar</th>
-                    <th>Aktion</th>
-                </tr>
-                </thead>
-                <tbody>
-                @if(isset($positions) && $positions instanceof \Illuminate\Database\Eloquent\Collection)
-                    @foreach($positions as $position)
-                        <tr>
-                            <td><select class="bootstrap-select show-tick" data-live-search="true" name="qualification[]">
-                                    @foreach($qualifications as $qualification)
-                                        <option value="{{$qualification->id}}" @if($position->qualification_id == $qualification->id) selected @endif>{{$qualification->name}}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <select class="bootstrap-select show-tick" data-live-search="true" name="user[]">
-                                    <option value="null">-- Bitte wählen --</option>
-                                    @foreach($users as $key => $user)
-                                        <option @if($user->hasqualification($position->qualification_id))class="bg-green" @endif  value="{{$user->id}}" @if($position->user_id == $user->id) selected @endif>{{$user->name}}</option>
-                                    @endforeach
-                                </select>
-                            </td>
+<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
 
-                            <td>
-                                <input class="form-control" placeholder="Kommentar..." type="text" value="{{$position->comment}}" name="position_comment[]" >
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger waves-effect btn-delete delete_position">
-                                    <i class="material-icons">delete</i>
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                @endif
-                </tbody>
-            </table>
+    <div class="row clearfix">
+        <div class="col-sm-12 text-center">
+            <div class="form-group">
+                <button type="button" class="btn btn-danger waves-effect btn-success" id="add_qualification"><i class="material-icons">add</i><span> Position Hinzufügen</span> </button>
+            </div>
         </div>
+    </div>
 
+    <div class="body table-responsive" style="padding-bottom: 100px">
+        <table class="table table-striped" id="tblPositions">
+            <thead>
+            <tr>
+                <th>Qualifikation</th>
+                <th>Person</th>
+                <th>Kommentar</th>
+                <th>Aktion</th>
+            </tr>
+            </thead>
+            <tbody>
+            @if(isset($positions) && $positions instanceof \Illuminate\Database\Eloquent\Collection)
+                @foreach($positions as $position)
+                    <tr>
+                        <td><select class="bootstrap-select show-tick" data-live-search="true" name="qualification[]">
+                                @foreach($qualifications as $qualification)
+                                    <option value="{{$qualification->id}}" @if($position->qualification_id == $qualification->id) selected @endif>{{$qualification->name}}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <select class="bootstrap-select show-tick" data-live-search="true" name="user[]">
+                                <option value="null">-- Bitte wählen --</option>
+                                @foreach($users as $key => $user)
+                                    <option @if($user->hasqualification($position->qualification_id))class="bg-green" @endif  value="{{$user->id}}" @if($position->user_id == $user->id) selected @endif>{{$user->name}}</option>
+                                @endforeach
+                            </select>
+                        </td>
+
+                        <td>
+                            <input class="form-control" placeholder="Kommentar..." type="text" value="{{$position->comment}}" name="position_comment[]" >
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger waves-effect btn-delete delete_position">
+                                <i class="material-icons">delete</i>
+                            </button>
+                        </td>
+                    </tr>
+                @endforeach
+            @endif
+            </tbody>
+        </table>
     </div>
 
 </div>
