@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Mail\ServicesList;
+use App\Service;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
@@ -39,6 +40,10 @@ class SendServicePDF extends Command
      */
     public function handle()
     {
-        Mail::to(env('MAIL_LIST'))->queue(new ServicesList());
+        $services_count = Service::where([['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)]])->orderBy('date')->with('positions.qualification')->count();
+
+        if($services_count > 0) {
+            Mail::to(env('MAIL_LIST'))->queue(new ServicesList());
+        }
     }
 }
