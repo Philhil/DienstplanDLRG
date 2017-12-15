@@ -1,0 +1,162 @@
+% Präambel
+\documentclass[12pt,a4paper,oneside, 
+liststotoc, 					% Tabellen- und Abbildungsverzeichnis ins Inhaltsverzeichnis
+bibtotoc,						% Literaturverzeichnis ins Inhaltsverzeichnis aufnehmen
+titlepage, 						% Titlepage-Umgebung statt \maketitle
+headsepline, 					% horizontale Linie unter Kolumnentitel
+%abstracton,					% Überschrift beim Abstract einschalten, Abstract muss dazu in {abstract}-Umgebung stehen
+%DIV11,							% auskommentieren, um den Seitenspiegel zu vergrößern
+BCOR6mm,						% Bindekorrektur, die den Seitenspiegel um 6mm nach rechts verschiebt,
+]{scrreprt}			
+\usepackage{ucs} 				% Dokument in utf8-Codierung schreiben und speichern
+\usepackage[utf8x]{inputenc} 	% ermöglicht die direkte Eingabe von Umlauten
+\usepackage[ngerman]{babel} 	% deutsche Trennungsregeln und Übersetzung der festcodierten Überschriften
+\usepackage[T1]{fontenc} 		% Ausgabe aller zeichen in einer T1-Codierung (wichtig für die Ausgabe von Umlauten!)
+\usepackage{graphicx}  			% Einbinden von Grafiken erlauben
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathpazo} 			% Einstellung der verwendeten Schriftarten
+\usepackage{textcomp} 			% zum Einsatz von Eurozeichen u. a. Symbolen
+\usepackage{listings}			% Datstellung von Quellcode mit den Umgebungen {lstlisting}, \lstinline und \lstinputlisting
+\usepackage{xcolor} 			% einfache Verwendung von Farben in nahezu allen Farbmodellen
+\usepackage[intoc]{nomencl}  	% zur Erstellung des Abkürzungsberzeichnisses
+\usepackage{fancyhdr}			% Zusatzpaket zur Gestaltung von Fuß und Kopfzeilen
+\usepackage{titleref}			% Zum referenzieren mit Überschrift
+\usepackage{varwidth}			%alighn asci figure
+\usepackage{chngcntr}			% Tabellen- und Abbildungsverzeichnis als fortlaufende Nummer
+\usepackage{hyperref}
+\usepackage[justification=centering]{caption} % Bild unterschrift mittig ausrichten
+\usepackage{nameref}
+\counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
+\usepackage{url}
+
+\usepackage{natbib}
+\usepackage{changes}
+
+
+%For flow chart
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+    text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+    text width=5em, text centered, rounded corners, minimum height=4em, node distance=3cm]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=2cm,
+    minimum height=2em]
+
+
+%\usepackage[none]{hyphenat} %deaktiviert Silbentrennung
+%\usepackage{showframe}% zum Anzeigen des Seitenlayouts
+%Abstand vor Chapter
+\renewcommand*\chapterheadstartvskip{\vspace*{-\topskip}}
+\renewcommand*\chapterheadendvskip{%
+  \vspace*{1\baselineskip plus .1\baselineskip minus .167\baselineskip}}
+
+
+\setlength\abovedisplayshortskip{0pt}
+\setlength\belowdisplayshortskip{0pt}
+\setlength\abovedisplayskip{20pt}
+\setlength\belowdisplayskip{20pt}
+
+% -----------------------------------------------------------------------------------------------------------------
+% Zum Aktualisieren des Abkürzungsverzeichnisses bitte auf der Kommandozeile folgenden Befehl aufrufen :
+%  makeindex Bachelorarbeit.nlo -s nomencl.ist -o Bachelorarbeit.nls
+% -----------------------------------------------------------------------------------------------------------------
+
+% Hier die persönlichen Daten eingeben:
+
+\newcommand{\titel}{DLRG Dienstplan}
+\newcommand{\untertitel}{Benutzerhandbuch für das DLRG Dienstplan-Portal
+ 
+\url{https://dlrgdienstplan.de/}}
+\newcommand{\autor}{Philippe Käufer}
+
+\newcommand{\ovretextfalt}{%
+DLRG LV Württemberg e.V. \\
+Bezirk Stuttgart \\
+Mühlhäuser Str. 319 \\
+70378 Stuttgart \\
+www.DLRG-Stuttgart.de \\
+}
+
+% Abkürzungen
+\newcommand{\ua}{\mbox{u.\,a.\ }}
+\newcommand{\zB}{\mbox{z.B.\ }}
+\newcommand{\bs}{$\backslash$}
+\newcommand{\Csharp}{C\#}
+
+\renewcommand{\nomname}{Abkürzungsverzeichnis}
+\makenomenclature 
+
+% -------------------------------------------------------------------------------------------
+% Definition der Kopf- und Fußzeilen
+\lhead{}								% Kopf links
+\chead{}								% Kopf mitte
+\rhead{\sffamily{\titel}}				% Kopf rechts
+\lfoot{}								% Fuß links
+\cfoot{\sffamily{\thepage}}				% Fuß mitte
+\rfoot{\sffamily{\autor}}				% Fuß rechts
+\renewcommand{\headrulewidth}{0.4pt}	% Liniendicke Kopf
+\renewcommand{\footrulewidth}{0.4pt}	% Liniendicke Fuß
+
+\makenomenclature						% Abkürzungsverzeichnis erstellen
+\input{Inhalt/abkuerzungen}				% Datei mit Abkürzungen laden
+
+
+% -------------------------------------------------------------------------------------------
+%                     Beginn des Dokumenteninhalts
+% -------------------------------------------------------------------------------------------
+\begin{document}
+\setcounter{secnumdepth}{2}					% Nummerierungstiefe fürs Inhaltsverzeichnis
+\setcounter{tocdepth}{2}
+\sffamily									% für die Titelei serifenlose Schrift verwenden
+
+% ------------------------------ Titelei -----------------------------------------------------
+
+\include{Inhalt/titelseite} 				% erzeugt die Titelseite
+\pagenumbering{Roman}						% große, römische Seitenzahlen für Titelei
+\include{Inhalt/abstract}   				% Einbinden des Abstracts
+
+\tableofcontents							% Erzeugen des Inhalsverzeichnisses
+\printnomenclature[2.0cm]					% Erzeugen des Abkürzungsverzeichnisses
+\listoffigures 								% Erzeugen des Abbildungsverzeichnisses 
+\listoftables 								% Erzeugen des Tabellenverzeichnisses
+\pagebreak
+
+
+% --------------------------------------------------------------------------------------------
+%                    Inhalt der Bachelorarbeit
+%---------------------------------------------------------------------------------------------
+\pagenumbering{arabic}						% arabische Seitenzahlen für den Hauptteil
+\pagestyle{fancy}					
+\rmfamily
+\noindent
+
+\include{Inhalt/einleitung}
+\include{Inhalt/hauptteil}
+\include{Inhalt/zusammenfassung}
+%\include{Inhalt/vorlagen}
+
+
+% ---------------------------- Literaturverzeichnis ----------------------------------------------
+
+\begin{thebibliography}{999999}
+
+%\bibitem {Buchtitel} Author: \emph{Buchtitel}, Erscheinungsort: Verlag, Jahr
+
+
+\end{thebibliography}
+
+% ------------------------------- Anhang ---------------------------------------------------------
+
+\begin{appendix}
+\clearpage
+\pagenumbering{Roman}						% römische Seitenzahlen für Anhang
+\end{appendix}
+
+
+\end{document}

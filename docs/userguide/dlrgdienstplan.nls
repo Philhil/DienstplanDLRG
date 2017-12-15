@@ -1,0 +1,14 @@
+\begin{thenomenclature} 
+
+ \nomgroup{A}
+
+  \item [{CI}]\begingroup Corporate Identity \nomeqref {0.0}
+		\nompageref{1}
+  \item [{GUI}]\begingroup Grafische Benutzeroberfläche oder auch grafische Benutzerschnittstelle (graphical user interface) \nomeqref {0.0}
+		\nompageref{1}
+  \item [{ORM}]\begingroup Objektrelationale Abbildung (object-relational mapping) \nomeqref {0.0}
+		\nompageref{1}
+  \item [{RWD}]\begingroup (Responsive Web Design) Die Größe und Auflösung der Displays auf Laptops, Desktop-PCs, Tablets und Smartphones können erheblich variieren. Aus diesem Grund sind das Erscheinungsbild und die Bedienung einer Website stark abhängig vom Endgerät. Aufgrund dessen werden Webseiten mit einem Design ausgestattet welches sich auf die unterschiedlichen Anforderungen der Endgeräte anpassen. \nomeqref {0.0}
+		\nompageref{1}
+
+\end{thenomenclature}

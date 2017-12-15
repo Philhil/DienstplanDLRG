@@ -1,0 +1,466 @@
+\chapter{Status quo}
+\label{cha:Status quo}
+das MediativAG entwickelt und betreibt wie einleitend in Kapitel \ref{sec:Projektumfeld} \nameref{sec:Projektumfeld} erläutert verschiedenste mediale Lösungen für den POS im Einzelhandel. Jedes Produkt kann in differenzierter weise konfiguriert, upgedatet und fern gewartet werden. Eine einheitliche Lösung existiert nicht. Diese Tatsache der nicht einheitliche Lösung ist unter anderem für den Kunden als auch besonders für den Support und die Redaktion undurchsichtig, komplex und in gewissen Situationen unverhältnismäßig aufwendig. \\ \\Für eine Vereinheitlichung wurde ein neues Portal geschaffen. Dies ist von Grund auf neu Designt. Über dieses neue Portal sollen die verschiedenen Produkte konfiguriert werden können. Das Kernprodukt InstoreTV ist bereits voll in das Portal integriert.\\ Der Aufbau wird in diesem Kapitel nun näher beschrieben.
+
+\section{Portal}
+\label{sec:Portal}
+Das Portal ist ein Digital Signage System um Mediale-Inhalte für verschiedene Endsysteme zu planen, verwalten und einzusehen. Das Portal dient als zentrale Anlaufstelle für die Redaktion wie auch Kunden welche selbst die Inhalte ihrer Systeme, meist Instore TV's, verwalten möchten. Vorteile des eigens entwickelten Digital Signage Portal's sind zum einen eine einfache Bedienung für Redakteure und zum anderen die Möglichkeit für Administratoren eine komplexe Gruppen Hierarchie wie auch jeweils definierte Vorlagen für das eigene CI aufzubauen. So können größere Firmen mit mehreren Filialen oder Franchise Partnern auf Datenbasis eines Kunden geführt werden. Denkbar ist, dass die Instore TV's der Filialen je einer Filial Gruppe zugeordnet werden. Zusätzlich lassen sich diese auch noch zu beliebig vielen weiteren Gruppen zuordnen. Eine Aktionsgruppen (\zB Weihnachtskalender) könnte somit noch zusätzlich zugeordnet werden. Auf den Insore TV's würden Medien der Filialen Gruppe wie auch der Aktionsgruppe, welche in unserem Beispiel vom Zentralen Marketing befüllt wird, abgespielt. 
+Einzelne Nutzer können definierte Rechte auf einzelne Gruppen durch die Administratoren erlangen. Eine sehr differenzierte Aufteilung und Verwaltung ist somit durch die modulare Gruppen und Rechtestruktur gegeben.
+\\Um ein Einheitliches Auftreten in dem Digital Signage Bereich zu gewährleisten, müssen sogenannte Templates erstellt werden. Hier wird \zB das Hintergrundbild vorab fest definiert. Templates werden wiederum den bereits beschriebenen Gruppen zugewiesen. Die Redaktion erstellt mit den für die jeweilige Gruppe zu Verfügung stehende Templates Nachrichten, welche mit eigenen medialen Inhalten befüllt werden. Das im Beispiel verwendete Hintergrundbild ist jedoch nach wie vor fest definiert.
+\\Wie schnell klar wird, gibt es eine viel zahl an stellen im System was eine Änderung an der Datenbasis hervorruft. Dies impliziert meist eine Aktualisierung auf den abspielenden Endsystemen. 
+\\\\Das Portal ist zum Großteil in der Sprache PHP geschrieben und basiert auf dem Laravel Framework. Mit dem packaging manager Composer sind vielerlei externer Pakete zusätzlich in Laravel nutzbar. Create, read, update, delete (CRUD) sind in Webanwendungen häufig eingesetzte Operationen. So werden Objekte der Datenhaltung auf eine generische Ebene gehoben und können auf der GUI visualisiert werden. Diese Atomaren Operationen kann in einer Mehrbenutzer Anwendung von verschiedenen Personen zeitlich versetzt verwendet werden. Ein CRUD System erlaubt das nutzen von unterschiedlichen Operationen ohne Berücksichtigung von Zeitlichen komponenten. Datensätze werden nicht gesperrt. Dieses Modell findet ebenso in Laravel anwendung. \\Zusätzlich vereinfacht Laravel 
+das entwickeln von Web-Anwendungen mit einem Schichtenmodell das auf das klassische MVC Konzept (Kap 18 \cite{Methoden und Architekturen der Softwaretechnik}) aufsetzt. Zusätzlich zur Model, View und Contoller Schicht gibt es das Modell des Routing. Dies ist in der Abbildung \textit{\ref{LaravelLayer} \nameref{LaravelLayer}} verdeutlicht.
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}[node distance = 2cm, auto]
+    % Place nodes
+    \node [block] (init) {Routing};
+    \node [block, right of=init] (controller) {Controller};
+    \node [block, right of=controller] (view) {View};
+    \node [block, below of=controller] (model) {Model};
+    \node [cloud, below of=model] (database) {Datenbank};
+          
+    % Draw edges
+    \path [line, double] (init) -- (controller);
+    \path [line, double] (controller) -- (view);
+    \draw [latex'-latex',double] (controller) -- (model);
+    \draw [latex'-latex',double] (model) -- (database);
+\end{tikzpicture}
+\caption[Konzept der Laravel Schichtenarchitektur (erweitertes MVC)]{Konzept der Laravel Schichtenarchitektur}
+\label{LaravelLayer}
+\end{figure} Laravel hilft mit dem Routing und sogenannten "Resource Controllern" den Entwicklungsprozess von den bereits erläuterten CRUD Schnittstellen zu erleichtern. Durch die Laravel Routing Technik und den Resource Controllern lassen sich viel einfacher und schneller Anwendungen entwickeln.
+\\Bei einem HTTP Request wird in der Routing Schicht die entsprechende Funktion eines Controllers aufgerufen. Routen können für einen Controller allgemein als resource definiert werden. \zB für einen PhotoController:
+\begin{lstlisting}[language=php]
+Route::resource('photo', 'PhotoController');
+\end{lstlisting}
+So werden automatisch für die vordefinierten und in jedem Controller existierenden Funktionen einzelne Routes angelegt um eine CRUD Schnittstelle bereit zu stellen.
+Die Routen bestehen automatisch aus Pfaden und Funktion wie in Tabelle \textit{\ref{Routeresource} \nameref{Routeresource}} dargestellt.
+
+\renewcommand{\arraystretch}{2}
+\begin{table}[hbt]
+\centering
+\begin{tabular}{c|c|c}
+\hline \textbf{Methode} & \textbf{Pfad} & \textbf{Funktion}  \\ 
+\hline \textbf{GET} & /photo &  index\\ 
+\hline \textbf{GET} & /photo/create & create\\ 
+\hline \textbf{POST} & /photo & store \\
+\hline \textbf{GET} & /photo/\{photo-id\} &  show\\
+\hline \textbf{GET} & /photo/\{photo-id\}/edit &  edit\\
+\hline \textbf{PUT} & /photo/\{photo-id\} &  update\\
+\hline \textbf{DELETE} & /photo/\{photo-id\} &  destroy \\
+\hline 
+\end{tabular}
+\caption[Generierte Aktionen von Route::resource]{Generierte Aktionen von Route::resource,\\Quelle: https://laravel.com/docs/5.2/controllers }
+\label{Routeresource}
+\end{table} Bei einem Aufruf von \url{http://localhost/photo} wird im Routing anhand der Definitionen entschieden, welche Funktion vom jeweiligen Controller aufgerufen wird. In dem dargelegten Beispiel wird die Funktion \textit{index} des Controllers \textit{PhotoController} aufgerufen.
+Neben ganzen resourcen können im Routing auch einzelne von Schema abweichende Endpunkte definiert werden. \begin{lstlisting}[language=php]
+Route::post('/getMediaUrl', 'PhotoController@getMediaUrl');
+\end{lstlisting}
+Wenn es eine passende Route im Routing zu einem HTTP Request existiert, wird die entsprechende Methode in der Controller Schicht aufgerufen. Die entsprechenden Parameter des Requests stehen in der Methode des Controllers ebenfalls zu Verfügung. Somit impliziert es schon fast, dass jeder Controller die von Route::resource automatisch erstellen Routen implementiert hat. Ein Controller besteht somit im Normalfall immer aus den Methoden index, create, store, show, edit, update und destroy. Ob diese letztendlich in der Anwendung zum tragen kommt hängt vom Programmierer ab. Controller können beliebig erweitert werden wie es in dem Beispiel mit einer Methode \textit{getMediaUrl} erforderlich wäre. 
+\\Die Controller Funktionen selber sind für die Aggregation sowie speichern der Daten zuständig. Dies wird durch das Eloquent ORM, was durch Laravel zu Verfügung gestellt wird, sehr vereinfacht. Eloquent ist in der Schichtenarchitektur unter Model einzuordnen. Für jede Tabelle der Datenbank existiert auch ein Model, welches für die Interaktion mit der entsprechenden Tabelle zuständig ist. Die Model's erlauben abfragen für diese Tabellen wie auch Operationen um Daten zu manipulieren. Nachdem einem Controller mit Hilfe der Model's die Daten aggregiert hat, werden diese Daten einer View übergeben.
+\\Die View baut in Laravel auf eine Template Struktur namens "`Blade"' auf. Im Gegensatz zu anderen Template Umgebungen kann in der View sowohl HTML als auch PHP code gescheben werden. Multilinguale Oberflächen sind ohne weitere Schwierigkeiten sehr einfach umsetzbar. Ein Blade wird bei dem ersten Aufruf in reinen PHP Code umgewandelt und solange gecached bis es eine Änderung im View gibt.
+
+
+\section{Player}
+\label{sec:Player}
+Der Player bezeichnet eine Software Umgebung, welche auf einem InsoreTV läuft und Mediale Inhalte abspielt. Neben dem Abspielen ist dieser auch für eine aktuelle lokale Datenhaltung und Generierung einer Playlist verantwortlich. Dies geht mit einer Diversität an Voraussetzungen einher. Einzelne Nachrichten sind nach dem anlegen im Portal noch nicht freigegeben. Diese sollen erst nach der Freigabe durch die Redaktion auf dem InstoreTV abgespielt werden. Um die Zeitspanne zwischen der Freigabe und der Wiedergabe so gering wie möglich zu halten, soll die Nachricht, obwohl diese nicht freigegeben ist, schon komplett auf dem InstoreTV heruntergeladen werden. Erst nach Freigabe jedoch in der Playliste auftauchen und abgespielt werden. Zusätzlich können Nachrichten einen Zeitfilter enthalten und nur \zB zwischen 8:00 Uhr und 10:00 Uhr und/oder nur Donnerstags und Samstags abgespielt werden. Des weiteren können "`Hightlight"' Nachrichten mit sogenannten  Wiederholungsraten erstellt werden. Dabei wird eine Nachricht  je nach Wiederholungsrate, \zB mit 2 nach jeder zweiten Nachricht, abgespielt.
+\\\\Python ist die Programmiersprache, in welcher der Player entwickelt wird. Momentan laufen alle InstoreTV's mit dem Betriebssystem Windows. Durch die Plattformunabhängigkeit von Python ist eine Ausführung unter Linux möglich. Die Strategische Ausrichtung könnte in Zukunft so aussehen, dass die in den Monitoren immer mehr verbreiteten und verbauten Micro-Computer auf Linux Basis direkt als InstoreTV Ersatz genutzt werden können.
+\\Die eingesetzten Programme, auf die der Player aufbaut und welche er zum Darstellen benötigt sind ebenfalls auf den Gängigen Plattformen ausführbar. So dient das VLC Plugin\footnote{Ein sehr verbreiteter und beliebter Media Player da dieser nahezu alle Formate abspielen kann.} zum abspielen von Video Inhalten oder das Chromium  Framework\footnote{Ein auf Google Chrome basiertes Open Source Framework um eine HTML5 GUI zu erstellen.} um neben Bildern auch HTML Inhalt zu präsentieren.
+
+\section{Polling}
+\label{sec:Polling}
+Die Kommunikation zwischen Player und Portal ist mehrstufig aufgebaut. Eine Übertragung der Daten wird über das HTTP Protokoll mittels Polling Verfahren (Kapitel 3.2 \cite{Interaktives Monitorsystem zur besonderen medialen Darstellung von Produkten am Point of Sale}) durchgeführt. Hierbei erkundigt sich der Player in einem einzustellenden Zeitintervall beim Portal nach ihn betreffenden Änderungen. Als Standardeinstellung ist ein Zeitintervall von 60 Sekunden im Player hinterlegt. Daraus folgt, dass das Portal in den 60 Sekunden Anfragen von allen Playern beantworten muss. Dies ist eine Herausforderung um eine akzeptable Performance zu gewährleisten.
+\\\\In der ersten Stufe werden Metadaten, \zB die Nachrichten selber mit unter anderem Abspieldatum, Abspielzeit und Ort der Mediendatei auf dem Contentserver übertragen. Diese werden vom Portal im JSON Format bereitgestellt. Wenn für den Player keine Änderungen existieren, wird auch nichts zurückgegeben. Dementsprechend ist der Payload des HTTP Response leer und der Header Proportional zum Payload sehr groß.
+\\Mit der Zweiten Ebene werden die fehlenden Medieninhalte von den entsprechenden Contentservern heruntergeladen.
+
+
+
+\chapter{Konzept - Planung - Prototype}
+\label{cha:Konzept - Planung}
+
+Das Ziel dieser Projektarbeit soll sein, Performance Verbesserung und eine Echtzeit Kommunikation mit Teilsystemen zu evaluieren. Dabei soll nicht nur die prinzipielle Machbarkeit im Vordergrund stehen sondern vor allem eine Abwägung der Zukunftssicherheit der eingesetzten Technologien beachtet werden.
+
+\section{Anforderungsmanagement}
+\label{sec:Anforderungsmanagement}
+Die Anforderungen für das Ergebnis dieser Arbeit können in zwei Kategorien differenziert werden: Performance Verbesserung und die neue Funktion der Echtzeit Kommunikation mit Teilsystemen.\\ \newline
+Die Performance Verbesserung soll mittels Funktionalem Testen eruiert werden. Dieses Testverfahren handelt weniger um das Aufdecken von herkömmlichen Fehlern, als um Vergleich der Performance, welche auch als Fehler gewertet wird. In dieser Testmethode wird ohne die Betrachtung der Eigenschaften des Systems das Verhalten bei vorgegebenen Testdaten gemessen. Diese Methode ist eine Kategorie des Black-Box Testing. Vergleich Funktionales Testen \cite[\textit{Testmethoden und tools in der modellbasierten Funktionsentwicklung}]{Testmethoden und tools in der modellbasierten Funktionsentwicklung}\\
+Die Erwartungswerte der Vergleichsindekatoren soll niedriger als derer des bisheriges Portal liegen. Dies resultiert aus der Annahme, dass der HTTP Header des bisherigen Polling Mechanismus (Kapitel \ref{sec:Polling} \textit{\nameref{sec:Polling}}) mit dem Websocket Protokoll (Kapitel \ref{cha:Websocket} \textit{\nameref{cha:Websocket}}) optimiert wird.\\ Das bisherige Verhältnis von Nutzdaten kann in der Theorie nicht bewertet werden da ein HTTP Header von der Größe variiert und von den Statuscodes abhängig ist. Eine Praktische Bewertung fand anhand des Produktiv-Portales statt bei welchem insgesamt 28000 HTTP Pakete mit 
+\begin{lstlisting}
+tcpflow port 80 -i eth0
+\end{lstlisting}
+aufgezeichnet wurden. Dies wurde über einen Zeitraum in der Hochlastphase ermittelt und bilden eine Diversität über verschiedene Abfragetypen ab. Das Resultierende Ergebnis entstand aus 28.000 Datensätze mit einer Gesamtgröße von 79,8 MB. Der HTTP Header entspricht 37,34\% der Übertragenen Daten. Durch den Wegfall des HTTP Headers und ein minimaler Overhead des Websocket Protokolls könnte so ein Erwartungswert der Verbesserung von ~25\% festgelegt werden. Der größte Performance Vorteil wird zukünftig vor allem dem aktiven pushen von Änderungen im Portal über das Websocket Protokoll anstatt dem Prüfen auf Änderung durch Polling zuzuschreiben sein.
+\\//TODO
+Quellen suchen:
+-Testen in definierten Bereichen
+-Festlegen von Vergleichsindikatoren
+
+
+
+Die Echtzeitkommunikationsschnittstelle ist eine neue Funktion die mit den Optimierungen einhergehen soll. Die Vorstellungen von Echtzeitkommunikation sind sehr unterschiedlich. Sie können von "`schneller"', über "`sichere"' bis zu vorhersagbarer Kommunikation gehen. 
+Im Anforderungsmanagement muss zunächst einmal die zu erwartende Echtzeit definiert werden. Was ist Echtzeit? Zeit ist eine Physikalische Größe welche stark von Raum abhängt. Diese Physikalischen Eigenschaften wurden neben Albert Einstein mit der daraus entstandenen Relativitätstheorie auch schon von vielen anderen Physikern untersucht. Da zwischen dem Player und Portal meist viel Raum, ein weiter Weg liegt, kann bereits Physikalisch nicht in Wirklicher Echtzeit (im Sinne von der selben Gegenwart) Kommunikation stattfinden. Wenn von einem Client über das Portal mit dem Player in Echtzeit kommuniziert werden soll wird durch die zunehmende Strecke und zwischen geschalteten Netzknoten dieser Effekt verstärkt. Eine Optimierung ist mit einer Direktkommunikation von Client zu Player ist denkbar.
+\\Durch die Physikalischen Gegebenheiten kann keine "`wirkliche"' Echtzeitkommunikation stattfinden. Aufgrund dessen müssen wir zwischen verschiedenen nahe zu Echtzeit Definitionen unterscheiden. Diese Diskussion muss je nach Anforderung, vor allem wenn kritische Echtzeitsysteme wie die Steuerung in Fahr- und Flugzeugen betrachtet werden, geführt werden. 
+\\In Echtzeitanwendungen ist das Resultat eines Computersystemes nicht nur vom Resultat selber sondern auch vom Zeitpunkt der Auslieferung bzw Empfangs abhängig. 
+Diese Deadline werden je nach Anforderung der Umgebung kürzer definiert.
+\\Eine Einteilung in zwei grobe Kategorien kann vorgenommen werden (ref: \cite{Echtzeitsysteme Grundlagen}):
+
+\begin{itemize}
+\item \textbf{Harte Echtzeitanforderungen}: \\Eine Anwendung \underline{muss} bis spätestens zur definierten Deadline eine Antwort geliefert haben. Beispiele sind hier die Steuerung in Fahr- und Flugzeugen oder andere Objekte, wo Unglücke geschehen, wenn das Computersystem nicht rechtzeitig Ergebnisse liefert. Eine Überschreitung der Deadline wird als gescheitert gewertet. 
+
+\item \textbf{Weiche Echtzeitanforderungen}: \\Eine Anwendung \underline{soll} bis spätestens zur definierten Deadline bzw. einem akzeptablen Mittelwert eine Antwort geliefert haben. Wenn diese zu spät eintrifft leidet die Qualität oder das Ergebnis hat keinen wert mehr und wird verworfen. In Video/Chat Anwendung soll die Kommunikation möglichst in Echtzeit übertragen werden. Kommen einzelne Fragmente zu spät leidet die Qualität. Es sind keine Kritischen folgen zu erwarten und muss somit nicht als Scheitern gewertet werden.
+\end{itemize}
+
+Die Echtzeitkommunikation in dem Ökosystem des Portales ist in keinster weise als kritisch zu definieren. Die Ankunftszeit der Meldungen hat keinerlei Auswirkung oder birgt Gefahren für Menschen oder die Umwelt. Der Vorteil der Bidirektionalen Kommunikation mit einer für den Nutzer vertretbaren Zeit ist vollkommen ausreichend. So ist diese Anwendung als "`weiche Echtzeitanforderung"' zu definieren mit einer Deadline von fünf Sekunden.
+\\Prinzipiell kann in der Softwareentwicklung mit Benutzer Interaktion festgestellt werden, dass das System den Benutzer in vertretbarer Zeit entsprechende Rückmeldungen zu Aktionen geben muss (ref \cite{usability heuristics}).
+\\\newline Der Schwerpunkt liegt viel mehr in der Optimierung der Kommunikation. Datensparsamkeit und "`Leichtgewichtige"' Kommunikation sollen gegeben sein. Datensaprsamkeit und Leichgewichtige Kommunikation bedeuten, dass entsprechende Daten nur an die Empfänger übermittelt werden, welche den Informationsgehalt auch verarbeiten können und diese Informationen nur so wenig wie möglich zu senden. Daten erreichen so nur einmal direkt die Empfänger welche diese auch verarbeiten.
+\\Aufgrund von Kompatibilität und Ausfallsicherheit, soll die Kommunikation weiter in verschiedenen Ebenen statt finden. In erster Ebene ist eine Kommunikation über die Leichtgewichtige Echtzeit Schnittstelle zu priorisieren. Durch betriebswirtschaftlichen Entscheidungen soll die Echtzeit Schnittstelle manuell für einzelne Player zu und abschaltbar sein. Fällt die Echtzeitkommunikation aus oder ist aus anderen Gründen wie \zB Betriebswirtschaftlichen Gründen nicht verwendbar, wird auf das bisherige Polling verfahren (\textit{\ref{sec:Polling} \nameref{sec:Polling}}) zurückgegriffen. Allgemein wird weiterhin lediglich Metadaten und Ereignisse übertragen. 
+Medien sollen weiterhin vom Player direkt vom Portal heruntergeladen werden. Bei einer Client zu Player direkt Kommunikation kann das Medium auch unmittelbar an den Player übermittelt werden.
+\\\newline
+
+
+
+
+
+
+
+//TODO: umsetzung und testen mit prototyping.... Player soll jetziges polling über socket und grundstatis ans portal senden können
+\\\newline
+Anforderungen an die Simulation eines Players sind, Funktionen welche sowohl Befehle erhalten als auch Statusinformationen an das Portal absetzen können. Dies soll anhand eines Dummy Players umgesetzt werden. Der Dummy Player sollte die Möglichkeit bieten die Anzahl der echten Player zu repräsentieren um die Performance bei Skalierung auf Realbedingungen sowie eine Wachsende zahl der Player in den kommenden Jahren zu gewährleisten.
+
+
+
+
+
+
+
+\chapter{Websocket}
+\label{cha:Websocket}
+In den Anfangszeiten des Internets existierte für jede Anwendung, beispielsweise Mail oder Daten Transport, ein eigener Port. Das heißt, ein Briefkasten (Port) wird in einem Appartementhaus (Computer) für jedes Apartment (Applikation) reserviert. Einige Protokolle wie \zB FTP handeln zusätzlich noch dynamische Ports aus. Die Firewalls und Firmen Richtlinien sperrten immer mehr Ports was Softwareentwicklern das Implementieren von Sockets vor immer größer werdende Herausforderungen stellte. Daraus Folgten ein Trend von weit verbreiteten Protokollen wie Beispielsweise HTTP "`upzugraden"' auf andere Protokolle welche eine bessere Sicherheit, Performance oder auch einfacher in bestehende Infrastruktur integriert werden kann. Des weiteren wurden in der Vergangenheit verschiedenste Verfahren für eine Bidirektionale Kommunikation gesucht und entwickelt. Die entstandenen Techniken haben alle entsprechende Vor- und Nachteile. Das Websocket Protokoll hat sich in der jüngsten Vergangenheit als zusätzliches Protokoll zu HTTP zur Kommunikation zwischen Server und Webclient abgehoben und vor allem bei den Browserherstellern durchgesetzt.
+\\Das Websocketprotokoll ist im RFC6455 definiert und dient der Bidirektionalen Kommunikation zwischen Client und Server. Das Protokoll wird in der Regel durch ein Upgrade von HTTP eröffnet und bietet eine Kommunikation über TCP. Ziel dieses Websocket Protokolles ist, in der Web Technologie (meist Browser oder Mobile Geräte) eine Bidirektionale Kommunikationsschnittstelle bereitzustellen ohne des öfteren einzelne HTTP Verbindungen aufbauen zu müssen (ref.: \cite{The WebSocket Protocol}).
+Hierbei bietet das Websocket Protokoll zum HTTP Protokoll entscheidende Vorteile. Die Kommunikation kann ohne großen Overhead, welcher durch Header und Handshake im Anfrage-Antwort-Zyklus verursacht wird, durchgeführt werden. Der Server kann jederzeit Nachrichten an den Client sowie der Client jederzeit Nachrichten an den Server senden. Die Verbindung im Websocket Protokoll ist persistent. Der durch HTTP sonst verursachte Verbindungsauf- und -abbau entfällt. Ein Theoretischen Vergleich der ist in \cite{Interaktives Monitorsystem zur besonderen medialen Darstellung von Produkten am Point of Sale} zu finden.
+\\ \newline
+Das Websocket Protokoll baut sich in zwei Phasen auf. Dem Aufbau der Verbidnung (Handshake) sowie der Datenübertragung. Wie bereits erwähnt nutzt das Websocket Protokoll eine bestehende HTTP-Verbindung für den Verbindungsaufbau. Dies ist das sogenannte Protokoll "`Upgrade"'. Zunächst eröffnet der Client mit dem ersuchen nach Upgrade bei dem Server den Handshake:
+\begin{verbatim}
+  GET /chat HTTP/1.1
+  Host: server.example.com
+  Upgrade: websocket
+  Connection: Upgrade
+  Sec-WebSocket-Key: somerandomgeneratedkey
+  Origin: http://example.com
+  Sec-WebSocket-Protocol: chat, superchat
+  Sec-WebSocket-Version: 13
+\end{verbatim}
+Der Server antwortet im Erfolgsfall mit einem HTTP 101 Statuscode:
+\begin{verbatim}
+  HTTP/1.1 101 Switching Protocols
+  Upgrade: websocket
+  Connection: Upgrade
+  Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+  Sec-WebSocket-Protocol: chat
+\end{verbatim}
+Nach einem erfolgreichen Handshake ist der Wechsel von HTTP auf das Websocket Protokoll vollzogen und die Kommunikation kann dort beginnen. Das Websocket Protokoll besteht aus Datenframes welche durch Opcodes markiert und auch Fragmentiert werden können.
+\begin{verbatim}
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-------+-+-------------+-------------------------------+
+   |F|R|R|R| opcode|M| Payload len |    Extended payload length    |
+   |I|S|S|S|  (4)  |A|     (7)     |             (16/64)           |
+   |N|V|V|V|       |S|             |   (if payload len==126/127)   |
+   | |1|2|3|       |K|             |                               |
+   +-+-+-+-+-------+-+-------------+ - - - - - - - - - - - - - - - +
+   |     Extended payload length continued, if payload len == 127  |
+   + - - - - - - - - - - - - - - - +-------------------------------+
+   |                               |Masking-key, if MASK set to 1  |
+   +-------------------------------+-------------------------------+
+   | Masking-key (continued)       |          Payload Data         |
+   +-------------------------------- - - - - - - - - - - - - - - - +
+   :                     Payload Data continued ...                :
+   + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+   |                     Payload Data continued ...                |
+   +---------------------------------------------------------------+
+\end{verbatim}
+\begin{itemize}  
+\item FIN (1 Bit): Das Bit wird bei dem letzten Fragment einer Nachricht auf 1 gesetzt.
+\item RSV1, RSV2, RSV3 (je 1 Bit): Reserviert für zukünftige Erweiterungen die so verwendet werden können. Normalerweise sind alle drei RSV Flags auf 0. Ist widererwartend ein Flag auf 1 gesetzt, muss die Verbindung geschlossen werden.
+\item Opcode (4 Bit): Gibt an ob es sich um Daten- oder Kontrollframes handelt. Die Frames welche die tatsächlichen Daten übertragen sind die Datenframes. Hierbei kann es sich um Textdaten oder um Binärdaten handeln. Bei Fragmentierten Daten enthält nur das erste Paket den Opcode und das Fin Bit ist auf 0. Alle weiteren Pakete weisen einen Opcode und Fin von 0 auf. Lediglich das letzte Paket hat das Fin Bit auf 1 gesetzt.\\
+Die Kontrollframes werden unter anderem zum beenden der Verbindung oder zum Prüfen ob die Gegenstelle noch aktiv ist verwendet.
+\item Mask (1 Bit): Verpflichtend für Pakete von Client zum Server. Wenn gesetzt sind die Nutzdaten mit dem Maskierungskey Oktettweise XOR Verknüpft.
+\item Payload len (7 - 64 Bit): Je nach Größe der Nutzdaten wird die Länge dieser in 7-64 Bit dargestellt.
+\item Masking-key (32 Bit): Maskierungskey wenn Mask Bit gesetzt ist.
+\item Payload Data: Die eigentlichen Nutzdaten.
+\end{itemize}
+Viele Funktionen sowohl im Webbrowser als auch auf mobilen Endgeräten sind erst durch das Nachrichten pushen von Server zum Client möglich geworden. Mit dem Websocket Protokoll ist eine voll Bidirektionale Kommunikation möglich. In absehbarer Zeit wird das Websocket-Protokoll andere Server-Push Varianten ablösen. Die Technologie fordert jedoch ein Umdenken. Durch die Nutzung von WebSocket entsteht ein völlig neues Nutzungsmuster für serverseitige Anwendungen. Serverseitig wird nach herkömmlichen Vorgehen für jede Verbindung ein Prozess mit Resourcen belegt, was meist nicht gut mit einer großen Anzahl an Verbindungen funktioniert.
+Skalierbare Lösungen müssen jedoch ereignisgesteuert aufgebaut sein um eine hohe Gleichzeitigkeit an Verbindungen bei möglichst geringen Einbußen der Leistung zu ermöglichen. Solche Architekturen werden meist um Threading oder sogenannte nicht-blockierende IOs konzipiert.
+
+\chapter{WebRTC}
+\label{sec:RTC DataChannel}
+WebRTC (Web-based Real-Time Communications) ist ein Realtime Protokoll welches 2011 von Google veröffentlicht wurde und für die direkt Kommunikation zwischen Client und  Client konzipiert wurde. Noch vor 2011 war eine Web Kommunikation zwischen Client und Server durchdringt. Es existierten nur einige wenige und zum Großteil auch nur Properitäre Protokolle und Ansätze. So mussten extra Erweiterungen auf den Client Rechnern installiert werden welche wiederum meist nur ein bestimmten Browser unterstützte. In größeren Firmen welche oft ein aufwendigen Freigabeprozess für Software vorschreiben kamen weitere Herausforderungen dazu. In solchen Freigabeprozessen muss jede Software zertifiziert, abgenommen und in die Umgebung Integriert werden. Dies ist ein großer Wirtschaftlicher Aufwand und wurde von der Firmen-IT oft abgelehnt. 
+\\Webentwickler konnten bis dahin keine "`jedermann"' Applikationen schreiben welche ohne weiteres Zutun auf Clients läuft. Dies war nur mit erheblichem Aufwand und Know-How auf Entwicklerseite als auch zusätzlichem Aufwand auf Clientseite möglich.
+\\Google entdeckte im Rahmen ihres Hangout Projektes ein Vorgänger des heutigen WebRTC und entwickelte dieses weiter. Auf der Google I/O Konferenz berichtet Justin Uberti, einer der Entwickler über ihr Primäres Ziel: "`Realtime communication into the fabric of the web [...] a open plattform for any application and any device could use to communicate"'\footnote{Justin Uberti, Google I/O 2012}\\
+Das Team erkannte, dass eine Gruppe von Unterstützern und eine Implementierung in allen Browsern nötig war, um die Idee erfolgreich umsetzen zu können. Parallel zu der Entwicklung fanden so auch Gespräche mit anderen Browserherstellern und der Telekommunikationsindustrie statt. Die direkt integrierte Kommunikation, bei welcher kein extra Tool erfordert, word als kontextbezogene oder kontextuelle Kommunikation bezeichnet. \cite{WebRTC Standard für die Web basierte Echtzeitkommunikation}
+\\Spezifiziert wurde das Protokoll mit diesen Partnern von Browserherstellern und aus der Telekommunikationsindustrie im W3C und in IETF Working Groups.
+\bigskip\\Es existieren zwei gängige Implementierungen des WebRTC Protokolls. Das von Google entwickelte als auch das Projekt OpenWebRTC von Ericsson. Der Code beider Implementierungen sind mittlerweile öffentlich. Zunächst war der Fokus die Browser mit dem Protokoll auszustatten. Damit war es für Entwickler möglich ohne durch beherrschen der komplexen Funktionsweise von Echtzeitkommunikation diese zu nutzen. Da die Bidirektionale Echtzeitkommunikation, auch im Zusammenspiel mit Browsern, immer interessanter für andere Anwendungen wurden, existiert zusätzlich eine native C++ Version. Dadurch hat das Protokoll für Zukunft großes Potential. WebRTC  birgt nicht nur für das Web große Potentiale sondern auch für die gesamte Kommunikationsindustrie \footnote{Justin Uberti, Google I/O 2012}
+
+\section{Architektur}
+WebRTC ist für die Übertragung in drei Typen eingeteilt: Video, Audio und Data. In der Webprogrammierung müssen nur noch die Spezifizierte API aufgerufen um so eine oder mehrere der drei Typen zu übertragen. Die Unterscheidung der drei Typen sind lediglich im Codex auf Sender und Empängerseite. Die Übertragung selber unterscheidet sich nicht. 
+ 
+Wesentlich: Übertragung in Echtzeit, nicht wie beispielsweise DASH (Streaming over HTTP).
+
+Übertragung gesichert über DTLS (Datagram Transport Layer Security) [=> DRLS erkären]
+
+Da es sich hier um Direktkommunikation handelt gibt es jedoch einige hindernisse wie Signalisierung, Konnektivitätsprüfung, NAT, Sicherheit, Codecs.
+
+Signalisierung: 
+How the peers find each other? sogenanntes Signalling! nicht im webrtc standard enthalten. Benötigt wird ein messaging service. Clients müssen messages miteinander austauschen (Bidirektional). z.B. WS, XMPP Jingle, Google AppEngine's messaging Protocol oder Komerzielle platformen wie egPusher oder PupNub. Diese haben eine kleinere latenz als RTC selber. so werden nur nötige Infos ausgetauscht um die verbindung mit weniger Latenz aufzubauen.
+
+Der verbindungsanfrage, verbindungsannahme, Verbinsungsaufbau,  Verbindungsende. Aber wie Finden sich die Teilnehmer? Server signaling -> Teilnehmer können in verschiedenen Netzen sein und sich so "`finden"'. Kein spezifiziertes Signalisierungs Protokoll. Kann selbst entschieden werden. Vorteil => entwickler kann dies so einfach wie möglich oder auch Komplexer gestalten. Je nach anforderung. Gängig ist hier jedoch, da wir uns in einem Webmodell aufhalten, eine einfae variante die auf Websockets aufzubauen.
+
+//Tiefergehend beschreiben mit stun etc...
+
+
+
+DataChannel uses SCTP (Stream Control Transmission Protocol) \\1
+WebRTC is becoming the de-facto way to connect two peers in the web \\
+Benötigt signaling infrastructure wie z.B. WS\\
+Wenn STUN (Nat und firewall loch) nicht funktioniert, nutze TURN server.\\
+ca 10-20 prozent der sessions brauchen TURN (http://de.slideshare.net/tsahil/02-tsahibabysteps folie 18) \\
+Mesh vs star topologie \begin{verbatim}(http://de.slideshare.net/vline/a-practical?next_slideshow=1 folie 16)\end{verbatim}
+3 Typen \begin{verbatim}https://www.youtube.com/watch?v=uBV_KKGzNqQ\end{verbatim} 
+\section{Funktion}
+
+
+
+Sicherheit und Datenschutz:
+Web schnittstellen ist einfallstor für angreifer.
+Erste standadisierte Direktkommunikation welche verbeitung findet benötigt entsprechende Sicherheitskonzept da auch zugriff auf Kamera, Bildschirm oder Mikrofon erfolgt. Durch eine bösartige Applikation kann so tief in den Privaten Bereich der Nutzer eingedrungen werden. Das Konzept sieht vor, dass Sender-Browser zunächst das Einverständnis des Empfänger-Browsers einholen muss, bevor er Daten übertragen kann. Abbildung\textit{ \ref{fig:RTC Kommunikationsmodell} \nameref{fig:RTC Kommunikationsmodell}} Dieses Verfahren ist im RFC 7675 dokumentiert.
+
+Nach dem erfolgreichen Aufbau einer Vertrauensbeziehung kann übertragen werden. Auch wenn Politik, Geheimdienste und Verfolgungsbehörden immer öfter dazu aufrufen verschlüsselung abzustellen oder gar hintertüren einzubauen, war dies zu keiner Zeit ein Diskusionspunkt in den Standadisierungs Depatten. Um ein auslesen oder gar manipulieren des Datenstromes zu verhinden, wird standartmäßig mit dem DTLS-SRTP-Verfahren verschlüsselt. 
+
+
+
+\begin{figure}[h]
+\centering
+\begin{varwidth}{\linewidth}
+\begin{verbatim}
+	      Client           |  via Websocket  |         Player        
+	-----------------------|:---------------:|-------------------------
+	creates peerconnection |                 |                         
+	creates datachannel    |                 |                         
+	creates offer          |                 |                         
+	                       |---- offer ----> |                         
+	                       |                 |creates peerconnection   
+	                       |                 |creates datachannel      
+	                       |                 |creates answer with offer
+	                       |<---- answer ----|                         
+	processing Answer      |                 |                         
+	datachannel opens      |                 |datachannel opens 
+\end{verbatim}
+\end{varwidth}
+\caption{RTC Kommunikationsmodell}
+\label{fig:RTC Kommunikationsmodell}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\label{sec:Funktion}
+3 Seiten\\
+
+Ice Candidate, STUN/TUN \\
+Zeitlicher ablaufdiagramm
+
+
+Schichten: Websocket (Basiskommunikation) -> STUN/TUN port-ip für rtc connection -> RTC Channel Direktkommunikation.
+
+
+
+
+   
+
+\section{Vergleich zu Websocket}
+\label{sec:Vergleich zu Websocket}
+1/2 Seite\\
+
+chunked?\\
+peer to peer\\
+
+
+\chapter{Integration}
+\label{cha:chapter}
+Im folgenden wird die Integration in die einzelnen Komponenten erläutert.
+
+//TODO QUELLE?: 
+Integration: Kap 20 \cite{Methoden und Architekturen der Softwaretechnik}
+
+\section{Portal}
+\label{sec:In Portal}
+Für die Entwicklung sowie die Umsetzung der Testmethoden in Kapitel \ref{sec:Anforderungsmanagement} \textit{\nameref{sec:Anforderungsmanagement}} wurde ein Test-Portal eigens für diese Arbeit aufgesetzt. Die Einhaltung der vorher formulierten Kriterien und Indikatoren (Kapitel \ref{sec:Anforderungsmanagement} \textit{\nameref{sec:Anforderungsmanagement}}) kommt mit Voraussetzungen einher. Für das Test-Portal wurde die Äußeren Einflüsse sowie Gegebenheiten des Produktiven Portals berücksichtigt und nahe zu Identisch bei dem Test-Portal vorrausgesetzt. Das heißt, dass die Portale auf dem gleichen Basis Betriebssystem aufsetzen sind und die gleiche Dimensionierung der virtualisierten Hardware-Umgebung zugrunde liegt. Beide Portale sind im selben Schrank (Cluster) des Rechenzentrums untergebracht sowie über den selben Upstream Provider aus dem Internet erreichbar. Die gleichen Voraussetzungen der zwei Portale dienen der Eleminierung von Mess-Fehlern und Stör-variablen. So kann durch objektive Leistungsmessung in Simulationen Werte ermittelt werden. Die Werte dienen als Kriterien der Vergleichbarkeit sowie Evaluation der gewünschten Systemeigenschaften (s. \cite{Usability Engineering} ). \\\\
+Das Portal ist zum Großteil in der Sprache PHP geschrieben und basiert auf dem Laravel Framework. Laravel hat von Haus aus bereits einige Pakete inbegriffen und kann durch den packaging manager Composer um vielerlei externer Pakete erweitert werden. Eine voll integrierte Event und Broadcasting Funktion ist allerdings in einer neueren, zu dem Zeitpunkt nicht eingesetzten Version vorhanden. Ein Update auf eine aktuellere Version wurde bisher nicht fokussiert da einige Änderungen im Framework, vor allem im Eloquent, vorgenommen werden muss. Eloquent, welches ein extrem mächtiges Konzept darstellt, ist verantwortlich die Daten aus der Relationalen Datenbank auszulesen und als PHP Objekte darzustellen. 
+Aufgrund der Laravel eigenen Event und Broadcasting Funktion wurde ein nicht im Projekt eingeplantes Update von Laravel inklusive aufwendiges umschreiben einiger Kern Module vorgenommen. So können jetzt die Framework eigenen Event Funktionen genutzt werden, welche bereits voll integriert sind und auch in Fachliteratur wie \cite{Laravel: Up and Running: A Framework for Building Modern PHP Apps} aufgrund der einfachen Handhabung und Konfigurationsmöglichkeiten als auch der Queueing Funktionalität empfohlen sind.\\ Das Queueing ist ein Konzept um abzuarbeitende Aufgaben in einer "`Warteschlange"', einer Queue, bereitzustellen. Diese werden erst von einem im Hintergrund laufendem Prozess ausgeführt um die Auslieferung von der View o.ä. nicht mit langsamen Aufgaben wie \zB Schreiben auf dem Filesystem oder einem E-Mail versandt unnötig zu verzögern.
+\\Die Event Funktionalität besteht aus einzeln definierten Event Klassen, welche ein Daten Container darstellen. Über einen Konstruktor können Parameter entgegengenommen werden. Mit Implementierung einer Funktion broadcastOn in der jeweiligen Klasse, kann das Event als Broadcast an einen definierten "Channel" gesendet werden. Über welchen Broadcast driver, die Funktionalität ausgeführt wird, lässt sich in der laravel Konfiguration einstellen. Verschiedene Socket Techniken bzw. Verfahren sind hier als driver einsetzbar und werden im laufe dieses Kapitels noch erläutert.
+\\Beim Aufruf eines Events, wird zusätzlich definierte Listener Methoden aufgerufen, welche das Event handeln. \cite{Laravel: Up and Running: A Framework for Building Modern PHP Apps}. 
+Im Portal wurde eine Generische Event Klasse namens PH5Commander implementiert, welche die Basis für jedes Event darstellt. Dieses Event übernimmt durch Implementierung der broadcastOn Funktion die Kommunikation nach außen über den Socket.IO Server mit den PH5 Playern. Darauf aufbauende Events wie \zB eines welches beim Anlegen oder Updaten von Nachrichten im Portal ausgeführt wird, ist durch einen Listener geprägt der die nötigen Informationen aufbereitet und wiederum das Generische PH5Commander Event aufruft.\\
+Der Ablauf  ist schematisch in Abbildung \ref{EventGraph} \textit{\nameref{EventGraph}}  dargestellt. Von seitens des PH5 Players wird eine Verbindung zu einem Channel auf dem Websocket Server aufgebaut. Über die Channel's wird von dem PH5Commander Event Informationen übertragen, welche wiederum in den Event's aufbereitet werden. Channels bieten das Konzept der Datenkapselung um Kundeninahlte auf verschiedenen Kanälen zu trennen. 
+Die Einzelnen Event's werden aus den entsprechenden Controller Klassen aufgerufen. Hierfür wurden vier Kategorien festgelegt welche bei jedem Event mit übermittelt werden und während dem Eventaufruf definiert werden. "`Create"', "`Update"' und "`Delete"', nach dem CRUD Prinzip, als auch "`Restore"'. So kann auf Seite des PH5 Players entsprechende Maßnahmen getroffen werden.
+\begin{center}
+\begin{figure}[!htb]
+\begin{tikzpicture}[node distance = 2cm, auto]
+    % Place nodes
+    \node [cloud] (init) {Controller Schicht};
+    \node [block, below of=init] (event) {News Event};
+    \node [block, left of=event, node distance=3cm] (templateevent) {Template Event};
+    \node [block, left of=templateevent, node distance=3cm] (groupevent) {Group Event};
+    \node [block, right of=event, node distance=3cm] (monitorevent) {Monitor Event};
+    \node [block, right of=monitorevent, node distance=3cm] (appevent) {App Event};
+    \node [block, below of=event] (PH5Commander) {PH5 Commander Event};
+    \node [cloud, below of=PH5Commander] (socketio) {Websocket Server};
+    % Draw edges
+    \path [line] (init) -- (event);
+    \path [line] (init) -- (templateevent);
+    \path [line] (init) -- (groupevent);
+    \path [line] (init) -- (monitorevent);
+    \path [line] (init) -- (appevent);
+    \path [line] (event) -- (PH5Commander);
+    \path [line] (templateevent) -- (PH5Commander);
+    \path [line] (groupevent) -- (PH5Commander);
+    \path [line] (monitorevent) -- (PH5Commander);
+    \path [line] (appevent) -- (PH5Commander);
+    \path [line] (PH5Commander) -- node {Broadcast to Channel} (socketio);
+\end{tikzpicture}
+\caption[Schematischer Ablauf der Event Funktionalität]{Schematischer Ablauf der Event Funktionalität}
+\label{EventGraph}
+\end{figure}
+\end{center} Als Websocket Server wurden drei miteinander konkurrierende Möglichkeiten ermittelt. Eine Websocket-Implementierung in PHP selber, welche sehr nah an der RFC Definition wie in Kapitel \textit{\ref{cha:Websocket} \nameref{cha:Websocket}} beschrieben anlehnt. Zwei weitere Möglichkeiten sind in der Verwendung mit Laravel üblich sowie in der Literatur auch ausführlich erläutert und empfohlen \cite{Laravel: Up and Running: A Framework for Building Modern PHP Apps}. "`Pusher"' ist ein Dienstleister, welcher eine API sowie Bibliotheken für eine Vielzahl an Programmiersprachen bietet. Ohne eigene Infrastruktur kann die WebSocket Kommunikation über Pusher abgewickelt werden. "`socket.io"' ist die dritte Alternative, welche eine JavaScript Implementation aufbauend auf NodeJS darstellt.
+Die Voraussetzung ist, die Technik im Player unter einer Python Umgebung zu implementieren zu können. Dies ist mit allen drei Möglichkeiten gegeben. Die Laravel eigene Implementation der Websocket schnittstelle "`Laravelecho"' bietet diese Möglichkeit nicht. Des weiteren haben Websockets heutzutage oft Probleme, da es noch viele Browser, Proxies und Applikationsserver ohne Unterstützung für WebSockets gibt. Es kann nicht davon ausgegangen werden, dass in jedem Netzwerk die reine Websocket Technik ohne Probleme funktionieren wird. Pusher sowie socket.io bieten automatisch die Möglichkeit auf ein Polling Verfahren zurückzugreifen, sollte der Websocket in dem jeweiligen Netzwerk fehlschlagen. \\Der Betriebswirtschaftliche Faktor war maßgeblich für die Entscheidung der selber betriebenen "`socket.io"' Lösung im gegensatz zu Pusher, welcher Monatlich und je nach Anzahl an Requests abgerechnet wird. Davon ausgehend dass das Unternehmen eine Vielzahl von Requests der einzelnen Installationen vor Ort erhalten wird, ist die Wahl des selfhosted "`socket.io"' unumgänglich. Gleichzeitig bietet sich hier die Möglichkeit die Logik sowie den Ablauf des Requests und der Response zu überwachen und ggf. anzupassen.
+\bigskip \\Der auf Basis von NodeJS laufenden socket.io Server kommuniziert über Redis, einer In-Memory Key-Value Datenbank, mit der Laravel Umgebung des Portales. Diese Datenbank dient als "`Puffer"' zwischen diesen zwei Komponenten. Lange Wartezeit oder gar ein Dilemma in Form von einem Deadlock verhalten bei dem sich socket.io und Laravel gegenseitig blockieren ist somit gelöst.
+\\Der socket.io Server stellt für die Kommunikation zu den Playern ein Channel verfahren bereit. Nach einer erfolgreichen Verbindung zum Websocket muss sich der Player zu einem Channel verbinden. Dies geschieht nicht über eine übliche Authentifizierung da die Player selbst schon eine eineindeutigen UUID besitzen. Somit wird ein Toakenverfahren angewendet bei dem sich die Player mit ihren Toaken, der UUID, für den jeweiligen Channel Authentifizieren. Über diese Channel können Informationen ausgetauscht werden. Dieses Prinzip der Channel bietet den Vorteil Daten nicht über einen Broadcast an alle Verbundenen Geräte des Websocketservers versenden zu müssen. Daten werden nur an die Empfänger gesendet für welche auch die Daten bereit gestellt werden.
+\bigskip\\Die Basis für eine Direktkommunikation zwischen Client und Player ist durch diesen Websocket ebenfalls gegeben, da hierüber Informationen ausgetauscht werden können um auf ein Protokoll wie WebRTC upgraden zu können.
+
+\section{Player}
+\label{sec:In Player}
+Der Player ist in der Programmiersprache Python entwickelt und baut für die Anzeige auf das Chromium Framework auf. Die Kommunikation mit dem Portal als auch das Managen der Daten ist in der Basis des Players integriert und somit in Python Programmiert. Die Echtzeitkommunikation muss somit auch in Pyhton realisiert werden. Dies Impliziert, dass die Protokolle in Python unterstützt werden bzw. hierfür Libraries existieren und kann nicht in der Webbasierten Laravel eigenen Websocket Implementation "`Echo"' umgesetzt werden. Nach Recherchen existiert sowohl für socket.io als auch WebRTC eine Möglichkeit zur Umsetzung in Python.
+
+\begin{itemize}
+\item \textbf{socket.io}: \\
+Eine unter der MIT Lizenz stehende Python Client Implementation ist in Github zu finden. Diese wird offen von einer Community entwickelt. Unter anderem sind auch Entwickler beteiligt welche bei dem socket.io selber auch involviert sind.
+\item \textbf{WebRTC}: \\
+WebRTC ist federführend durch Google offen entstanden. Der Native-Code ist von Google in ihrem öffentlichen Git \footnote{https://chromium.googlesource.com/external/webrtc} bereit gestellt. Bisher wurde diese WebRTC Basis nur in gängigen Browser voll implementiert. Einzelne nicht finalisierte Projekte sind in Foren und auf Github zu finden.
+\\Neben der von Google entwickelten Implementation existiert ein Open Source Projekt Namens OpenWebRTC \footnote{https://www.openwebrtc.org/} von Ericsson Research. In diesem Projekt sind jedoch noch nicht alle Funktionen voll Implementiert. \\\\Eine Implementation auf Basis eines dieser zwei Projekte wäre in der Theorie möglich.
+\end{itemize} 
+Die Implementation in den Existierenden Player konnte nicht umgesetzt werden. Eine Umsetzung, Einarbeitung oder Unterstützung konnte aufgrund von Zeitmangel von dem Entwickler des Players nicht erfolgen. \\Durch diese Umstände wurde ein Dummy Player in Python Programmiert welcher die grundlegende Kommunikation mit dem Portal unterstützt. Der Dummy Player baut eine WebSocket Verbindung mit Hilfe der socket.io Python Library \footnote{https://github.com/invisibleroads/socketIO-client} zum Portal auf. Nach erfolgreicher Verbindung registriert der Dummy-Player sich mit seiner UUID am entsprechenden Channel. Über diesen Channel bekommt der Dummy-Player alle für ihn nötigen Infos und Events. Der Dummy-Player stellt die Empfangenen Daten lediglich in einem Konsolenfenster dar ohne tatsächliche Aktionen am Player auszuführen. \\Mit dem PyInstaller\footnote{http://www.pyinstaller.org/} wurde eine ausführbare exe Datei generiert um den Dummy-Player für die Auswertung entsprechend auf den InstoreTV's zusätzlich zu dem bisherigen Player zu Installieren.
+
+\section{Mobile Device}
+\label{sec:In Mobile Device}
+
+
+
+
+
+2 Seiten \\
+Phonegapp / cordova prototype?
+\\erstellen einer "`fernbedienung"' und aktivieren deaktivieren von Nachrichten
+\\mit webrtc direktkommunikation und Medient anziegen oder sogar livestream von Bildschrim oder Kamera
+
+\section{Auswertung}
+\label{sec:Auswertung}
+Für die Auswertung wurde der Dummy Player (\textit{\ref{sec:In Player} \nameref{sec:In Player}}) zusätzlich zu dem schon laufendem Player auf rund 200 InstoreTV Rechner installiert und ausgeführt. Der Dummy Player hatte sich über den Websocket zu dem im Rahmen dieser Arbeit entstandenem Testportal (\textit{\ref*{sec:In Portal} \nameref{sec:In Portal}}) verbunden. In Abhängigkeit von dem Testzeitraum waren bei den Messungen zwischen 150 und 200 Verbindungen zu dem Websocket auf dem Testportal geöffnet.
+\\Die Anforderung der weichen Echtzeitkommunikation wurde auf seitens des Portales erreicht. Zu jeder Zeit war die Kommunikation bidirektional unter fünf Sekunden mit dem Dummy Player. Wie in \ref{sec:In Player} \nameref{sec:In Player} ausgeführt konnte die vollständige Integration in den Player nicht erfolgen.
+\\Die Auswertung der Performance Verbesserung wurde mittels Aufzeichnung der TCP Pakete durchgeführt. Wie in der Analyse des \ref{sec:Anforderungsmanagement} \Nameref{sec:Anforderungsmanagement} wurden die Pakete durch
+\begin{lstlisting}
+tcpflow port 80 -i eth0
+\end{lstlisting} zeitgleich sowohl auf dem Test-Portal als auch dem Produktiv-Portal aufgezeichnet. Die Auswertungen wurden sowohl auf dem Produktiv als auch Test -Portal parallel durchgeführt. Jede Auswertung hatte verschiedene Umgebungsvoraussetzungen um die Plausibilität als auch die Verbesserung in den jeweiligen Kriterien einzeln auszumachen. Wenn Veränderungen oder Reaktionen auf seitens der Portale notwendig waren, wurden diese immer sowohl auf dem Test-Portal als auch auf dem Produktiv-Portal identisch vorgenommen. So konnte eine vergleichbare Auswertung auf Basis der zwei Techniken von Polling und Websocket Verfahrens durchgeführt werden.
+\begin{itemize}
+\item \textbf{Kein Nutz-Traffic}: \\
+In der Auswertung ohne Nutz-Traffic wurde sichergestellt, dass im Portal keinerlei Änderungen auftreten. Somit ist der reine Overhead durch das Polling Verfahren verdeutlicht da keinerlei neue Daten an den Player übertragen wurden. Über das Polling-Verfahren wurden 49828 Pakete mit einer Gesamtgröße von 192078428 Bytes übertragen. Bei dem Websocket-Verfahren wurde hingegen mit 376 Paketen nur die Verbindung aufgebaut und vereinzelt "`keep alive pakete"' empfangen. Daraus folgt eine Linear anwachsende Optimierung auf die Zeit. Um so länger eine Aufzeichnung statt findet um so größer ist die Optimierung. Die aufgezeichneten Daten des Websocket-Verfahrens summierten sich zu einer Summe von insgesamt 156468 Bytes. Somit ist der Websocket-Anteil 0,081460 \% dessen des Polling-Verfahrens. Daraus lässt sich eine Optimierung von 99.918540 \% in dieser Auswertung durch das Websocket-Verfahren ableiten. Dies kann als ein großer Erfolg gewertet werden, da im Portal tatsächlich nur sporadisch tatsächlich Änderungen stattfinden. Eine Optimierung zum Großteil der Zeit ist somit schon gewährleistet.
+
+\item \textbf{Eine neue Nachricht - Broadcast an alle InstoreTV's}: \\
+Die Auswertung mit einer erstellten Nachricht und einer Broadcast Nachricht an alle InstoreTV's über Websocket muss mindestens eine Minute andauern, dass so die InstoreTV's über das Polling-Verfahren auch die neue Nachricht übertragen bekommen. Die Anzahl der Requests waren im Polling-Verfahren 1166 und einer Gesamtgröße von 1492183 Bytes größer wie des Websocket-Verfahrens mit 252 und einer Größe von 167232 Bytes. Dies ergibt eine Optimierung von 88,792796 \%.
+In der Grafik \textit{\ref{fig:RequestwithRauschen_broadcast} \nameref{fig:RequestwithRauschen_broadcast}} ist ein Ausschnitt der InstoreTV's mit den jeweiligen Paketgrößen dargestellt. Durch das Box Plot wird die Größe eines Paketes im Mittel pro InstoreTV wiedergegeben. Im Gesamtdurchschnitt macht der Websocket 11,207204 des Polling-Verfahrens aus. 
+
+\begin{figure}[h]
+ \begin{addmargin}{-0.2\linewidth}
+   \centering 
+   \includegraphics[width=20cm]{Bilder/RequestwithRauschen_broadcast.png}
+ \end{addmargin} 
+ \caption{Requests Vergleich bei einer News über Broadcast}
+ \label{fig:RequestwithRauschen_broadcast}
+\end{figure}
+
+\item \textbf{Eine neue Nachricht - Channel, nur an entsprechende InstoreTV's}: \\
+Das Verfahren des vorherigen Punktes mit Broadcast an alle InstoreTV's konnte durch Brücksichtigung des Empfängers der Daten noch weiter optimiert werden. Jeder InstoreTV hat einen eigenen Kanal im Websocket. So werden die Daten nur an die Entsprechenden InstoreTV's über diese Kanäle versendet. Durch dieses Konzept wurde im Vergleich Polling-Verfahren mit 2200 Requests und 2756648 Byten zu dem Websocket-Verfahren mit 781 Requests und 234996 Bytes eine Optimierung von 91,475299 \% erreicht. 
+\\In der Grafik \textit{\ref{fig:RequestwithRauschen_channel} \nameref{fig:RequestwithRauschen_channel}} ist der Unterschied ersichtlich.
+\\Dies sind mit 8.524701 \% im relativen Vergleich mit dem Polling-Verfahren 2,682503 \% Verbesserung zum Broadcasting (11,207204 \%).
+
+\begin{figure}[h]
+ \begin{addmargin}{-0.2\linewidth}
+   \centering 
+   \includegraphics[width=20cm]{Bilder/RequestwithRauschen_channel.png}
+ \end{addmargin} 
+ \caption{Requests Vergleich bei einer News über seperierte Channel}
+ \label{fig:RequestwithRauschen_channel}
+\end{figure}
+
+\item \textbf{Eine neue Nachricht - Isolierte Betrachtung eines InstoreTV}: \\
+Bei der isolierten Betrachtung eines einzelnen InstoreTV's mit Nutztraffic von einer erstellten Nachricht wurden im Polling-Verfahren 36 Pakete mit 38889 Bytes aufgezeichnet. Wie in der Grafik \textit{\ref{fig:OnlyRequestCompare} \nameref{fig:OnlyRequestCompare}} zu sehen ist liegt dies deutlich über dem  Websocket Verfahren mit 2 Paketen mit einer Größe von 2800 Bytes. Dies ist eine Steigerung der Dateneffizienz von 92.800021\%
+
+\begin{figure}[h]
+ \begin{addmargin}{-0.2\linewidth}
+   \centering 
+   \includegraphics[width=20cm]{Bilder/OnlyRequestCompare.png}
+ \end{addmargin} 
+ \caption{Requests einer News mit einem InstoreTV}
+ \label{fig:OnlyRequestCompare}
+\end{figure}
+
+\end{itemize} \bigskip In den Phasen mit last wurde eine Einsparung der Übertragenen Daten von über 90\% erreicht. In den Phasen ohne Last, in welchen keinerlei Daten mit Informationsgehalt übertragen werden, ist sogar eine Einsparung von über 99\% erreicht worden. Somit wurden die Anforderungen sowohl der Echtzeitkommunikation als auch der Erwartungswert von 25\% der optimierten Übertragung erfüllt und übertroffen.
+
+
+
+
+
+
+
+
+\newpage
+\chapter{SAMMLUNG - REMOVE}
+\label{sec:New Section}
+
+	-> direkte Kommunikation? (Hole-Punching-Techniken aus STUN und TURN)	
+	
+\textbf{Zeitplan und Themen}\\
+\begin{itemize}
+\item bis 02.06 (6h) Test Portal erstellen
+\item bis 07.07 (40h) WS in Portal mit separierten Chanel und security Berücksichtigung
+\item bis 07.07 (6h) Dummy Python Player
+\item bis 21.07 (12h) Dummy Player (600 Stück) Simulation -> Portal Beschuss und Vergleich zu jetzigen Pollingsituation
+\item bis 04.08 (10h) Dummy Control -> Android, Web?
+\\\sout{implementierung Player}
+\\Implementierung Mobile Device
+\\Reflektion
+\\Aussicht
+\\\sout{websocket}
+\\webrtc
+\item 14.09 Abgabe inc. Gutachten
+\end{itemize}
+
+
+
+Webrtc datachannel python: https://webrtcmagazine.wordpress.com/2015/09/30/librtcdc-tiny-webrtc-datachannel-implementation/ \\
+Janus WebRTC Gateway (to big, komplett auf server...) https://github.com/meetecho/janus-gateway
+RTC Dtachannel- RTC Peerconnection - WebRTC audio/video mediadata... \begin{verbatim}https://www.youtube.com/watch?v=uBV_KKGzNqQ\end{verbatim}
+
+	
