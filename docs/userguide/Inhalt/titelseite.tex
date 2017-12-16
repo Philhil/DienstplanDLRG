@@ -1,0 +1,57 @@
+\thispagestyle{plain}
+\begin{titlepage}
+\enlargethispage{4.0cm}
+%\sffamily 								% Serifenlose Grundschrift für die Titelseite einstellen
+
+\begin{tikzpicture}[remember picture,overlay]%
+	\node (nw) at (current page.north west) {};
+	\node [xshift=0.2\paperwidth] (ne) at (nw) {};
+	\node (sw) at (current page.south west) {};
+	\node [xshift=0.2\paperwidth] (se) at (sw) {};
+
+	% Farbiges Feld links
+	%\filldraw[fill=yellow!90!black, draw=yellow!90!black] (nw) rectangle (se);
+	\node (bard) at (nw) [anchor=north west,fill=red,minimum width=0.2\paperwidth,minimum height=\paperheight] {};
+
+	% DLRG Wortmarke
+	\node [anchor=north west,yshift=-2.5cm] at (bard.north west) {%
+		\includegraphics[width=0.185\paperwidth]{Bilder/DLRG-GELB.png}%
+	};
+	
+	
+	% Textfeld TOP
+	\node (ovretext) [anchor=north west,align=left,yshift=-2.5cm,xshift=12pt,font=\sffamily] at (bard.north east) {%
+		\ovretextfalt%
+	};
+
+	% Grafik mitte
+	\node [anchor=north west,yshift=-2cm] at (ovretext.center) {%
+		\includegraphics[height=8cm]{Bilder/DienstplanDLRG_Kalender.png}%
+	};
+
+	% Titel
+	\node (titel) [anchor=north west,yshift=-7cm+-2cm,align=left,text width=0.6\paperwidth,font=\LARGE\sffamily] 
+		at (ovretext.south west) {%
+		\textbf{\titel}%
+	};
+
+	% Untertitel
+	\node (undertitel) [anchor=north west,yshift=-6pt,align=left,text width=0.6\paperwidth,font=\large\sffamily] 
+		at (titel.south west) {%
+		\untertitel%
+	};
+
+	% Author
+	\node (forfattare) [anchor=south west,yshift=4cm,xshift=12pt,align=left,font=\sffamily] 
+		at (bard.south east) {%
+		Authoren: \autor%
+	};
+	
+	% Logo unten rechts
+	\node (logo) [anchor=south east,xshift=-18pt,yshift=18pt] at (current page.south east) {%
+		\includegraphics[width=0.2\paperwidth]{Bilder/Logo-B-Schwarz.png}%
+	};
+\end{tikzpicture}
+
+\end{titlepage}
+\rmfamily
