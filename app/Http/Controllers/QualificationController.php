@@ -53,7 +53,14 @@ class QualificationController extends Controller
      */
     public function store(StoreQualification $request)
     {
-        Qualification::updateOrCreate($request->only('id'), $request->except(['id']));
+        if($request->has('id')) {
+            $quali = Qualification::findOrFail($request->only('id'))->first();
+            $quali->fill($request->except(['id']));
+            $quali->save();
+        } else {
+            $quali = new Qualification($request->except(['id']));
+            $quali->save();
+        }
 
         return redirect(action('QualificationController@index'));
     }
