@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Mail\ServicesList;
 use App\Service;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class SendServicePDF extends Command
