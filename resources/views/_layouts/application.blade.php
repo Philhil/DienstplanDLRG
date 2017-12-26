@@ -55,9 +55,6 @@
     <!-- Custom Js -->
     <script src="/js/admin.js"></script>
 
-    <!-- Demo Js -->
-    <script src="/js/demo.js"></script>
-
     <!-- Bootstrap Notify Plugin Js -->
     <script src="/plugins/bootstrap-notify/bootstrap-notify.js"></script>
 
