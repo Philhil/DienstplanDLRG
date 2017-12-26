@@ -61,6 +61,18 @@ class PositionController extends Controller
     }
 
     /**
+     * Unubscripe a Position.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function unsubscribe($id)
+    {
+        PositionCandidature::where(['position_id' => $id, 'user_id' =>  Auth::user()->id])->forceDelete();
+        return $id;
+    }
+
+    /**
      * Authorize a Position.
      *
      * @param  int  $id

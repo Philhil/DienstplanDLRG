@@ -64,10 +64,10 @@
                                             </span>
                                             {{-- user has a Candidature for that pos --}}
                                         @elseif(\Illuminate\Support\Facades\Auth::user()->hascandidate($position->id))
-                                            <button type="button" class="btn bg-orange waves-effect btn-subscribe" positionid="{{$position->id}}" disabled><i class="material-icons">check_circle</i>
-                                                bereits gemeldet
+                                            <button type="button" class="btn bg-orange waves-effect btn-unsubscribe" positionid="{{$position->id}}"><i class="material-icons">check_circle</i>
+                                                Meldung zurückziehen
                                             </button>
-                                            {{-- Has user this qualification? and Has user already a Position at this service --}}
+                                            {{-- Has user this qualification? and Has user NOT already a Position at this service --}}
                                         @elseif(\Illuminate\Support\Facades\Auth::user()->hasqualification($position->qualification()->first()->id) && !$service->hasUserPositions(Auth::user()->id))
                                             <button type="button" class="btn bg-deep-orange waves-effect btn-subscribe" positionid="{{$position->id}}"><i class="material-icons">touch_app</i>
                                             @if($service->hastoauthorize) Melden
@@ -101,7 +101,7 @@
 @section('post_body')
     <script>
         $( document ).ready(function() {
-            $('.btn-subscribe').on('click', function () {
+            $('.container-fluid').on('click', '.btn-subscribe', function () {
                 $.ajax({
                     type: "POST",
                     url: '/position/'+$(this).attr('positionid')+'/subscribe',
@@ -120,8 +120,30 @@
                             if (data.user_id == "null") {
                                 $(tr).html('<span class="badge bg-light-green">{{substr(\Illuminate\Support\Facades\Auth::user()->first_name, 0, 1)}}. {{\Illuminate\Support\Facades\Auth::user()->name}}</span>');
                             } else {
-                                $(tr).html('<button type="button" class="btn bg-orange waves-effect btn-subscribe" positionid="7" disabled=""><i class="material-icons">check_circle</i>bereits gemeldet</button>');
+                                $(tr).html('<button type="button" class="btn bg-orange waves-effect btn-unsubscribe" positionid="'+data.id+'"><i class="material-icons">check_circle</i>Meldung zurückziehen</button>');
                             }
+                        }
+                    }
+                });
+            });
+
+            $('.container-fluid').on('click', '.btn-unsubscribe', function () {
+                $.ajax({
+                    type: "POST",
+                    url: '/position/'+$(this).attr('positionid')+'/unsubscribe',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success : function(pos_id){
+                        if (pos_id == "false") {
+                            showNotification("alert-warning", "Fehler beim speichern der Zuordnung", "top", "center", "", "");
+                        } else {
+                            showNotification("alert-success", "Meldung zurückgenommen", "top", "center", "", "");
+
+                            tr = $(".btn-unsubscribe[positionid="+pos_id+"]").parent();
+                            $(".btn-unsubscribe[positionid="+pos_id+"]").remove();
+
+                            $(tr).html('<button type="button" class="btn bg-deep-orange waves-effect btn-subscribe" positionid="'+pos_id+'"><i class="material-icons">touch_app</i>Melden</button>');
                         }
                     }
                 });
