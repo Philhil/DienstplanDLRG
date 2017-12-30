@@ -23,7 +23,7 @@
             <li class="{{active('home')}}">
                 <a href="{{ action('HomeController@index') }}">
                     <i class="material-icons">home</i>
-                    <span>Home</span>
+                    <span>Dashboard</span>
                 </a>
             </li>
             <li class="{{active('service.index')}}">
