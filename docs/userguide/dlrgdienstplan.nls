@@ -4,9 +4,15 @@
 
   \item [{CI}]\begingroup Corporate Identity \nomeqref {0.0}
 		\nompageref{1}
+  \item [{Dienst}]\begingroup Eine Freiwilligenarbeit in der DLRG für eine definierte Zeit. Meist im Wasserrettungsdienst oder Freibad. Der Dienst definiert wann und eventuell wie lange und wo die Freiwilligearbeit zu tätigen ist. Ein Dienst enthält eine oder mehrere zu besetzende Positionen.\nomeqref {0.0}
+		\nompageref{1}
   \item [{GUI}]\begingroup Grafische Benutzeroberfläche oder auch grafische Benutzerschnittstelle (graphical user interface) \nomeqref {0.0}
 		\nompageref{1}
   \item [{ORM}]\begingroup Objektrelationale Abbildung (object-relational mapping) \nomeqref {0.0}
+		\nompageref{1}
+  \item [{Position}]\begingroup Eine zu besetzende Freiwillgearbeit mit vordefinierten vorraussetzungen wie Wissen und Können (Qualifikation). Eine Position ist immer einem Dienst zugeordnet.\nomeqref {0.0}
+		\nompageref{1}
+  \item [{Qualifikation}]\begingroup Ein definiertes Wissen und Können welches meist durch Besuchen von Lehrgängen und Fortbildungen in der DLRG erlangt werden kann.\nomeqref {0.0}
 		\nompageref{1}
   \item [{RWD}]\begingroup (Responsive Web Design) Die Größe und Auflösung der Displays auf Laptops, Desktop-PCs, Tablets und Smartphones können erheblich variieren. Aus diesem Grund sind das Erscheinungsbild und die Bedienung einer Website stark abhängig vom Endgerät. Aufgrund dessen werden Webseiten mit einem Design ausgestattet welches sich auf die unterschiedlichen Anforderungen der Endgeräte anpassen. \cite{Responsive_Webdesign} \nomeqref {0.0}
 		\nompageref{1}
