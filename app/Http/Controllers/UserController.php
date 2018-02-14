@@ -80,7 +80,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (Auth::user()->can('administration') && Auth::user()->id != $id)
+        if (Auth::user()->isAdmin() && Auth::user()->id != $id)
         {
             $user = User::findorFail($id);
             $user->fill($request->except(['id', '_token', 'password']));
@@ -113,7 +113,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        if(!Auth::user()->can('administration')) {
+        if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 
@@ -123,7 +123,7 @@ class UserController extends Controller
 
     public function approve_user($id)
     {
-        if(!Auth::user()->can('administration')) {
+        if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 
