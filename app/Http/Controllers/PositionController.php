@@ -50,8 +50,13 @@ class PositionController extends Controller
                     }
                 }
                 else {
-                    $positionCandidature = \App\PositionCandidature::Create(['user_id' => Auth::user()->id, 'position_id' => $position->id]);
-                    event(new NewPositioncandidature($positionCandidature));
+                    //check if user is already Candidate
+                    if (PositionCandidature::where(['user_id' => Auth::user()->id, 'position_id' => $position->id])->count() == 0) {
+                        $positionCandidature = \App\PositionCandidature::Create(['user_id' => Auth::user()->id, 'position_id' => $position->id]);
+                        event(new NewPositioncandidature($positionCandidature));
+                    } else {
+                        return "false";
+                    }
                 }
                 return $position;
             }
