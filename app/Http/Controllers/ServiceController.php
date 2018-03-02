@@ -20,15 +20,19 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        if(Auth::user()->can('administration'))
+        if(Auth::user()->isAdmin())
         {
             $services = Service::where('date','>=', DB::raw('CURDATE()'))->orderBy('date')->with('positions.qualification')->with('positions.user')->with('positions.candidatures')->with('positions.candidatures.user')->get();
         } else
         {
-            $services = Service::where('date','>=', DB::raw('CURDATE()'))->orderBy('date')->with('positions.qualification')->with('positions.user')->with('positions.candidatures')->get();
+            $services = Service::where('date','>=', DB::raw('CURDATE()'))->orderBy('date')->with('positions.qualification')->with('positions.user')->with('positions.candidatures')->with(['positions.candidatures.user'=> function ($query) {
+                $query->where('id', '=', Auth::user()->id);
+            }])->get();
         }
 
-        return view('service.index', compact('services'));
+        $user = User::where('id', '=', Auth::user()->id)->with('qualifications')->first();
+        
+        return view('service.index', compact('services', 'user'));
     }
 
     /**
@@ -38,7 +42,7 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        if(!Auth::user()->can('administration')) {
+        if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 
@@ -66,7 +70,7 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        if(!Auth::user()->can('administration')) {
+        if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 
@@ -117,7 +121,7 @@ class ServiceController extends Controller
      */
     public function edit($id)
     {
-        if(!Auth::user()->can('administration')) {
+        if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 
@@ -137,7 +141,7 @@ class ServiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(!Auth::user()->can('administration')) {
+        if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 
@@ -179,7 +183,7 @@ class ServiceController extends Controller
      */
     public function destroy($id)
     {
-        if(!Auth::user()->can('administration')) {
+        if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 
@@ -190,6 +194,10 @@ class ServiceController extends Controller
 
     public function delete($id)
     {
+        if(!Auth::user()->isAdmin()) {
+            abort(402, "Nope.");
+        }
+
         return $this->destroy($id);
     }
 }
