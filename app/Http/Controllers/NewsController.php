@@ -27,7 +27,7 @@ class NewsController extends Controller
      */
     public function create()
     {
-        if(!Auth::user()->can('administration')) {
+        if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 
@@ -43,7 +43,7 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-        if(!Auth::user()->can('administration')) {
+        if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 
@@ -74,7 +74,7 @@ class NewsController extends Controller
      */
     public function edit($id)
     {
-        if(!Auth::user()->can('administration')) {
+        if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 
@@ -91,7 +91,7 @@ class NewsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(!Auth::user()->can('administration')) {
+        if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 
@@ -111,7 +111,7 @@ class NewsController extends Controller
      */
     public function destroy($id)
     {
-        if(!Auth::user()->can('administration')) {
+        if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 

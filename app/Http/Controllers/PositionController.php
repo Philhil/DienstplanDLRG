@@ -126,7 +126,7 @@ class PositionController extends Controller
      */
     public function deauthorizePos($id)
     {
-        if(!Auth::user()->can('administration')) {
+        if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 

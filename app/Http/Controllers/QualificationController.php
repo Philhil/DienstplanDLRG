@@ -15,7 +15,7 @@ class QualificationController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if(!Auth::user()->can('administration')) {
+            if(!Auth::user()->isAdmin()) {
                 abort(402, "Nope.");
             }
 

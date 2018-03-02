@@ -16,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        if(!Auth::user()->can('administration')) {
+        if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 
