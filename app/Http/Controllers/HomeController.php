@@ -33,7 +33,7 @@ class HomeController extends Controller
         $positions_free = Position::where('user_id', '=', null)->join('services', 'positions.service_id', '=', 'services.id')
             ->where('services.date', '>=', DB::raw('CURDATE()'))->count();
         $top_users = Position::where('user_id', '!=', null)->with('user')->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))->selectRaw('user_id, count(*) as aggregate')->groupBy('user_id')->get();
+            ->where('services.date', '<', DB::raw('CURDATE()'))->selectRaw('user_id, count(*) as aggregate')->groupBy('user_id')->limit(10)->get();
 
         return view('home.index', compact('positions_user_past', 'positions_total_past', 'positions_free', 'top_users'));
     }
