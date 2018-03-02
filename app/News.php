@@ -15,4 +15,9 @@ class News extends Model
     protected $dates = [
         'create_at',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

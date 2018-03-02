@@ -6,6 +6,7 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "doctrine/dbal": "^2.5",
         "hisorange/browser-detect": "^3.1",
         "laravel/framework": "5.5.*",
         "laravel/socialite": "^3.0",
