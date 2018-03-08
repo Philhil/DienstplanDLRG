@@ -12,13 +12,13 @@
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
                         <i class="material-icons">notifications</i>
-                        <span class="label-count">{{\Illuminate\Support\Facades\Auth::user()->authorizedpositions()->count()}}</span>
+                        <span class="label-count">{{\Illuminate\Support\Facades\Auth::user()->authorizedpositions_future()->count()}}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <li class="header">Zukünftige Dienste von <br>{{\Illuminate\Support\Facades\Auth::user()->first_name}} {{\Illuminate\Support\Facades\Auth::user()->name}}</li>
                         <li class="body">
                             <ul class="menu">
-                                @foreach(\Illuminate\Support\Facades\Auth::user()->authorizedpositions()->get() as $position)
+                                @foreach(\Illuminate\Support\Facades\Auth::user()->authorizedpositions_future()->get() as $position)
                                 <li>
                                     <a href="javascript:void(0);">
                                         <div class="icon-circle bg-green">

@@ -73,4 +73,9 @@ class User extends Authenticatable
         return $this->hasMany(Position::class)->join('services', 'positions.service_id', '=', 'services.id')
             ->orderBy('services.date')->with('qualification');
     }
+
+    public function authorizedpositions_future()
+    {
+        return $this->authorizedpositions()->where('services.date','>=', DB::raw('CURDATE()'));
+    }
 }
