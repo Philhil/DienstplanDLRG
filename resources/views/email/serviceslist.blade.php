@@ -40,7 +40,7 @@
                     <?php $positionswithqualification = $service->positionwithQualification($qualification->id)->with('user')->get()  ?>
 
                     <td class="{{$positionswithqualification->isEmpty() ? "nopos" : ""}}">
-                        @foreach($service->positionwithQualification($qualification->id)->with('user')->get() as $position)
+                        @foreach($positionswithqualification as $position)
                             <div class="{{is_null($position->user_id) ? "notassigned" : ""}}">
                             @if(is_null($position->user_id))
                                     -

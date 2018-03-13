@@ -12,9 +12,6 @@ class WachplanToMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $tableheader;
-    public $services;
-
     /**
      * Create a new message instance.
      *
@@ -22,9 +19,6 @@ class WachplanToMail extends Mailable
      */
     public function __construct()
     {
-        $this->tableheader = \App\Qualification::where('isservicedefault', true)->get();
-        //get all services of next 2 month
-        $this->services = \App\Service::where([['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)]])->orderBy('date')->with('positions.qualification')->get();
     }
 
     /**
@@ -34,9 +28,13 @@ class WachplanToMail extends Mailable
      */
     public function build()
     {
+        $tableheader = \App\Qualification::where('isservicedefault', true)->get();
+        //get all services of next 2 month
+        $services = \App\Service::where([['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)]])->orderBy('date')->with('positions.qualification')->get();
+
         return $this->subject('Wachplan MES')->view('email.serviceslist')->with([
-            'tableheader' => $this->tableheader,
-            'services' => $this->services,
+            'tableheader' => $tableheader,
+            'services' => $services,
         ]);
     }
 }
