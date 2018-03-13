@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Position;
+use App\PositionCandidature;
 use App\Qualification;
 use App\Service;
 use App\User;
@@ -151,24 +152,53 @@ class ServiceController extends Controller
         $service->hastoauthorize = $request->get('hastoauthorize');
         $service->save();
 
-        //Delete all Positions and recreate 
-        Position::where('service_id', '=', $id)->forceDelete();
+        //set changes and delete potential candidatures
         if ($request->get('qualification')) {
             $qualifications = $request->get('qualification');
             $users = $request->get('user');
             $position_comment = $request->get('position_comment');
-            for ($i = 0; $i < count($qualifications); $i++ ) {
-                $position = new Position();
-                $position->service_id = $service->id;
-                $position->qualification_id = $qualifications[$i];
-                if ($users[$i] == "null") {
-                    $position->user_id = null;
-                } else {
-                    $position->user_id = $users[$i];
-                }
-                $position->comment = $position_comment[$i];
+            $positions = $request->get('position');
 
-                $position->save();
+            //remove deleted positions (with candidatures)
+            foreach ($request->get('delete_position') as $delete_position) {
+                if ($delete_position >= 0) {
+                    PositionCandidature::where('position_id', $delete_position)->forceDelete();
+                    Position::where('id', $delete_position)->forceDelete();
+                }
+            }
+
+            //are there changed positions
+            for ($i = 0; $i < count($qualifications); $i++ ) {
+                $pos = Position::findOrFail($positions[$i]);
+
+                //just security reasons -> no manipulation of foreign positions
+                if ($pos->service_id == $id){
+
+                    //null and "null" compare problem :(
+                    $user_id = $pos->user_id;
+                    if (is_null($pos->user_id))
+                    {
+                        $user_id = "null";
+                    }
+
+                    //changed qualification and not null?
+                    //changed user?
+                    //changed comment?
+                    if (($pos->qualification_id != $qualifications[$i] && !empty($qualifications[$i])) ||
+                        $user_id != $users[$i] ||
+                        strcmp($pos->comment, $position_comment[$i]) != 0)
+                    {
+                        $pos->qualification_id = $qualifications[$i];
+                        $pos->user_id = $users[$i];
+                        $pos->comment = $position_comment[$i];
+                        $pos->save();
+
+                        //user not null? -> remove all cadidates of this pos
+                        if (!is_null($pos->user_id)) {
+                            PositionCandidature::where('position_id', '=', $pos->id)->forceDelete();
+                        }
+                    }
+                }
             }
         }
 

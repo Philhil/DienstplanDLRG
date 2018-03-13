@@ -65,8 +65,10 @@
             <tbody>
             @if(isset($positions) && $positions instanceof \Illuminate\Database\Eloquent\Collection)
                 @foreach($positions as $position)
-                    <tr>
-                        <td><select class="bootstrap-select show-tick" data-live-search="true" name="qualification[]">
+                    <tr pos_id="{{$position->id}}" class="strikeout">
+                        <td>
+                            {{Form::hidden('position[]',$position->id)}}
+                            <select class="bootstrap-select show-tick" data-live-search="true" name="qualification[]">
                                 @foreach($qualifications as $qualification)
                                     <option value="{{$qualification->id}}" @if($position->qualification_id == $qualification->id) selected @endif>{{$qualification->name}}</option>
                                 @endforeach
@@ -105,6 +107,8 @@
         </div>
     </div>
 </div>
+
+<div id="delete_position"></div>
 {{ Form::close() }}
 
 
@@ -163,7 +167,7 @@
             });
 
             $('#add_qualification').on("click", function () {
-                var prot = '<tr>';
+                var prot = '<tr pos_id="-1" >';
                 prot += '<td><select class="bootstrap-select show-tick" data-live-search="true" name="qualification[]">';
                 prot += '@foreach($qualifications as $qualification)<option value="{{$qualification->id}}">{{$qualification->name}}</option>@endforeach';
                 prot += ' </select> </td>';
@@ -179,10 +183,8 @@
                 $('.bootstrap-select').selectpicker();
             });
 
-            $('.delete_position').on("click", function () {
-            });
-
             $('#tblPositions').on('click', '.delete_position', function() {
+                $('#delete_position').append('<input type="hidden" name="delete_position[]" value="'+$(this).closest('tr').attr('pos_id')+'" />')
                 $(this).closest('tr').remove();
             });
         });
