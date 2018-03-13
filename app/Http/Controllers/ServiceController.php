@@ -128,7 +128,7 @@ class ServiceController extends Controller
         $service = Service::findOrFail($id);
         $qualifications = Qualification::orderBy('name')->get();
         $positions = $service->positions()->get();
-        $users = User::orderBy('name')->get();
+        $users = User::orderBy('name')->with('qualifications')->get();
         return view('service.create', compact('service', 'positions', 'qualifications', 'users'));
     }
 
