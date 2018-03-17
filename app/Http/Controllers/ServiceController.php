@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PositionAuthorized;
 use App\Position;
 use App\PositionCandidature;
 use App\Qualification;
@@ -81,7 +82,7 @@ class ServiceController extends Controller
         $service->hastoauthorize = $request->get('hastoauthorize');
         $service->save();
 
-        if ($request->get('qualification')) {
+        if ($request->has('qualification') && $request->get('qualification')) {
             $qualifications = $request->get('qualification');
             $users = $request->get('user');
             $position_comment = $request->get('position_comment');
@@ -96,7 +97,12 @@ class ServiceController extends Controller
                 }
                 $position->comment = $position_comment[$i];
 
-                $position->save();
+                $saved = $position->save();
+
+                //inform user about new pos assign
+                if($saved && !is_null($position->user_id)) {
+                    event(new PositionAuthorized($position, Auth::user()));
+                }
             }
         }
 
@@ -153,17 +159,19 @@ class ServiceController extends Controller
         $service->save();
 
         //set changes and delete potential candidatures
-        if ($request->get('qualification')) {
+        if ($request->has('qualification') && $request->get('qualification')) {
             $qualifications = $request->get('qualification');
             $users = $request->get('user');
             $position_comment = $request->get('position_comment');
             $positions = $request->get('position');
 
             //remove deleted positions (with candidatures)
-            foreach ($request->get('delete_position') as $delete_position) {
-                if ($delete_position >= 0) {
-                    PositionCandidature::where('position_id', $delete_position)->forceDelete();
-                    Position::where('id', $delete_position)->forceDelete();
+            if($request->has('delete_position')) {
+                foreach ($request->get('delete_position') as $delete_position) {
+                    if ($delete_position >= 0) {
+                        PositionCandidature::where('position_id', $delete_position)->forceDelete();
+                        Position::where('id', $delete_position)->forceDelete();
+                    }
                 }
             }
 
@@ -191,11 +199,14 @@ class ServiceController extends Controller
                         $pos->qualification_id = $qualifications[$i];
                         $pos->user_id = $users[$i];
                         $pos->comment = $position_comment[$i];
-                        $pos->save();
+                        $save = $pos->save();
 
                         //user not null? -> remove all cadidates of this pos
-                        if (!is_null($pos->user_id)) {
+                        if ($save && !is_null($pos->user_id)) {
                             PositionCandidature::where('position_id', '=', $pos->id)->forceDelete();
+
+                            //inform user about new pos assign
+                            event(new PositionAuthorized($pos, Auth::user()));
                         }
                     }
                 }
