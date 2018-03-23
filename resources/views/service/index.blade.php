@@ -16,6 +16,7 @@
                             <span class="glyphicon glyphicon-collapse-up float-left"></span>
                         @else
                             <span class="glyphicon glyphicon-collapse-down float-left"></span>
+                            @if($service->openpositions->count() > 0)<span class="badge bg-red">{{$service->openpositions->count()}}</span>@endif
                         @endif
                         {{$service->date->format('l d m Y')}} <small>{{$service->comment}}</small>
                     </h2>

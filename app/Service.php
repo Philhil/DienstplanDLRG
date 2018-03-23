@@ -29,6 +29,11 @@ class Service extends Model
         return $this->hasMany(Position::class);
     }
 
+    public function openpositions()
+    {
+        return $this->hasMany(Position::class)->whereNull('user_id');
+    }
+
     public function positionwithQualification($qualifiaction_id)
     {
         return $this->positions()->where('qualification_id', $qualifiaction_id);
