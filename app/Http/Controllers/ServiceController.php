@@ -117,7 +117,10 @@ class ServiceController extends Controller
      */
     public function show($id)
     {
-        //
+        if(!Auth::user()->isAdmin()) {
+            abort(402, "Nope.");
+        }
+        // if admin or headofservice (service->positions where user && position->quali headofservice)
     }
 
     /**
@@ -197,7 +200,7 @@ class ServiceController extends Controller
                         strcmp($pos->comment, $position_comment[$i]) != 0)
                     {
                         $pos->qualification_id = $qualifications[$i];
-                        $pos->user_id = $users[$i];
+                        $pos->user_id = $users[$i] === "null" ? null : $users[$i];
                         $pos->comment = $position_comment[$i];
                         $save = $pos->save();
 
