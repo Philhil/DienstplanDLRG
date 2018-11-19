@@ -181,7 +181,30 @@ class ServiceController extends Controller
                 }
             }
 
-            //TODO: store newly add Positions (Issue #39)
+            //If there are more qualifications than position: User has Add new Positions
+            if (count($positions) < count($qualifications))
+            {
+                for ($i = count($positions); $i < count($qualifications); $i++ )
+                {
+                    $newposition = new Position();
+                    $newposition->service_id = $service->id;
+                    $newposition->qualification_id = $qualifications[$i];
+                    $newposition->requiredposition = $position_required[$i];
+                    if ($users[$i] == "null") {
+                        $newposition->user_id = null;
+                    } else {
+                        $newposition->user_id = $users[$i];
+                    }
+                    $newposition->comment = $position_comment[$i];
+
+                    $saved = $newposition->save();
+
+                    //inform user about new pos assign
+                    if($saved && !is_null($newposition->user_id)) {
+                        event(new PositionAuthorized($newposition, Auth::user()));
+                    }
+                }
+            }
 
             //are there changed positions
             for ($i = 0; $i < count($positions); $i++ ) {
