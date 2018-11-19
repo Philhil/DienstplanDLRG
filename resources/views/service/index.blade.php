@@ -43,7 +43,7 @@
                             <table class="table">
                                 <tr>
                                     @foreach($service->positions as $position)
-                                        <th>{{$position->qualification->name}}</th>
+                                        <th @if($position->requiredposition) class="font-underline"@endif>{{$position->qualification->name}}</th>
                                     @endforeach
                                 </tr>
                                 <tr>
