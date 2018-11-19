@@ -39,8 +39,8 @@
                                 <i class="material-icons">event_busy</i>
                             </div>
                             <div class="content">
-                                <div class="text">Noch nicht besetzte Dienste</div>
-                                <div class="number count-to" data-from="0" data-to="{{$positions_free}}" data-speed="1000" data-fresh-interval="20">{{$positions_free}}</div>
+                                <div class="text">Noch nicht besetzte Dienste (Mindestbesatzung)</div>
+                                <div class="number count-to" data-from="0" data-to="{{$positions_free_required}}" data-speed="1000" data-fresh-interval="20">{{$positions_free_required}}</div>
                             </div>
                         </div>
                     </div>

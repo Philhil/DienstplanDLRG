@@ -8,7 +8,7 @@ class Position extends Model
 {
 
     protected $fillable = [
-        'qualification_id', 'service_id'
+        'qualification_id', 'service_id', 'requiredposition'
     ];
 
     public function qualification()

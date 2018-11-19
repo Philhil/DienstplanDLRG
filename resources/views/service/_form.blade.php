@@ -4,7 +4,7 @@
     {{ Form::model($service->toArray() + $positions->toArray(), ['action' => ['ServiceController@store', 'id' => $service->id]]) }}
 @endif
 
-<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+<div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
 
     <div class="row clearfix">
         <div class="col-sm-10">
@@ -42,7 +42,7 @@
     </div>
 </div>
 
-<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+<div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
 
     <div class="row clearfix">
         <div class="col-sm-12 text-center">
@@ -59,6 +59,7 @@
                 <th>Qualifikation</th>
                 <th>Person</th>
                 <th>Kommentar</th>
+                <th>Erforderlich</th>
                 <th>Aktion</th>
             </tr>
             </thead>
@@ -87,6 +88,12 @@
                             <input class="form-control" placeholder="Kommentar..." type="text" value="{{$position->comment}}" name="position_comment[]" >
                         </td>
                         <td>
+                            <select class="bootstrap-select show-tick" name="position_required[]">
+                                <option value="0">Optional</option>
+                                <option value="1" {{$position->requiredposition ? "selected" : ""}}>Erforderlich</option>
+                            </select>
+                        </td>
+                        <td>
                             <button type="button" class="btn btn-danger waves-effect btn-delete delete_position">
                                 <i class="material-icons">delete</i>
                             </button>
@@ -113,38 +120,6 @@
 
 
 @section('post_body')
-
-    <table hidden>
-        <tbody>
-        <tr id="samplerow">
-            <td><select class="bootstrap-select show-tick" data-live-search="true" name="qualification[]">
-                    @foreach($qualifications as $qualification)
-                        <option value="{{$qualification->id}}">{{$qualification->name}}</option>
-                    @endforeach
-                </select>
-            </td>
-            <td>
-                <select class="bootstrap-select show-tick" data-live-search="true" name="user[]">
-                    <option value="null">-- Bitte wählen --</option>
-                    @foreach($users as $user)
-                        <option value="{{$user->id}}">{{$user->name}}</option>
-                    @endforeach
-                </select>
-            </td>
-
-            <td>
-                <input class="form-control" placeholder="Kommentar..." type="text" value="" name="position_comment[]" >
-            </td>
-            <td>
-                <button type="button" class="btn btn-danger waves-effect btn-delete delete_position">
-                    <i class="material-icons">delete</i>
-                </button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-
     <!-- Moment Plugin Js -->
     <script src="/plugins/momentjs/moment.js"></script>
 
@@ -167,6 +142,8 @@
             });
 
             $('#add_qualification').on("click", function () {
+
+                var date = new Date;
                 var prot = '<tr pos_id="-1" >';
                 prot += '<td><select class="bootstrap-select show-tick" data-live-search="true" name="qualification[]">';
                 prot += '@foreach($qualifications as $qualification)<option value="{{$qualification->id}}">{{$qualification->name}}</option>@endforeach';
@@ -175,6 +152,10 @@
                 prot += '<option value="null">-- Bitte wählen --</option> @foreach($users as $user) <option value="{{$user->id}}">{{$user->name}}</option> @endforeach';
                 prot += '</select> </td>';
                 prot += ' <td> <input class="form-control" placeholder="Kommentar..." type="text" value="" name="position_comment[]" > </td>';
+                prot += '<td> <select class="bootstrap-select show-tick" name="position_required[]">\n' +
+                    '<option value="0">Optional</option>\n' +
+                    '<option value="1">Erforderlich</option>\n' +
+                    '</select> </td>';
                 prot += '<td><button type="button" class="btn btn-danger waves-effect btn-delete delete_position"><i class="material-icons">delete</i></button></td>';
                 prot += '</tr>';
 

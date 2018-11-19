@@ -49,6 +49,14 @@
                                     {!! $errors->first('defaultcount', '<p class="help-block">:message</p>') !!}
                                 </div>
                             </div>
+                            <div class="form-group {{ $errors->has('defaultrequiredasposition') ? 'has-error' : ''}}">
+                                <div class="form-line">
+                                    {{ Form::hidden('defaultrequiredasposition',0)}}
+                                    {{ Form::checkbox('defaultrequiredasposition', 1, old('defaultrequiredasposition') or $qualification->defaultrequiredasposition != 0 ? true : false, ['class' => 'filled-in', 'id' => "defaultrequiredasposition"]) }}
+                                    {{ Form::label('defaultrequiredasposition', 'Ist das Besetzen der Positionen unbedingt erforderlich, welche mit dieser Qualifikation automatisch erstellt werden?') }}
+                                    {!! $errors->first('defaultrequiredasposition', '<p class="help-block">:message</p>') !!}
+                                </div>
+                            </div>
                         </div>
                     </div>
 

@@ -56,7 +56,7 @@ class ServiceController extends Controller
         {
             for ($i = 0; $i < $quali->defaultcount; $i++)
             {
-                $positions->push(new Position(['qualification_id' => $quali->id]));
+                $positions->push(new Position(['qualification_id' => $quali->id, 'requiredposition' => $quali->defaultrequiredasposition]));
             }
         }
 
@@ -86,10 +86,12 @@ class ServiceController extends Controller
             $qualifications = $request->get('qualification');
             $users = $request->get('user');
             $position_comment = $request->get('position_comment');
+            $position_required = $request->get('position_required');
             for ($i = 0; $i < count($qualifications); $i++ ) {
                 $position = new Position();
                 $position->service_id = $service->id;
                 $position->qualification_id = $qualifications[$i];
+                $position->requiredposition = $position_required[$i];
                 if ($users[$i] == "null") {
                     $position->user_id = null;
                 } else {
@@ -166,6 +168,7 @@ class ServiceController extends Controller
             $qualifications = $request->get('qualification');
             $users = $request->get('user');
             $position_comment = $request->get('position_comment');
+            $position_required = $request->get('position_required');
             $positions = $request->get('position');
 
             //remove deleted positions (with candidatures)
@@ -178,8 +181,10 @@ class ServiceController extends Controller
                 }
             }
 
+            //TODO: store newly add Positions (Issue #39)
+
             //are there changed positions
-            for ($i = 0; $i < count($qualifications); $i++ ) {
+            for ($i = 0; $i < count($positions); $i++ ) {
                 $pos = Position::findOrFail($positions[$i]);
 
                 //just security reasons -> no manipulation of foreign positions
@@ -192,25 +197,43 @@ class ServiceController extends Controller
                         $user_id = "null";
                     }
 
-                    //changed qualification and not null?
-                    //changed user?
                     //changed comment?
-                    if (($pos->qualification_id != $qualifications[$i] && !empty($qualifications[$i])) ||
-                        $user_id != $users[$i] ||
-                        strcmp($pos->comment, $position_comment[$i]) != 0)
+                    //=>Update without inform
+                    if (strcmp($pos->comment, $position_comment[$i]) != 0) {
+                        $pos->comment = $position_comment[$i];
+                    }
+
+                    //changed requiredposition?
+                    //=>Update without inform
+                    if($pos->requiredposition != $position_required[$i]) {
+                        $pos->requiredposition = $position_required[$i];
+                    }
+
+                    //changed qualification and not null?
+                    //=>Update and inform user
+                    $informUser = false;
+                    if ($pos->qualification_id != $qualifications[$i] && !empty($qualifications[$i]))
                     {
                         $pos->qualification_id = $qualifications[$i];
+                        $informUser = true;
+                    }
+
+                    //changed user?
+                    //=>Update and inform user
+                    if ($user_id != $users[$i])
+                    {
                         $pos->user_id = $users[$i] === "null" ? null : $users[$i];
-                        $pos->comment = $position_comment[$i];
-                        $save = $pos->save();
+                        $informUser = true;
+                    }
 
+                    $save = $pos->save();
+
+                    if ($informUser && $save && !is_null($pos->user_id)) {
                         //user not null? -> remove all cadidates of this pos
-                        if ($save && !is_null($pos->user_id)) {
-                            PositionCandidature::where('position_id', '=', $pos->id)->forceDelete();
+                        PositionCandidature::where('position_id', '=', $pos->id)->forceDelete();
 
-                            //inform user about new pos assign
-                            event(new PositionAuthorized($pos, Auth::user()));
-                        }
+                        //inform user about new pos assign
+                        event(new PositionAuthorized($pos, Auth::user()));
                     }
                 }
             }
