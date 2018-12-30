@@ -14,7 +14,7 @@ class AddCurrentclientidToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('currentclient_id')->unsigned();
+            $table->integer('currentclient_id')->unsigned()->nullable(); //->nullable() for upgrade on exsisting DB
             $table->foreign('currentclient_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }

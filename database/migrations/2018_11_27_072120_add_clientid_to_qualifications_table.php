@@ -14,7 +14,7 @@ class AddClientidToQualificationsTable extends Migration
     public function up()
     {
         Schema::table('qualifications', function (Blueprint $table) {
-            $table->integer('client_id')->unsigned();
+            $table->integer('client_id')->unsigned()->nullable(); //->nullable() for upgrade on exsisting DB
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }
