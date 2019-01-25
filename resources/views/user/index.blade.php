@@ -37,13 +37,15 @@
                                     </button>
                                 </a>
 
-                                {{ Form::open(['url' => '/user/'.$user->id, 'method' => 'delete', 'style'=>'display:inline-block']) }}
-                                <button type="submit" class="btn btn-danger waves-effect btn-delete">
-                                    <i class="material-icons">delete</i>
-                                </button>
-                                {{ Form::close() }}
+                                @if(Auth::user()->isSuperAdmin())
+                                    {{ Form::open(['url' => '/user/'.$user->id, 'method' => 'delete', 'style'=>'display:inline-block']) }}
+                                    <button type="submit" class="btn btn-danger waves-effect btn-delete">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                    {{ Form::close() }}
+                                @endif
 
-                                @if(!$user->approved)
+                                @if(!empty(\App\Client_user::where(['user_id' => $user->id, 'client_id' => Auth::user()->currentclient_id])->first()) && !\App\Client_user::where(['user_id' => $user->id, 'client_id' => Auth::user()->currentclient_id])->first()->approved)
                                     <a href="{{action('UserController@approve_user', $user->id)}}">
                                         <button type="button" class="btn btn-success waves-effect">
                                             <i class="material-icons">check</i>

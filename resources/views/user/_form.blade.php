@@ -41,7 +41,7 @@
 
 
 
-@if(\Illuminate\Support\Facades\Auth::user()->can('administration'))
+@if(\Illuminate\Support\Facades\Auth::user()->can('superadministration'))
 
     <div class="col-sm-10">
         <div class="form-group {{ $errors->has('approved') ? 'has-error' : ''}}">

@@ -23,6 +23,11 @@ class Client extends Model
         'create_at', 'seasonStart'
     ];
 
+    public function user_all()
+    {
+        return $this->belongsToMany(User::class, 'client_user')->orderBy('name');
+    }
+
     public function user()
     {
         return $this->belongsToMany(User::class, 'client_user')
