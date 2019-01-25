@@ -20,11 +20,7 @@ class CreateClientsTable extends Migration
             $table->boolean('isMailinglistCommunication')->default(false);
             $table->string('mailinglistAddress')->nullable()->default(NULL);
             $table->string('mailSenderName');
-            $table->string('mailSenderAddress');
-            $table->string('mailServer');
-            $table->string('mailPort');
-            $table->string('mailUser');
-            $table->string('mailPassword');
+            $table->string('mailReplyAddress');
             $table->time('defaultServiceStart')->default("10:00");
             $table->time('defaultServiceEnd')->default("19:00");
             $table->timestamps();
