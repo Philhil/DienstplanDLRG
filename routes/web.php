@@ -32,6 +32,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('user', 'UserController');
     Route::match(['get', 'post'], 'user/approve/{id}', 'UserController@approve_user');
 
+    Route::resource('client', 'ClientController');
+
     Route::resource('service', 'ServiceController');
     Route::get('service/{service}/delete', 'ServiceController@delete')->name('service.delete');
 
@@ -41,6 +43,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('qualification_user/create', 'QualificationController@createQualification_User');
     Route::match(['get', 'post'], 'qualification_user/delete/{user_id}/{qualification_id}', 'QualificationController@deleteQualification_User');
+
+    Route::post('client_user/admin', 'ClientController@adminClient_User');
 
     Route::match(['get', 'post'], 'position/{id}/subscribe', 'PositionController@subscribe');
     Route::match(['get', 'post'], 'position/{id}/unsubscribe', 'PositionController@unsubscribe');

@@ -30,7 +30,7 @@
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/dienstplan.css" rel="stylesheet">
 
-    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <!-- AdminBSB Themes -->
     <link href="/css/themes/all-themes.css" rel="stylesheet" />
 
     @yield('head')

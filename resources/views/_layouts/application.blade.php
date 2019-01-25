@@ -58,6 +58,9 @@
     <!-- Bootstrap Notify Plugin Js -->
     <script src="/plugins/bootstrap-notify/bootstrap-notify.js"></script>
 
+    <!-- Input Mask Plugin Js -->
+    <script src="/plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+
     <script>
         function showNotification(colorName, text, placementFrom, placementAlign, animateEnter, animateExit) {
             if (colorName === null || colorName === '') { colorName = 'alert-success'; }

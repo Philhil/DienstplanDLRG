@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
@@ -28,10 +29,25 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function isAdmin()
+    public function isSuperAdmin()
     {
         return $this->role == "admin";
     }
+
+    public function isAdmin()
+    {
+        return $this->isAdminOfClient(Auth::user()->currentclient_id);
+    }
+
+    public function isAdminOfClient($clientID)
+    {
+        if (Client_user::where(['client_id' => $clientID, 'user_id' => Auth::user()->id, 'isAdmin' => true])->count() > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
 
     public function qualifications()
     {

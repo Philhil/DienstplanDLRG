@@ -9,6 +9,9 @@
                 <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                 <ul class="dropdown-menu pull-right">
                     <li><a href="{{action('UserController@show', \Illuminate\Support\Facades\Auth::user()->id)}}"><i class="material-icons">person</i>Profil</a></li>
+                    @can('administration')
+                    <li><a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}"><i class="material-icons">group</i>Client</a></li>
+                    @endcan
                     <li role="seperator" class="divider"></li>
                     <li><a href="{{ route('logout') }}"><i class="material-icons">input</i>Logout</a></li>
                 </ul>
@@ -71,6 +74,23 @@
                     <span>Qualifikationen</span>
                 </a>
             </li>
+
+            <li class="{{active('client.show')}}">
+                <a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}">
+                    <i class="material-icons">group</i>
+                    <span>Client</span>
+                </a>
+            </li>
+            @endcan
+            @can('superadministration')
+                <li class="header {{active('client.edit')}}">Super Administration</li>
+
+                <li class="{{active('client.*')}}">
+                    <a href="{{ action('ClientController@index') }}">
+                        <i class="material-icons">group</i>
+                        <span>Clients</span>
+                    </a>
+                </li>
             @endcan
         </ul>
     </div>
