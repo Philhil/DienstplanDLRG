@@ -158,5 +158,10 @@
     <!-- Custom Js -->
     <script src="js/admin.js"></script>
     <script src="js/pages/examples/sign-in.js"></script>
+
+    <div class="pull-right top-buffer">
+        <a href="/impressum">Impressum</a>
+        <a href="/datenschutz">Datenschutz</a>
+    </div>
     </body>
 @endsection
