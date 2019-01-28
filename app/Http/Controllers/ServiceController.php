@@ -60,7 +60,7 @@ class ServiceController extends Controller
             }
         }
 
-        $users = User::orderBy('name')->get();
+        $users = Auth::user()->currentclient()->user()->orderBy('name')->get();
         return view('service.create', compact('service', 'positions', 'qualifications', 'users'));
     }
 
@@ -80,6 +80,7 @@ class ServiceController extends Controller
         $service->date = Carbon::createFromFormat('d m Y', $request->get('date'))->startOfDay();
         $service->comment = $request->get('comment');
         $service->hastoauthorize = $request->get('hastoauthorize');
+        $service->client_id = Auth::user()->currentclient_id;
         $service->save();
 
         if ($request->has('qualification') && $request->get('qualification')) {
@@ -88,22 +89,25 @@ class ServiceController extends Controller
             $position_comment = $request->get('position_comment');
             $position_required = $request->get('position_required');
             for ($i = 0; $i < count($qualifications); $i++ ) {
-                $position = new Position();
-                $position->service_id = $service->id;
-                $position->qualification_id = $qualifications[$i];
-                $position->requiredposition = $position_required[$i];
-                if ($users[$i] == "null") {
-                    $position->user_id = null;
-                } else {
-                    $position->user_id = $users[$i];
-                }
-                $position->comment = $position_comment[$i];
 
-                $saved = $position->save();
+                if (Qualification::where(['id' => $qualifications[$i], 'client_id' => Auth::user()->currentclient_id])->count() > 0) {
+                    $position = new Position();
+                    $position->service_id = $service->id;
+                    $position->qualification_id = $qualifications[$i];
+                    $position->requiredposition = $position_required[$i];
+                    if ($users[$i] == "null") {
+                        $position->user_id = null;
+                    } else {
+                        $position->user_id = $users[$i];
+                    }
+                    $position->comment = $position_comment[$i];
 
-                //inform user about new pos assign
-                if($saved && !is_null($position->user_id)) {
-                    event(new PositionAuthorized($position, Auth::user()));
+                    $saved = $position->save();
+
+                    //inform user about new pos assign
+                    if($saved && !is_null($position->user_id)) {
+                        event(new PositionAuthorized($position, Auth::user()));
+                    }
                 }
             }
         }
@@ -140,7 +144,7 @@ class ServiceController extends Controller
         $service = Service::findOrFail($id);
         $qualifications = Qualification::where('client_id', '=', Auth::user()->currentclient_id)->orderBy('name')->get();
         $positions = $service->positions()->get();
-        $users = User::orderBy('name')->with('qualifications')->get();
+        $users = Auth::user()->currentclient()->user()->with('qualifications')->orderBy('name')->get();
         return view('service.create', compact('service', 'positions', 'qualifications', 'users'));
     }
 
@@ -186,22 +190,24 @@ class ServiceController extends Controller
             {
                 for ($i = count($positions); $i < count($qualifications); $i++ )
                 {
-                    $newposition = new Position();
-                    $newposition->service_id = $service->id;
-                    $newposition->qualification_id = $qualifications[$i];
-                    $newposition->requiredposition = $position_required[$i];
-                    if ($users[$i] == "null") {
-                        $newposition->user_id = null;
-                    } else {
-                        $newposition->user_id = $users[$i];
-                    }
-                    $newposition->comment = $position_comment[$i];
+                    if (Qualification::where(['id' => $qualifications[$i], 'client_id' => Auth::user()->currentclient_id])->count() > 0) {
+                        $newposition = new Position();
+                        $newposition->service_id = $service->id;
+                        $newposition->qualification_id = $qualifications[$i];
+                        $newposition->requiredposition = $position_required[$i];
+                        if ($users[$i] == "null") {
+                            $newposition->user_id = null;
+                        } else {
+                            $newposition->user_id = $users[$i];
+                        }
+                        $newposition->comment = $position_comment[$i];
 
-                    $saved = $newposition->save();
+                        $saved = $newposition->save();
 
-                    //inform user about new pos assign
-                    if($saved && !is_null($newposition->user_id)) {
-                        event(new PositionAuthorized($newposition, Auth::user()));
+                        //inform user about new pos assign
+                        if ($saved && !is_null($newposition->user_id)) {
+                            event(new PositionAuthorized($newposition, Auth::user()));
+                        }
                     }
                 }
             }
@@ -235,7 +241,8 @@ class ServiceController extends Controller
                     //changed qualification and not null?
                     //=>Update and inform user
                     $informUser = false;
-                    if ($pos->qualification_id != $qualifications[$i] && !empty($qualifications[$i]))
+                    if ($pos->qualification_id != $qualifications[$i] && !empty($qualifications[$i])
+                        &&  Qualification::where(['id' => $qualifications[$i], 'client_id' => Auth::user()->currentclient_id])->count() > 0)
                     {
                         $pos->qualification_id = $qualifications[$i];
                         $informUser = true;
@@ -273,7 +280,7 @@ class ServiceController extends Controller
      */
     public function destroy($id)
     {
-        if(!Auth::user()->isAdmin()) {
+        if(!Auth::user()->isAdmin() || Service::where(['id' => $id, 'client_id' => Auth::user()->currentclient_id])->count() <= 0) {
             abort(402, "Nope.");
         }
 
@@ -284,7 +291,7 @@ class ServiceController extends Controller
 
     public function delete($id)
     {
-        if(!Auth::user()->isAdmin()) {
+        if(!Auth::user()->isAdmin() || Service::where(['id' => $id, 'client_id' => Auth::user()->currentclient_id])->count() <= 0) {
             abort(402, "Nope.");
         }
 
