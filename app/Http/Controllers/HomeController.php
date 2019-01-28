@@ -27,21 +27,21 @@ class HomeController extends Controller
     public function index()
     {
         $positions_user_past = Position::where('user_id', '=', Auth::user()->id)->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))->count();
+            ->where('services.date', '<', DB::raw('CURDATE()'))->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
         $positions_total_past = Position::where('user_id', '!=', null)->join('services', 'positions.service_id', '=', 'services.id')
-                            ->where('services.date', '<', DB::raw('CURDATE()'))->count();
+                            ->where('services.date', '<', DB::raw('CURDATE()'))->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
         $positions_free_required = Position::where('user_id', '=', null)->where('requiredposition', '=', 1)->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '>=', DB::raw('CURDATE()'))->count();
+            ->where('services.date', '>=', DB::raw('CURDATE()'))->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
         $top_users = Position::where('user_id', '!=', null)->with('user')->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))->selectRaw('user_id, count(*) as aggregate')
+            ->where('services.date', '<', DB::raw('CURDATE()'))->where('services.client_id', '=', Auth::user()->currentclient_id)->selectRaw('user_id, count(*) as aggregate')
             ->groupBy('user_id')->limit(10)->orderby('aggregate', 'desc')->get();
 
         return view('home.index', compact('positions_user_past', 'positions_total_past', 'positions_free_required', 'top_users'));
     }
 
     public function mailtest(){
-        $tableheader = \App\Qualification::where('isservicedefault', true)->get();
-        $services = Service::where([['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)]])->orderBy('date')->with('positions.qualification')->get();
+        $tableheader = \App\Qualification::where(['isservicedefault' => true, 'client_id' => Auth::user()->currentclient_id])->get();
+        $services = Service::where([['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)], 'services.client_id' => Auth::user()->currentclient_id])->orderBy('date')->with('positions.qualification')->get();
 
         return view('email.serviceslist', compact('tableheader', 'services'));
     }

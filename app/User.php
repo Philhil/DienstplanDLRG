@@ -94,4 +94,22 @@ class User extends Authenticatable
     {
         return $this->authorizedpositions()->where('services.date','>=', DB::raw('CURDATE()'));
     }
+
+    public function clients()
+    {
+        return $this->hasManyThrough(
+            Client::class,
+            Client_user::class,
+            'user_id', // Foreign key on Client_user table...
+            'id', // Foreign key on clients table...
+            'id', // Local key on users table...
+            'client_id' // Local key on Client_user table...
+        );
+    }
+
+    public function currentclient()
+    {
+        return $this->clients()->where('clients.id', '=', Auth::user()->currentclient_id)->first();
+    }
+
 }

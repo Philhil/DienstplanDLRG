@@ -9,7 +9,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
             <div class="header">
-                <h2>Übersicht und Statistik</h2>
+                <h2>Übersicht und Statistik von {{Auth::user()->currentclient()->name}}</h2>
             </div>
             <div class="body">
                 <div class="row clearfix">
