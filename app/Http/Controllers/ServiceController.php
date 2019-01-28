@@ -49,10 +49,10 @@ class ServiceController extends Controller
         }
 
         $service = new Service();
-        $qualifications = Qualification::orderBy('name')->get();
+        $qualifications = Qualification::where('client_id', '=', Auth::user()->currentclient_id)->orderBy('name')->get();
         $positions = new \Illuminate\Database\Eloquent\Collection();
 
-        foreach (Qualification::where(['isservicedefault' => true])->get() as $quali)
+        foreach (Qualification::where(['client_id' => Auth::user()->currentclient_id, 'isservicedefault' => true])->get() as $quali)
         {
             for ($i = 0; $i < $quali->defaultcount; $i++)
             {
@@ -138,7 +138,7 @@ class ServiceController extends Controller
         }
 
         $service = Service::findOrFail($id);
-        $qualifications = Qualification::orderBy('name')->get();
+        $qualifications = Qualification::where('client_id', '=', Auth::user()->currentclient_id)->orderBy('name')->get();
         $positions = $service->positions()->get();
         $users = User::orderBy('name')->with('qualifications')->get();
         return view('service.create', compact('service', 'positions', 'qualifications', 'users'));

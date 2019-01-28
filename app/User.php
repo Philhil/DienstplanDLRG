@@ -51,7 +51,7 @@ class User extends Authenticatable
 
     public function qualifications()
     {
-        return $this->belongsToMany(Qualification::class, 'qualification_users')->orderBy('name');
+        return $this->belongsToMany(Qualification::class, 'qualification_users')->where('client_id', '=', Auth::user()->currentclient_id)->orderBy('name');
     }
 
     public function qualificationsNotAssignedToUser()
@@ -60,7 +60,8 @@ class User extends Authenticatable
         return Qualification::leftJoin('qualification_users',function ($join) use ($id) {
             $join->on('qualifications.id', '=', 'qualification_users.qualification_id');
             $join->on('qualification_users.user_id', '=', DB::raw("'". $id. "'"));
-        })->whereNull('qualification_users.qualification_id')->select('qualifications.*')->orderBy('qualifications.name');
+        })->whereNull('qualification_users.qualification_id')->select('qualifications.*')
+            ->where('qualifications.client_id', '=', Auth::user()->currentclient_id)->orderBy('qualifications.name');
     }
 
     public function hasqualification($qualificationid)
@@ -87,6 +88,7 @@ class User extends Authenticatable
     public function authorizedpositions()
     {
         return $this->hasMany(Position::class)->join('services', 'positions.service_id', '=', 'services.id')
+            ->where('services.client_id', '=', Auth::user()->currentclient_id)
             ->orderBy('services.date')->with('qualification');
     }
 

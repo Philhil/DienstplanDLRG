@@ -30,7 +30,7 @@ class QualificationController extends Controller
      */
     public function index()
     {
-        $qualifications = \App\Qualification::orderBy('name')->get();
+        $qualifications = \App\Qualification::where('client_id', '=', Auth::user()->currentclient_id)->orderBy('name')->get();
         return view('qualification.index')->with('qualifications', $qualifications);
     }
 
@@ -56,9 +56,11 @@ class QualificationController extends Controller
         if($request->has('id')) {
             $quali = Qualification::findOrFail($request->only('id'))->first();
             $quali->fill($request->except(['id']));
+            $quali['client_id'] = Auth::user()->currentclient_id;
             $quali->save();
         } else {
             $quali = new Qualification($request->except(['id']));
+            $quali['client_id'] = Auth::user()->currentclient_id;
             $quali->save();
         }
 
@@ -84,6 +86,9 @@ class QualificationController extends Controller
     public function edit($id)
     {
         $qualification = Qualification::findorFail($id);
+        if($qualification['client_id'] != Auth::user()->currentclient_id) {
+            abort(402, "Nope.");
+        }
         return view('qualification.create', compact('qualification'));
     }
 
