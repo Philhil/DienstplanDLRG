@@ -65,7 +65,7 @@
 
                 <!-- NEWS -->
                 <div class="row clearfix">
-                    @foreach(\App\News::orderBy('created_at', 'DESC')->take(4)->get() as $news)
+                    @foreach(\App\News::where('client_id', '=', Auth::user()->currentclient_id)->orderBy('created_at', 'DESC')->take(1)->get() as $news)
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="card">
                                 <div class="header bg-blue-grey">
