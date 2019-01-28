@@ -18,8 +18,11 @@ class PositionController extends Controller
      */
     public function index_notAuthorized()
     {
-        $positions = Position::has('candidatures')->join('services', 'services.id', '=', 'service_id')->where('services.date','>=', DB::raw('CURDATE()'))
-            ->where(['user_id' =>  null])->orderby('service_id')->with('qualification')->with('service')->with('candidatures')->with('candidatures.user')->select('positions.*')->get();
+        $positions = Position::has('candidatures')->join('services', 'services.id', '=', 'service_id')
+            ->where('services.date','>=', DB::raw('CURDATE()'))
+            ->where(['user_id' =>  null, 'services.client_id' => Auth::user()->currentclient_id])
+            ->orderby('service_id')->with('qualification')->with('service')
+            ->with('candidatures')->with('candidatures.user')->select('positions.*')->get();
         return view('position.index_notAuthorized', compact('positions'));
     }
 
@@ -36,7 +39,8 @@ class PositionController extends Controller
         if ($position->user_id == null)
         {
             $service = $position->service()->first();
-            if (Auth::user()->hasqualification($position->qualification()->first()->id)){
+            if ($service->client_id == Auth::user()->currentclient_id
+                && Auth::user()->hasqualification($position->qualification()->first()->id)){
 
                 if ($service->hastoauthorize == false) {
                     //has user already approved position in this service?
