@@ -24,15 +24,19 @@ class ServiceController extends Controller
     {
         if(Auth::user()->isAdmin())
         {
-            $services = Service::where('date','>=', DB::raw('CURDATE()'))->orderBy('date')->with('openpositions')->with('positions.qualification')->with('positions.user')->with('positions.candidatures')->with('positions.candidatures.user')->get();
+            $services = Service::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+                ->orderBy('date')->with('openpositions')->with('positions.qualification')->with('positions.user')
+                ->with('positions.candidatures')->with('positions.candidatures.user')->get();
         } else
         {
-            $services = Service::where('date','>=', DB::raw('CURDATE()'))->orderBy('date')->with('openpositions')->with('positions.qualification')->with('positions.user')->with('positions.candidatures')->with(['positions.candidatures.user'=> function ($query) {
+            $services = Service::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+                ->orderBy('date')->with('openpositions')->with('positions.qualification')->with('positions.user')
+                ->with('positions.candidatures')->with(['positions.candidatures.user'=> function ($query) {
                 $query->where('id', '=', Auth::user()->id);
             }])->get();
         }
 
-        $user = User::where('id', '=', Auth::user()->id)->with('qualifications')->first();
+        $user = User::where(['id' => Auth::user()->id])->with('qualifications')->first();
         
         return view('service.index', compact('services', 'user'));
     }
