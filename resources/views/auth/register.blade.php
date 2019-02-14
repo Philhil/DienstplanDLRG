@@ -1,5 +1,10 @@
 @extends('_layouts.base')
 
+@section('head')
+    <!-- Bootstrap Select Css -->
+    <link href="/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+@endsection
+
 @section('body')
     <body class="signup-page">
     <div class="signup-box">
@@ -12,6 +17,28 @@
                 <form id="sign_up" method="POST" action="{{ route('register') }}">
                     {{ csrf_field() }}
                     <div class="msg">Registrieren</div>
+
+                    <div class="input-group form-group{{ $errors->has('client') ? ' has-error' : '' }}">
+                        <span class="input-group-addon">
+                            <i class="material-icons">group</i>
+                        </span>
+                        <div class="form-line">
+
+                            <select class="bootstrap-select show-tick" data-live-search="true" name="client[]">
+                                @foreach(\App\Client::all() as $client)
+                                    <option value="{{$client->id}}">{{$client->name}}</option>
+                                @endforeach
+                            </select>
+
+                            @if ($errors->has('client'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('client') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+
                     <div class="input-group form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
                         <span class="input-group-addon">
                             <i class="material-icons">person</i>
@@ -99,6 +126,9 @@
 
     <!-- Validation Plugin Js -->
     <script src="plugins/jquery-validation/jquery.validate.js"></script>
+
+    <!-- Select Plugin Js -->
+    <script src="/plugins/bootstrap-select/js/bootstrap-select.js"></script>
 
     <!-- Custom Js -->
     <script src="js/admin.js"></script>

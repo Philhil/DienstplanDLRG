@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Client;
 use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -13,15 +14,17 @@ class UserRegister extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $user;
+    public $client;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(User $user, Client $client)
     {
         $this->user = $user;
+        $this->client = $client;
     }
 
     /**

@@ -151,7 +151,7 @@ class UserController extends Controller
         $client_user->save();
 
         $user = User::findorFail($id);
-        event(new UserApproved($user, Auth::user()));
+        event(new UserApproved($user, Client::find(Auth::user()->currentclient_id), Auth::user()));
 
         return redirect(action('UserController@index'));
     }

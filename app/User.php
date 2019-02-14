@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'first_name', 'email', 'approved', 'role', 'password', 'mobilenumber',
+        'name', 'first_name', 'email', 'approved', 'role', 'password', 'mobilenumber', 'currentclient_id'
     ];
 
     /**
@@ -114,4 +114,15 @@ class User extends Authenticatable
         return $this->clients()->where('clients.id', '=', Auth::user()->currentclient_id)->first();
     }
 
+    public function clients_candidature()
+    {
+        return $this->hasManyThrough(
+            Client::class,
+            Client_user::class,
+            'user_id', // Foreign key on Client_user table...
+            'id', // Foreign key on clients table...
+            'id', // Local key on users table...
+            'client_id' // Local key on Client_user table...
+        )->where(['client_user.approved' => false]);
+    }
 }
