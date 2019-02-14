@@ -97,7 +97,7 @@
     <!-- #Menu -->
     <!-- Footer -->
     <div class="legal">
-        <a href="/impressum">Impressum</a>
+        <a href="/impressum">Impressum</a> <a>|</a>
         <a href="/datenschutz">Datenschutz</a>
         <div class="copyright">
             Design: &copy; 2016 - 2017 <a href="https://github.com/gurayyarar/AdminBSBMaterialDesign">AdminBSB - Material Design</a>. <br>

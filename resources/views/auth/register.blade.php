@@ -9,7 +9,7 @@
     <body class="signup-page">
     <div class="signup-box">
         <div class="logo">
-            <a href="javascript:void(0);"><b>DLRG</b> Stuttgart</a>
+            <a href="javascript:void(0);"><b>DLRG</b></a>
             <small>Online Dienstplan</small>
         </div>
         <div class="card">
@@ -135,7 +135,7 @@
     <script src="js/pages/examples/sign-up.js"></script>
 
     <div class="pull-right top-buffer">
-        <a href="/impressum">Impressum</a>
+        <a href="/impressum">Impressum</a> <a>|</a>
         <a href="/datenschutz">Datenschutz</a>
     </div>
     </body>
