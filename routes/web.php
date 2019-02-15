@@ -35,6 +35,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::match(['get', 'post'], 'user/approve/{id}', 'UserController@approve_user');
 
     Route::resource('client', 'ClientController');
+    Route::get('/clientapply', 'ClientController@apply')->name('clientapply');
+    Route::any('/client/{clientid}/apply', 'ClientController@applyrequest')->name('clientapplyrequest');
+    Route::any('/client/{clientid}/apply/revert', 'ClientController@applyrevert')->name('clientapplyrevert');
+    Route::get('/changeclient/{client}', 'UserController@setcurrentclient')->name('changeclient');
 
     Route::resource('service', 'ServiceController');
     Route::get('service/{service}/delete', 'ServiceController@delete')->name('service.delete');

@@ -100,6 +100,20 @@
                         '</div>'
                     });
         }
+
+        $( document ).ready(function() {
+            @if(Illuminate\Support\Facades\Auth::user()->clients()->count() > 0)
+            $('#clientchange').on('change', function(){
+                var newclient = $('#clientchange option:selected').val();
+                window.location.href='/changeclient/'+newclient;
+            });
+            @endif
+
+            @if(Session::get('errormessage') != null)
+                showNotification('alert-info', '{{Session::get('errormessage')}}');
+            @endif
+        });
+
     </script>
 
     @yield('post_body')

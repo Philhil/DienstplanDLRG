@@ -20,6 +20,9 @@
     <!-- Bootstrap Core Css -->
     <link href="/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
 
+    <!-- Bootstrap Select Css -->
+    <link href="/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+
     <!-- Waves Effect Css -->
     <link href="/plugins/node-waves/waves.css" rel="stylesheet" />
 

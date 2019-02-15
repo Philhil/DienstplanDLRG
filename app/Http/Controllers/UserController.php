@@ -155,4 +155,18 @@ class UserController extends Controller
 
         return redirect(action('UserController@index'));
     }
+
+    public function setcurrentclient($id)
+    {
+        if(Auth::user()->clients()->where(['clients.id' => $id, 'client_user.approved' => 1])->count() > 0)
+        {
+            $user = Auth::user();
+            $user->currentclient_id = $id;
+            $user->save();
+
+            return redirect()->back();
+        }
+
+        return redirect()->back()->with(['errormessage' => 'Dein User ist für ' . Client::find($id)->name . ' noch nicht freigegeben']);
+    }
 }

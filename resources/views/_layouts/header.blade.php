@@ -8,6 +8,22 @@
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
+
+                <li><a href="{{ action('ClientController@apply') }}" class="" data-close="true" role="button"><i class="material-icons">group_add</i></a></li>
+
+                @if(Illuminate\Support\Facades\Auth::user()->clients()->count() > 0)
+                <!--Select current client-->
+                <li>
+                    <a>
+                    <select class="bootstrap-select" id="clientchange" data-live-search="true" name="client[]" style="margin-top: 100px">
+                        @foreach(Illuminate\Support\Facades\Auth::user()->clients()->get() as $client)
+                            <option value="{{$client->id}}" @if($client->id == Auth::user()->currentclient_id) selected @endif>{{$client->name}}</option>
+                        @endforeach
+                    </select>
+                    </a>
+                </li>
+                @endif
+
                 <!-- Notifications -->
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">

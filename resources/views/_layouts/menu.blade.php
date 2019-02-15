@@ -22,7 +22,7 @@
     <!-- Menu -->
     <div class="menu">
         <ul class="list">
-            <li class="header {{active('user.show')}}">Navigation</li>
+            <li class="header {{active('user.show')}} {{active('clientapply')}}">Navigation</li>
             <li class="{{active('home')}}">
                 <a href="{{ action('HomeController@index') }}">
                     <i class="material-icons">home</i>

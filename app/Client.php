@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Client extends Model
 {
@@ -32,6 +33,12 @@ class Client extends Model
     {
         return $this->belongsToMany(User::class, 'client_user')
             ->where('client_user.approved', '=', true)->orderBy('name');
+    }
+
+    public function client_authuser()
+    {
+        return $this->hasMany( Client_user::class)
+            ->where('user_id', '=', Auth::user()->id);
     }
 
     public function noAdmins()

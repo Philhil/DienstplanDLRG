@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Client;
 use App\Client_user;
-use App\News;
-use App\User;
+use App\Events\UserRegistered;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Session;
 
 class ClientController extends Controller
 {
@@ -196,5 +194,25 @@ class ClientController extends Controller
             }
         }
         return "false";
+    }
+
+    public function apply()
+    {
+        $clients = Client::orderBy('name')->with('client_authuser')->get();
+        return view('client.apply')->with('clients', $clients);
+    }
+
+    public function applyrequest($id)
+    {
+        Client_user::create(['user_id' => Auth::user()->id, 'client_id' => $id]);
+
+        event(new UserRegistered(Auth::user(), Client::find($id)));
+        return redirect()->back();
+    }
+
+    public function applyrevert($id)
+    {
+        Client_user::where(['user_id' => Auth::user()->id, 'client_id' => $id, 'approved' => 0])->forceDelete();
+        return redirect()->back();
     }
 }
