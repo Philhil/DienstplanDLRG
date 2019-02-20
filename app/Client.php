@@ -13,6 +13,7 @@ class Client extends Model
         'name',
         'seasonStart',
         'isMailinglistCommunication',
+        'weeklyServiceviewEmail',
         'mailinglistAddress',
         'mailSenderName',
         'mailReplyAddress',

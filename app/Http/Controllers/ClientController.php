@@ -8,6 +8,7 @@ use App\Events\UserRegistered;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class ClientController extends Controller
 {
@@ -57,6 +58,7 @@ class ClientController extends Controller
             'name' => 'required|unique:clients|max:255',
             'seasonStart' => 'required',
             'isMailinglistCommunication' => 'boolean',
+            'weeklyServiceviewEmail' => 'boolean',
             'mailinglistAddress' => 'required_with:isMailinglistCommunication',
             'mailSenderName' => 'required|alpha_dash|max:255',
             'mailReplyAddress' => 'required|email|max:255',
@@ -66,6 +68,8 @@ class ClientController extends Controller
 
         $client = new Client($request->all());
         $client->seasonStart = Carbon::createFromFormat('d.m', $request->get("seasonStart"));
+        $client->weeklyServiceviewEmail = isset($request['weeklyServiceviewEmail']);
+        $client->isMailinglistCommunication = isset($request['isMailinglistCommunication']);
         $client->save();
 
         $client_user = new Client_user(['user_id' => Auth::user()->id, 'client_id' => $client->id, 'isAdmin' => true]);
@@ -123,20 +127,19 @@ class ClientController extends Controller
         $validatedData = $request->validate([
             'seasonStart' => 'required',
             'isMailinglistCommunication' => 'boolean',
+            'weeklyServiceviewEmail' => 'boolean',
             'mailinglistAddress' => 'required_with:isMailinglistCommunication',
             'mailSenderName' => 'required|max:255',
             'mailReplyAddress' => 'required|email|max:255',
             'defaultServiceStart' => 'required',
             'defaultServiceEnd' => 'required'
         ]);
-
+        
         $client = Client::findorfail($id);
-        $client->fill($request->except(['name', 'mailPassword']));
+        $client->fill($request->except(['name']));
         $client->seasonStart = Carbon::createFromFormat('d.m', $request->get("seasonStart"));
-        if ($request->filled('mailPassword'))
-        {
-            $client->mailPassword = $request->get('mailPassword');
-        }
+        $client->weeklyServiceviewEmail = isset($request['weeklyServiceviewEmail']);
+        $client->isMailinglistCommunication = isset($request['isMailinglistCommunication']);
         $client->save();
 
         Session::flash('message', $client->name . ' gespeichert!');

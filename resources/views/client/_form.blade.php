@@ -66,7 +66,18 @@
 
 
 <div class="col-md-12">
-    <b>{{ Form::label('isMailinglistCommunication', 'E-Mail Verteiler über Mailingliste') }}</b>
+    <b>{{ Form::label('weeklyServiceviewEmail', 'Automatismen') }}</b>
+    <div class="input-group {{ $errors->has('weeklyServiceviewEmail')  ? 'has-error' : ''}}">
+        <span class="input-group-addon pull-left">
+            {{ Form::checkbox('weeklyServiceviewEmail', 1, old('weeklyServiceviewEmail') or $client->weeklyServiceviewEmail != 0 ? true : false, ['class' => 'filled-in', 'id' => "weeklyServiceviewEmail"]) }}
+            {{ Form::label('weeklyServiceviewEmail', 'Wöchentliches versenden des Wachplans') }}
+            {!! $errors->first('weeklyServiceviewEmail', '<p class="help-block">:message</p>') !!}
+        </span>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <b>{{ Form::label('isMailinglistCommunication', 'E-Mail Verteiler über Mailingliste (News und Wachpläne)') }}</b>
     <div class="input-group {{ $errors->has('isMailinglistCommunication') || $errors->has('mailinglistAddress')  ? 'has-error' : ''}}">
         <span class="input-group-addon">
             {{ Form::checkbox('isMailinglistCommunication', 1, old('isMailinglistCommunication') or $client->isMailinglistCommunication != 0 ? true : false, ['class' => 'filled-in', 'id' => "isMailinglistCommunication"]) }}
@@ -80,6 +91,7 @@
         </div>
     </div>
 </div>
+
 
 <h2 class="card-inside-title">Absender Einstellungen</h2>
 
