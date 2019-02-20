@@ -18,6 +18,7 @@ class CreateClientsTable extends Migration
             $table->text('name');
             $table->date('seasonStart')->default("2000-01-01");
             $table->boolean('isMailinglistCommunication')->default(false);
+            $table->boolean('weeklyServiceviewEmail')->default(true);
             $table->string('mailinglistAddress')->nullable()->default(NULL);
             $table->string('mailSenderName');
             $table->string('mailReplyAddress');

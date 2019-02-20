@@ -29,11 +29,11 @@ class NewPositioncandidatureListener
      */
     public function handle(NewPositioncandidature $event)
     {
-        $admins = User::where('role', '=', 'admin')->select('email')->get();
+        $admins = $event->client->Admins()->select('email')->get();
 
         foreach ($admins as $admin)
         {
-            Mail::to($admin->email)->queue(new PositionCandidatureMail($event->positionCandidature));
+            Mail::to($admin->email)->queue(new PositionCandidatureMail($event->positionCandidature, $event->client));
         }
     }
 }

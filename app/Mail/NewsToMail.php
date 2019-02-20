@@ -30,8 +30,9 @@ class NewsToMail extends Mailable
      */
     public function build()
     {
+        $client = $this->news->client()->first();
         return $this->subject('DLRG DIENSTE: '. $this->news->title)->view('email.news')->with([
             'news' => $this->news,
-        ]);
+        ])->from($client->mailReplyAddress, $client->mailSenderName);
     }
 }

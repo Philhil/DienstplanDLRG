@@ -39,6 +39,7 @@ class UserApprove extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->subject('DLRG DIENSTE: Account Freigeschaltet')->view('email.user_approved');
+        return $this->subject('DLRG DIENSTE: Account Freigeschaltet')->view('email.user_approved')
+            ->from($this->client->mailReplyAddress, $this->client->mailSenderName);
     }
 }

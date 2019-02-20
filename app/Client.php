@@ -54,4 +54,14 @@ class Client extends Model
             ->where('client_user.approved', '=', true)
             ->where('isAdmin', '=', true)->orderBy('name');
     }
+
+    public function Qualifications()
+    {
+        return $this->hasMany( Qualification::class);
+    }
+
+    public function Services()
+    {
+        return $this->hasMany( Service::class);
+    }
 }

@@ -34,6 +34,7 @@ class UserRegister extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->subject('DLRG DIENSTE: New Account registration!')->view('email.new_user_register');
+        return $this->subject('DLRG DIENSTE: New Account registration!')->view('email.new_user_register')
+            ->from($this->client->mailReplyAddress, $this->client->mailSenderName);
     }
 }

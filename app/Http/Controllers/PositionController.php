@@ -57,7 +57,7 @@ class PositionController extends Controller
                     //check if user is already Candidate
                     if (PositionCandidature::where(['user_id' => Auth::user()->id, 'position_id' => $position->id])->count() == 0) {
                         $positionCandidature = \App\PositionCandidature::Create(['user_id' => Auth::user()->id, 'position_id' => $position->id]);
-                        event(new NewPositioncandidature($positionCandidature));
+                        event(new NewPositioncandidature($positionCandidature, Auth::user()->currentclient()));
                     } else {
                         return "false";
                     }

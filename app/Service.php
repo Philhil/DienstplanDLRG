@@ -49,4 +49,9 @@ class Service extends Model
     {
         return $this->hasMany(Position::class)->where('user_id', '=', $userid)->count() > 0 ? true : false;
     }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
 }

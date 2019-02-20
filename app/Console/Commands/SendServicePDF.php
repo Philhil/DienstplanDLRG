@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Client;
 use App\Mail\WachplanToMail;
 use App\Service;
 use Illuminate\Console\Command;
@@ -41,10 +42,23 @@ class SendServicePDF extends Command
      */
     public function handle()
     {
-        $services_count = Service::where([['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)]])->orderBy('date')->with('positions.qualification')->count();
+        foreach (Client::all() as $client)
+        {
+            if ($client->weeklyServiceviewEmail)
+            {
+                $services_count = Service::where([['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addWeek(2)]])->orderBy('date')->with('positions.qualification')->count();
 
-        if($services_count > 0) {
-            Mail::to(env('MAIL_LIST'))->queue(new WachplanToMail());
+                if($services_count > 0) {
+                    if ($client->isMailinglistCommunication) {
+                        Mail::to($client->mailinglistAddress)->queue(new WachplanToMail($client));
+                    } else {
+                        foreach ($client->user()->get() as $user) {
+                            Mail::to($user->email)->queue(new WachplanToMail($client));
+                        }
+                    }
+                }
+            }
+
         }
     }
 }

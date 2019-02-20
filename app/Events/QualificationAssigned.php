@@ -4,6 +4,7 @@ namespace App\Events;
 
 use App\Qualification;
 use App\Qualification_user;
+use App\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\SerializesModels;
@@ -19,16 +20,18 @@ class QualificationAssigned implements ShouldQueue
 
     public $qualification_user;
     public $authorizedby;
+    public $client;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Qualification_user $qualification_user, $authorizedby)
+    public function __construct(Qualification_user $qualification_user, User $authorizedby)
     {
         $this->qualification_user = $qualification_user;
         $this->authorizedby = $authorizedby;
+        $this->client = $authorizedby->currentclient();
     }
 
     /**

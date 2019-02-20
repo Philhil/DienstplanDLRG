@@ -35,10 +35,11 @@ class PositionAssigned extends Mailable implements ShouldQueue
      */
     public function build()
     {
+        $client = $this->position->service()->first()->client()->first();
         return $this->subject('DLRG DIENSTE: Dienst zugewiesen')->view('email.position')->with([
             'position' => $this->position,
             'servicepositions' => $this->servicepositions,
             'authorizedby' => $this->authorizedby,
-        ]);
+        ])->from($client->mailReplyAddress, $client->mailSenderName);
     }
 }
