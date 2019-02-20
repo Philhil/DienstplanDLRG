@@ -18,7 +18,6 @@
                         <th>Name</th>
                         <th>Vorname</th>
                         <th>E-Mail</th>
-                        <th>Rolle</th>
                         <th>Aktion</th>
                     </tr>
                     </thead>
@@ -29,7 +28,6 @@
                             <td>{{$user->name}}</td>
                             <td>{{$user->first_name}}</td>
                             <td>{{$user->email}}</td>
-                            <td>{{$user->role}}</td>
                             <td>
                                 <a href="/user/{{$user->id}}/edit">
                                     <button type="button" class="btn btn-warning waves-effect">

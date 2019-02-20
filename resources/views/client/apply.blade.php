@@ -22,11 +22,6 @@
                     </thead>
                     <tbody>
 
-                    //Background color if approved
-                    //Background color if not approved
-                    //revert/delete application
-                    //apply
-
                     @foreach($clients as $client)
                         <tr>
                             <td>
@@ -38,13 +33,13 @@
                                 @if(count($client->client_authuser) <= 0)
                                 <a href="/client/{{$client->id}}/apply">
                                     <button type="button" class="btn btn-success waves-effect">
-                                        <i class="material-icons">check</i>
+                                        <i class="material-icons">add_box</i>
                                     </button>
                                 </a>
                                 @elseif($client->client_authuser[0]->approved == 0)
                                     <a href="/client/{{$client->id}}/apply/revert">
                                         <button type="button" class="btn btn-danger waves-effect">
-                                            <i class="material-icons">delete</i>
+                                            <i class="material-icons">backspace</i>
                                         </button>
                                     </a>
                                 @endif
