@@ -44,7 +44,7 @@
             @can('administration')
             <li class="header {{active('service.edit')}}">Administration</li>
 
-            <li class="{{active('user.*')}}">
+            <li class=@if(\Illuminate\Support\Facades\Route::current()->getPrefix() != '/superadmin') "{{active('user.*')}}" @endif>
                 <a href="{{ action('UserController@index') }}">
                     <i class="material-icons">person</i>
                     <span>Benutzer</span>
@@ -84,6 +84,13 @@
             @endcan
             @can('superadministration')
                 <li class="header {{active('client.edit')}}">Super Administration</li>
+
+                <li class=@if(\Illuminate\Support\Facades\Route::current()->getPrefix() == '/superadmin') "{{active('superadmin.user')}}" @endif>
+                    <a href="{{ route('superadmin.user') }}">
+                        <i class="material-icons">person</i>
+                        <span>Alle Benutzer</span>
+                    </a>
+                </li>
 
                 <li class="{{active('client.*')}}">
                     <a href="{{ action('ClientController@index') }}">

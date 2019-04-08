@@ -8,6 +8,7 @@ use App\Events\UserApproved;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 class UserController extends Controller
 {
@@ -22,7 +23,7 @@ class UserController extends Controller
             abort(402, "Nope.");
         }
 
-        if (Auth::user()->isSuperAdmin())
+        if (Auth::user()->isSuperAdmin() && Route::current()->getPrefix() == '/superadmin')
         {
             $users = User::orderBy('name')->get();
         }

@@ -29,6 +29,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/mailtest', 'HomeController@mailtest');
 
+    Route::prefix('superadmin')->group(function () {
+        Route::get('user', 'UserController@index')->name('superadmin.user');
+    });
+
     Route::resource('qualification', 'QualificationController');
 
     Route::resource('user', 'UserController');
@@ -38,6 +42,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/clientapply', 'ClientController@apply')->name('clientapply');
     Route::any('/client/{clientid}/apply', 'ClientController@applyrequest')->name('clientapplyrequest');
     Route::any('/client/{clientid}/apply/revert', 'ClientController@applyrevert')->name('clientapplyrevert');
+    Route::any('/client/{clientid}/removeuser/{userid}', 'ClientController@removeuser')->name('clientremoveuser');
     Route::get('/changeclient/{client}', 'UserController@setcurrentclient')->name('changeclient');
 
     Route::resource('service', 'ServiceController');

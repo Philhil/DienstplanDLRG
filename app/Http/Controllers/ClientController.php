@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Client;
 use App\Client_user;
 use App\Events\UserRegistered;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -216,6 +217,27 @@ class ClientController extends Controller
     public function applyrevert($id)
     {
         Client_user::where(['user_id' => Auth::user()->id, 'client_id' => $id, 'approved' => 0])->forceDelete();
+        return redirect()->back();
+    }
+
+    public function removeuser(Request $request, $client_id, $user_id)
+    {
+        if(Auth::user()->isAdminOfClient($request->get('client_id'))) {
+            abort(402, "Nope.");
+        }
+
+        if ($user_id != Auth::user()->id)
+        {
+            $user = User::findOrFail($user_id);
+            if ($user->currentclient_id == $client_id)
+            {
+                $user->currentclient_id = NULL;
+                $user->save();
+            }
+
+            Client_user::where(['user_id' => $user_id, 'client_id' => $client_id])->forceDelete();
+        }
+
         return redirect()->back();
     }
 }

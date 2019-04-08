@@ -35,7 +35,7 @@
                                     </button>
                                 </a>
 
-                                @if(Auth::user()->isSuperAdmin())
+                                @if(Auth::user()->isSuperAdmin() && \Illuminate\Support\Facades\Route::current()->getPrefix() == '/superadmin')
                                     {{ Form::open(['url' => '/user/'.$user->id, 'method' => 'delete', 'style'=>'display:inline-block']) }}
                                     <button type="submit" class="btn btn-danger waves-effect btn-delete">
                                         <i class="material-icons">delete</i>
@@ -49,7 +49,14 @@
                                             <i class="material-icons">check</i>
                                         </button>
                                     </a>
+                                @elseif($user->id != Auth::user()->id)
+                                    {{ Form::open(['url' => '/client/'. Auth::user()->currentclient_id .'/removeuser/'.$user->id, 'method' => 'delete', 'style'=>'display:inline-block']) }}
+                                    <button type="submit" class="btn btn-danger waves-effect btn-delete">
+                                        <i class="material-icons">highlight_off</i>
+                                    </button>
+                                    {{ Form::close() }}
                                 @endif
+
                             </td>
                         </tr>
                     @endforeach
