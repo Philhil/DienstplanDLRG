@@ -11,7 +11,7 @@
 
                 <li><a href="{{ action('ClientController@apply') }}" class="" data-close="true" role="button"><i class="material-icons">group_add</i></a></li>
 
-                @if(Illuminate\Support\Facades\Auth::user()->clients()->count() > 0)
+                @if(Illuminate\Support\Facades\Auth::user()->clients()->count() > 1)
                 <!--Select current client-->
                 <li>
                     <a>
