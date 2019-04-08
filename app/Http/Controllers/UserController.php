@@ -146,6 +146,10 @@ class UserController extends Controller
             abort(402, "Nope.");
         }
 
+        $user = User::find($id);
+        $user->approved = true;
+        $user->save();
+
         $client_user = Client_user::where(['user_id' => $id, 'client_id' => Auth::user()->currentclient_id])->first();
         $client_user->approved = true;
         $client_user->save();
