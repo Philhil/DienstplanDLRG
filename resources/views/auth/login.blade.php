@@ -89,7 +89,7 @@
                             <i class="material-icons">person</i>
                         </span>
                         <div class="form-line">
-                            <input type="email" id="email"  class="form-control" name="email" placeholder="Benutzername" value="{{ old('email') }}" required autofocus>
+                            <input type="email" id="email"  class="form-control" name="email" placeholder="E-Mail" value="{{ old('email') }}" required autofocus>
                             @if ($errors->has('email'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('email') }}</strong>
