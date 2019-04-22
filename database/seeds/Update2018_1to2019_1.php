@@ -20,13 +20,10 @@ class Update2018_1to2019_1 extends Seeder
                 'name' => "Bezirk Stuttgart",
                 'seasonStart' => \Carbon\Carbon::parse('2000-01-01'),
                 'isMailinglistCommunication' => true,
+                'weeklyServiceviewEmail' => true,
                 'mailinglistAddress' => NULL,
                 'mailSenderName' => "DLRG Dienstplan",
-                'mailSenderAddress' => "INSERT_SENDERADDR",
-                'mailServer' => "INSERT_SERVER",
-                'mailPort' => "INSERT_PORT",
-                'mailUser' => "INSERT_USR",
-                'mailPassword' => "INSERT_PASSWD",
+                'mailReplyAddress' => "INSERT_REPLYRADDR",
                 'defaultServiceStart' => \Carbon\Carbon::createFromTime(9, 15, 00),
                 'defaultServiceEnd' => \Carbon\Carbon::createFromTime(19, 15, 00)
             ]);
