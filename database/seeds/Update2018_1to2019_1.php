@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use \Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB;
 
-class DBUpdate_Multiclient extends Seeder
+class Update2018_1to2019_1 extends Seeder
 {
     /**
      * Run the database seeds.

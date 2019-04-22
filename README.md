@@ -14,6 +14,10 @@ Please refrain from using the `master` branch for anything else but development 
 Use the most recent release instead. You can list all releases by running `git tag`
 and switch to one by running `git checkout *name*`.
 
+## Upgrade
+
+If you run a old version follow the upgrade Guide: [https://github.com/Philhil/DienstplanDLRG/wiki#upgrade-guide](https://github.com/Philhil/DienstplanDLRG/wiki#upgrade-guide)
+
 ## License
 The Laravel framework is open-sourced software licensed under the MIT license.
 
