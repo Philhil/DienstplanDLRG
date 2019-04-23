@@ -2,6 +2,19 @@
 
 # DienstplanDLRG
 This Project is a Laravel based web application to manage volunteer services at the German Life Saving Society (DLRG) of Stuttgart.
+A production version could be found here https://dlrgdienstplan.de. If you want to register a new Client (Gliederung), additional Informatins are providet here for you: http://get.dlrgdienstplan.de
+
+## Demo 
+A Demo Application is providet here: https://demo.dlrgdienstplan.de. 
+
+Login as a Admin with 
+>user: admin 
+>password: admin 
+
+or as a User with 
+
+>user: user 
+>password: user
 
 ## Issues & Feature requests
 
