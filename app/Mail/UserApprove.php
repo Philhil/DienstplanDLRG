@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Client;
 use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -14,6 +15,7 @@ class UserApprove extends Mailable implements ShouldQueue
 
 
     public $user;
+    public $client;
     public $authorizedby;
 
     /**
@@ -23,9 +25,10 @@ class UserApprove extends Mailable implements ShouldQueue
      * @param User instance of authorized by
      * @return void
      */
-    public function __construct(User $user, $authorizedby)
+    public function __construct(User $user, Client $client, $authorizedby)
     {
         $this->user = $user;
+        $this->client = $client;
         $this->authorizedby = $authorizedby;
     }
 
@@ -36,6 +39,7 @@ class UserApprove extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->subject('DLRG DIENSTE: Account Freigeschaltet')->view('email.user_approved');
+        return $this->subject('DLRG DIENSTE: Account Freigeschaltet')->view('email.user_approved')
+            ->from($this->client->mailReplyAddress, $this->client->mailSenderName);
     }
 }

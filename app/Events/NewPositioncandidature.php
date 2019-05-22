@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Client;
 use App\PositionCandidature;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
@@ -15,14 +16,16 @@ class NewPositioncandidature
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $positionCandidature;
+    public $client;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(PositionCandidature $positionCandidature)
+    public function __construct(PositionCandidature $positionCandidature, Client $client)
     {
         $this->positionCandidature = $positionCandidature;
+        $this->client = $client;
     }
 
     /**

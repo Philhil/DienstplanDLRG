@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Client;
 use App\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,6 +16,7 @@ class UserApproved implements ShouldQueue
 
 
     public $user;
+    public $client;
     public $authorizedby;
 
     /**
@@ -24,9 +26,10 @@ class UserApproved implements ShouldQueue
      * @param User instance of authorized by
      * @return void
      */
-    public function __construct(User $user, $authorizedby)
+    public function __construct(User $user, Client $client, $authorizedby)
     {
         $this->user = $user;
+        $this->client = $client;
         $this->authorizedby = $authorizedby;
     }
 

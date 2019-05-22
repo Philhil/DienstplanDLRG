@@ -31,11 +31,14 @@ BCOR6mm,						% Bindekorrektur, die den Seitenspiegel um 6mm nach rechts verschi
 \counterwithout{figure}{chapter}
 \counterwithout{table}{chapter}
 \usepackage{url}
-
-
-%For flow chart
+\usepackage{float}
+\usepackage[framemethod=tikz]{mdframed}
+\usetikzlibrary{calc}
 \usepackage{tikz}
+\usepackage[tikz]{bclogo}
 \usetikzlibrary{shapes,arrows}
+
+
 % Define block styles
 \tikzstyle{decision} = [diamond, draw, fill=blue!20, 
     text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
@@ -45,6 +48,21 @@ BCOR6mm,						% Bindekorrektur, die den Seitenspiegel um 6mm nach rechts verschi
 \tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=2cm,
     minimum height=2em]
 
+
+
+\tikzset{
+	lampsymbol/.style={%
+		,scale=2,overlay}}
+	
+\newmdenv[nobreak,middlelinewidth=.8pt,
+frametitlefont=\bfseries,
+leftmargin=.3cm,rightmargin=.3cm, innerleftmargin=2cm,
+skipabove=\topsep,skipbelow=\topsep,
+singleextra={\path let \p1=(P), \p2=(O) in ($(\x2,0)+0.5*(2,\y1)$) node[ lampsymbol, rotate=20] {\bclampe};
+	\draw[line width=.8pt,white,] ($(O|-P)+(.2cm,0)$) -- ($(P)-(.2cm,0)$); 
+	\draw[line width=.8pt,white,] ($(O)+(.2cm,0)$) -- ($(P|-O)-(.2cm,0)$);
+},%
+]{lamp}
 
 %\usepackage[none]{hyphenat} %deaktiviert Silbentrennung
 %\usepackage{showframe}% zum Anzeigen des Seitenlayouts
@@ -71,7 +89,7 @@ BCOR6mm,						% Bindekorrektur, die den Seitenspiegel um 6mm nach rechts verschi
  
 \url{https://dlrgdienstplan.de/}}
 \newcommand{\autor}{Philippe Käufer}
-\newcommand{\version}{2018.1}
+\newcommand{\version}{2019.1}
 
 \newcommand{\ovretextfalt}{%
 DLRG LV Württemberg e.V. \\
@@ -142,7 +160,8 @@ www.DLRG-Stuttgart.de \\
 \include{Inhalt/overview}
 \include{Inhalt/services}
 \include{Inhalt/news}
-\include{Inhalt/hauptteil}
+\include{Inhalt/prozesse}
+\include{Inhalt/admin}
 \include{Inhalt/zusammenfassung}
 
 

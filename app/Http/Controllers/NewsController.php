@@ -16,7 +16,7 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $newss = News::orderBy('created_at', 'DESC')->with('user')->get();
+        $newss = News::where('client_id', '=', Auth::user()->currentclient_id)->orderBy('created_at', 'DESC')->with('user')->get();
         return view('news.index', compact('newss'));
     }
 
@@ -49,6 +49,7 @@ class NewsController extends Controller
 
         $news = new News($request->all());
         $news['user_id'] = Auth::user()->id;
+        $news['client_id'] = Auth::user()->currentclient_id;
         $news->save();
 
         event(new OnCreateNews($news));

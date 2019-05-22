@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Client;
 use App\Qualification_user;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -14,15 +15,17 @@ class QualificationAssignedMail extends Mailable
 
     protected $qualification_user;
     protected $authorizedby;
+    protected $client;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Qualification_user $qualification_user, $authorizedby)
+    public function __construct(Qualification_user $qualification_user, $authorizedby, Client $client)
     {
         $this->qualification_user = $qualification_user;
         $this->authorizedby = $authorizedby;
+        $this->client = $client;
     }
 
     /**
@@ -36,6 +39,6 @@ class QualificationAssignedMail extends Mailable
             'user' => $this->qualification_user->user()->first(),
             'qualification' => $this->qualification_user->qualification()->first(),
             'authorizedby' => $this->authorizedby,
-        ]);
+        ])->from($this->client->mailReplyAddress, $this->client->mailSenderName);
     }
 }

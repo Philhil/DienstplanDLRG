@@ -20,6 +20,9 @@
     <!-- Bootstrap Core Css -->
     <link href="/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
 
+    <!-- Bootstrap Select Css -->
+    <link href="/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+
     <!-- Waves Effect Css -->
     <link href="/plugins/node-waves/waves.css" rel="stylesheet" />
 
@@ -30,7 +33,7 @@
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/dienstplan.css" rel="stylesheet">
 
-    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <!-- AdminBSB Themes -->
     <link href="/css/themes/all-themes.css" rel="stylesheet" />
 
     @yield('head')

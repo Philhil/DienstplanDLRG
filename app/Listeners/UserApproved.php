@@ -25,6 +25,6 @@ class UserApproved
      */
     public function handle(\App\Events\UserApproved $event)
     {
-        Mail::to($event->user)->queue(new UserApprove($event->user, $event->authorizedby));
+        Mail::to($event->user)->queue(new UserApprove($event->user, $event->client, $event->authorizedby));
     }
 }

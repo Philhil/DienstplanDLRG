@@ -39,17 +39,9 @@
     </div>
 </div>
 
-<div class="col-sm-10">
-    <div class="form-group {{ $errors->has('password') ? 'has-error' : ''}}">
-        <div class="form-line">
-            {{ Form::label('password', 'Passwort:') }}
-            {{ Form::password('password', ['class' => 'form-control', 'placeholder' => 'Passwort']) }}
-            {!! $errors->first('password', '<p class="help-block">:message</p>') !!}
-        </div>
-    </div>
-</div>
 
-@if(\Illuminate\Support\Facades\Auth::user()->can('administration'))
+
+@if(\Illuminate\Support\Facades\Auth::user()->can('superadministration'))
 
     <div class="col-sm-10">
         <div class="form-group {{ $errors->has('approved') ? 'has-error' : ''}}">

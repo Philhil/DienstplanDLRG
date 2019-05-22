@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Client;
 use App\PositionCandidature;
 use App\Qualification;
 use App\Service;
@@ -17,17 +18,19 @@ class PositionCandidatureMail extends Mailable implements ShouldQueue
     protected $position;
     protected $user;
     protected $positionCandidature;
+    protected $client;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(PositionCandidature $positionCandidature)
+    public function __construct(PositionCandidature $positionCandidature, Client $client)
     {
         $this->positionCandidature = $positionCandidature;
         $this->position = $positionCandidature->position()->with('service')->with('qualification')->first();
         $this->user = $positionCandidature->user()->first();
+        $this->client = $client;
     }
 
     /**
@@ -42,6 +45,6 @@ class PositionCandidatureMail extends Mailable implements ShouldQueue
                 'position' => $this->position,
                 'positionCandidature' => $this->positionCandidature,
                 'user' => $this->user,
-            ]);
+            ])->from($this->client->mailReplyAddress, $this->client->mailSenderName);
     }
 }

@@ -18,7 +18,6 @@
                         <th>Name</th>
                         <th>Vorname</th>
                         <th>E-Mail</th>
-                        <th>Rolle</th>
                         <th>Aktion</th>
                     </tr>
                     </thead>
@@ -29,7 +28,6 @@
                             <td>{{$user->name}}</td>
                             <td>{{$user->first_name}}</td>
                             <td>{{$user->email}}</td>
-                            <td>{{$user->role}}</td>
                             <td>
                                 <a href="/user/{{$user->id}}/edit">
                                     <button type="button" class="btn btn-warning waves-effect">
@@ -37,19 +35,28 @@
                                     </button>
                                 </a>
 
-                                {{ Form::open(['url' => '/user/'.$user->id, 'method' => 'delete', 'style'=>'display:inline-block']) }}
-                                <button type="submit" class="btn btn-danger waves-effect btn-delete">
-                                    <i class="material-icons">delete</i>
-                                </button>
-                                {{ Form::close() }}
+                                @if(Auth::user()->isSuperAdmin() && \Illuminate\Support\Facades\Route::current()->getPrefix() == '/superadmin')
+                                    {{ Form::open(['url' => '/user/'.$user->id, 'method' => 'delete', 'style'=>'display:inline-block']) }}
+                                    <button type="submit" class="btn btn-danger waves-effect btn-delete">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                    {{ Form::close() }}
+                                @endif
 
-                                @if(!$user->approved)
+                                @if(!empty(\App\Client_user::where(['user_id' => $user->id, 'client_id' => Auth::user()->currentclient_id])->first()) && !\App\Client_user::where(['user_id' => $user->id, 'client_id' => Auth::user()->currentclient_id])->first()->approved)
                                     <a href="{{action('UserController@approve_user', $user->id)}}">
                                         <button type="button" class="btn btn-success waves-effect">
                                             <i class="material-icons">check</i>
                                         </button>
                                     </a>
+                                @elseif($user->id != Auth::user()->id)
+                                    {{ Form::open(['url' => '/client/'. Auth::user()->currentclient_id .'/removeuser/'.$user->id, 'method' => 'delete', 'style'=>'display:inline-block']) }}
+                                    <button type="submit" class="btn btn-danger waves-effect btn-delete">
+                                        <i class="material-icons">highlight_off</i>
+                                    </button>
+                                    {{ Form::close() }}
                                 @endif
+
                             </td>
                         </tr>
                     @endforeach

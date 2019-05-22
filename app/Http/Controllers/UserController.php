@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Client;
+use App\Client_user;
 use App\Events\UserApproved;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 class UserController extends Controller
 {
@@ -16,11 +19,18 @@ class UserController extends Controller
      */
     public function index()
     {
-        if(!Auth::user()->isAdmin()) {
+        if(!Auth::user()->isAdmin() && !Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 
-        $users =  User::orderBy('name')->get();
+        if (Auth::user()->isSuperAdmin() && Route::current()->getPrefix() == '/superadmin')
+        {
+            $users = User::orderBy('name')->get();
+        }
+        else
+        {
+            $users = Client::findorfail(Auth::user()->currentclient_id)->user_all()->get();
+        }
         return view('user.index')->with('users', $users);
     }
 
@@ -65,6 +75,14 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        //Refuse wenn 1. kein Admin oder Superadmin
+        // oder
+        // 2. kein Superadmin und user hat kein client_user.client mit aktuellerUser.client
+        if (!(Auth::user()->isAdminOfClient(Auth::user()->currentclient_id) || Auth::user()->isSuperAdmin())
+        || (empty(Client_user::where(['user_id' => $id, 'client_id' => Auth::user()->currentclient_id])->first())) && !Auth::user()->isSuperAdmin()){
+            abort(402, "Nope.");
+        }
+
         $user = User::findorFail($id);
         $qualifications_assigned = $user->qualifications()->get();
         $qualifications_notassigned = $user->qualificationsNotAssignedToUser()->get();
@@ -80,10 +98,18 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (Auth::user()->isAdmin() && Auth::user()->id != $id)
+        if (Auth::user()->isSuperAdmin() && Auth::user()->id != $id)
         {
             $user = User::findorFail($id);
-            $user->fill($request->except(['id', '_token', 'password']));
+            $user->fill($request->except(['id', '_token']));
+            $user->save();
+
+            return redirect(action('UserController@index'));
+        }
+        else if (Auth::user()->isAdmin() && Auth::user()->id != $id)
+        {
+            $user = User::findorFail($id);
+            $user->fill($request->except(['id', '_token', 'approved', 'role']));
             $user->save();
 
             return redirect(action('UserController@index'));
@@ -91,13 +117,7 @@ class UserController extends Controller
         else
         {
             $user = Auth::user();
-            $user->fill($request->except(['id', '_token', 'approved', 'role', 'password']));
-
-            if ( !empty($request->get('password')))
-            {
-                $user->password = bcrypt($request->get('password'));
-            }
-
+            $user->fill($request->except(['id', '_token', 'approved', 'role']));
             $user->save();
 
             return redirect(action('HomeController@index'));
@@ -113,7 +133,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        if(!Auth::user()->isAdmin()) {
+        if(!Auth::user()->isSuperAdmin()) {
             abort(402, "Nope.");
         }
 
@@ -127,12 +147,31 @@ class UserController extends Controller
             abort(402, "Nope.");
         }
 
-        $user = User::findorFail($id);
+        $user = User::find($id);
         $user->approved = true;
         $user->save();
 
-        event(new UserApproved($user, Auth::user()));
+        $client_user = Client_user::where(['user_id' => $id, 'client_id' => Auth::user()->currentclient_id])->first();
+        $client_user->approved = true;
+        $client_user->save();
+
+        $user = User::findorFail($id);
+        event(new UserApproved($user, Client::find(Auth::user()->currentclient_id), Auth::user()));
 
         return redirect(action('UserController@index'));
+    }
+
+    public function setcurrentclient($id)
+    {
+        if(Auth::user()->clients()->where(['clients.id' => $id, 'client_user.approved' => 1])->count() > 0)
+        {
+            $user = Auth::user();
+            $user->currentclient_id = $id;
+            $user->save();
+
+            return redirect()->back();
+        }
+
+        return redirect()->back()->with(['errormessage' => 'Dein User ist für ' . Client::find($id)->name . ' noch nicht freigegeben']);
     }
 }

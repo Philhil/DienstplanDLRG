@@ -29,11 +29,11 @@ class UserRegisteredListener
      */
     public function handle(UserRegistered $event)
     {
-        $admins = User::where('role', '=', 'admin')->select('email')->get();
+        $admins = $event->client->Admins()->select('email')->get();
 
         foreach ($admins as $admin)
         {
-            Mail::to($admin->email)->queue(new UserRegister($event->user));
+            Mail::to($admin->email)->queue(new UserRegister($event->user, $event->client));
         }
     }
 }

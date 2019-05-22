@@ -4,10 +4,26 @@
         <div class="navbar-header">
             <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
             <a href="javascript:void(0);" class="bars"></a>
-            <a class="navbar-brand" href="/home">DLRG Stuttgart</a>
+            <a class="navbar-brand" href="/home">@if(empty(Auth::user()->currentclient())) DLRG Dienstplan @else {{Auth::user()->currentclient()->name}}@endif</a>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
+
+                <li><a href="{{ action('ClientController@apply') }}" class="" data-close="true" role="button"><i class="material-icons">group_add</i></a></li>
+
+                @if(Illuminate\Support\Facades\Auth::user()->clients()->count() > 1)
+                <!--Select current client-->
+                <li>
+                    <a>
+                    <select class="bootstrap-select" id="clientchange" data-live-search="true" name="client[]" style="margin-top: 100px">
+                        @foreach(Illuminate\Support\Facades\Auth::user()->clients()->get() as $client)
+                            <option value="{{$client->id}}" @if($client->id == Auth::user()->currentclient_id) selected @endif>{{$client->name}}</option>
+                        @endforeach
+                    </select>
+                    </a>
+                </li>
+                @endif
+
                 <!-- Notifications -->
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
@@ -69,7 +85,9 @@
                 </li>
                 <!-- #END# MyQualifications-->
                 <li><a href="{{action('UserController@show', \Illuminate\Support\Facades\Auth::user()->id)}}"><i class="material-icons">person</i></a></li>
-
+                @can('administration')
+                    <li><a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}"><i class="material-icons">group</i></a></li>
+                @endcan
                 <li class="pull-right"><a href="{{ route('logout') }}" class="js-right-sidebar" data-close="true"><i class="material-icons">input</i></a></li>
             </ul>
         </div>

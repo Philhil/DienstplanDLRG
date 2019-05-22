@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Client;
 use App\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
@@ -16,15 +17,17 @@ class UserRegistered
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
+    public $client;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(User $user, Client $client)
     {
         $this->user = $user;
+        $this->client = $client;
     }
 
     /**

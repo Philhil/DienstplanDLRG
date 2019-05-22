@@ -27,6 +27,16 @@ class OnCreateNews
      */
     public function handle(\App\Events\OnCreateNews $event)
     {
-        Mail::to(env('MAIL_LIST'))->queue(new NewsToMail($event->news));
+        $client = $event->news->client()->first();
+
+        if ($client->isMailinglistCommunication) {
+            Mail::to($client->mailinglistAddress)->queue(new NewsToMail($event->news));
+        } else {
+            foreach ($client->user()->get() as $user) {
+                Mail::to($user->email)->queue(new NewsToMail($event->news));
+            }
+        }
+
+
     }
 }

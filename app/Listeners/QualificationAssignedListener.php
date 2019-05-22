@@ -29,6 +29,6 @@ class QualificationAssignedListener
     public function handle(QualificationAssigned $event)
     {
         Mail::to($event->qualification_user->user()->first())
-            ->queue(new QualificationAssignedMail($event->qualification_user, $event->authorizedby));
+            ->queue(new QualificationAssignedMail($event->qualification_user, $event->authorizedby, $event->authorizedby->currentclient()));
     }
 }

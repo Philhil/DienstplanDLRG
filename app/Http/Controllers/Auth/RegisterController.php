@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Client;
+use App\Client_user;
 use App\Events\UserRegistered;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -70,9 +73,17 @@ class RegisterController extends Controller
             'first_name' => $data['first_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'currentclient_id' => $data['client'][0]
         ]);
 
-        event(new UserRegistered($user));
+        Client_user::create([
+            'client_id' => $data['client'][0],
+            'user_id' => $user->id,
+            'isAdmin' => 0,
+            'approved' => 0
+        ]);
+
+        event(new UserRegistered($user, Client::find($data['client'][0])));
         return $user;
     }
 
@@ -87,9 +98,9 @@ class RegisterController extends Controller
         $validator = $this->validator($request->all());
 
         if ($validator->fails()) {
-            $this->throwValidationException(
-                $request, $validator
-            );
+            return redirect('/register')
+                ->withErrors($validator)
+                ->withInput();
         }
 
         $this->create($request->all());
@@ -99,6 +110,6 @@ class RegisterController extends Controller
 
     public function success()
     {
-        return view('auth.success');
+        return view('auth.success', compact('clients_candidature', 'clients_nocandidature'));
     }
 }

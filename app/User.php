@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
@@ -16,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'first_name', 'email', 'approved', 'role', 'password', 'mobilenumber',
+        'name', 'first_name', 'email', 'approved', 'role', 'password', 'mobilenumber', 'currentclient_id'
     ];
 
     /**
@@ -28,14 +29,29 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function isAdmin()
+    public function isSuperAdmin()
     {
         return $this->role == "admin";
     }
 
+    public function isAdmin()
+    {
+        return $this->isAdminOfClient(Auth::user()->currentclient_id);
+    }
+
+    public function isAdminOfClient($clientID)
+    {
+        if (Client_user::where(['client_id' => $clientID, 'user_id' => Auth::user()->id, 'isAdmin' => true])->count() > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+
     public function qualifications()
     {
-        return $this->belongsToMany(Qualification::class, 'qualification_users')->orderBy('name');
+        return $this->belongsToMany(Qualification::class, 'qualification_users')->where('client_id', '=', Auth::user()->currentclient_id)->orderBy('name');
     }
 
     public function qualificationsNotAssignedToUser()
@@ -44,7 +60,8 @@ class User extends Authenticatable
         return Qualification::leftJoin('qualification_users',function ($join) use ($id) {
             $join->on('qualifications.id', '=', 'qualification_users.qualification_id');
             $join->on('qualification_users.user_id', '=', DB::raw("'". $id. "'"));
-        })->whereNull('qualification_users.qualification_id')->select('qualifications.*')->orderBy('qualifications.name');
+        })->whereNull('qualification_users.qualification_id')->select('qualifications.*')
+            ->where('qualifications.client_id', '=', Auth::user()->currentclient_id)->orderBy('qualifications.name');
     }
 
     public function hasqualification($qualificationid)
@@ -71,11 +88,41 @@ class User extends Authenticatable
     public function authorizedpositions()
     {
         return $this->hasMany(Position::class)->join('services', 'positions.service_id', '=', 'services.id')
+            ->where('services.client_id', '=', Auth::user()->currentclient_id)
             ->orderBy('services.date')->with('qualification');
     }
 
     public function authorizedpositions_future()
     {
         return $this->authorizedpositions()->where('services.date','>=', DB::raw('CURDATE()'));
+    }
+
+    public function clients()
+    {
+        return $this->hasManyThrough(
+            Client::class,
+            Client_user::class,
+            'user_id', // Foreign key on Client_user table...
+            'id', // Foreign key on clients table...
+            'id', // Local key on users table...
+            'client_id' // Local key on Client_user table...
+        );
+    }
+
+    public function currentclient()
+    {
+        return $this->clients()->where('clients.id', '=', Auth::user()->currentclient_id)->first();
+    }
+
+    public function clients_candidature()
+    {
+        return $this->hasManyThrough(
+            Client::class,
+            Client_user::class,
+            'user_id', // Foreign key on Client_user table...
+            'id', // Foreign key on clients table...
+            'id', // Local key on users table...
+            'client_id' // Local key on Client_user table...
+        )->where(['client_user.approved' => false]);
     }
 }

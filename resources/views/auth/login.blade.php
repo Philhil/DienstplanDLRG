@@ -69,7 +69,7 @@
 
     <div class="login-box">
         <div class="logo">
-            <a href="javascript:void(0);"><b>DLRG</b> Stuttgart</a>
+            <a href="javascript:void(0);"><b>DLRG</b></a>
             <small>Online Dienstplan</small>
         </div>
         <div class="card">
@@ -89,7 +89,7 @@
                             <i class="material-icons">person</i>
                         </span>
                         <div class="form-line">
-                            <input type="email" id="email"  class="form-control" name="email" placeholder="Benutzername" value="{{ old('email') }}" required autofocus>
+                            <input type="email" id="email"  class="form-control" name="email" placeholder="E-Mail" value="{{ old('email') }}" required autofocus>
                             @if ($errors->has('email'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('email') }}</strong>
@@ -158,5 +158,10 @@
     <!-- Custom Js -->
     <script src="js/admin.js"></script>
     <script src="js/pages/examples/sign-in.js"></script>
+
+    <div class="pull-right top-buffer">
+        <a href="/impressum">Impressum</a> <a>|</a>
+        <a href="/datenschutz">Datenschutz</a>
+    </div>
     </body>
 @endsection

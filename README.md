@@ -2,6 +2,19 @@
 
 # DienstplanDLRG
 This Project is a Laravel based web application to manage volunteer services at the German Life Saving Society (DLRG) of Stuttgart.
+A production version could be found here https://dlrgdienstplan.de. If you want to register a new Client (Gliederung), additional Informatins are providet here for you: http://get.dlrgdienstplan.de
+
+## Demo 
+A Demo Application is providet here: https://demo.dlrgdienstplan.de. 
+
+Login as a Admin with 
+>user: admin 
+>password: admin 
+
+or as a User with 
+
+>user: user 
+>password: user
 
 ## Issues & Feature requests
 
@@ -13,6 +26,10 @@ Before opening an issue, make sure to check whether any existing issues
 Please refrain from using the `master` branch for anything else but development purposes!
 Use the most recent release instead. You can list all releases by running `git tag`
 and switch to one by running `git checkout *name*`.
+
+## Upgrade
+
+If you run a old version follow the upgrade Guide: [https://github.com/Philhil/DienstplanDLRG/wiki#upgrade-guide](https://github.com/Philhil/DienstplanDLRG/wiki#upgrade-guide)
 
 ## License
 The Laravel framework is open-sourced software licensed under the MIT license.

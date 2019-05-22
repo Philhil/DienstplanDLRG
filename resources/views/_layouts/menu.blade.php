@@ -9,6 +9,9 @@
                 <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                 <ul class="dropdown-menu pull-right">
                     <li><a href="{{action('UserController@show', \Illuminate\Support\Facades\Auth::user()->id)}}"><i class="material-icons">person</i>Profil</a></li>
+                    @can('administration')
+                    <li><a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}"><i class="material-icons">group</i>Client</a></li>
+                    @endcan
                     <li role="seperator" class="divider"></li>
                     <li><a href="{{ route('logout') }}"><i class="material-icons">input</i>Logout</a></li>
                 </ul>
@@ -19,7 +22,7 @@
     <!-- Menu -->
     <div class="menu">
         <ul class="list">
-            <li class="header {{active('user.show')}}">Navigation</li>
+            <li class="header {{active('user.show')}} {{active('clientapply')}}">Navigation</li>
             <li class="{{active('home')}}">
                 <a href="{{ action('HomeController@index') }}">
                     <i class="material-icons">home</i>
@@ -41,7 +44,7 @@
             @can('administration')
             <li class="header {{active('service.edit')}}">Administration</li>
 
-            <li class="{{active('user.*')}}">
+            <li class=@if(\Illuminate\Support\Facades\Route::current()->getPrefix() != '/superadmin') "{{active('user.*')}}" @endif>
                 <a href="{{ action('UserController@index') }}">
                     <i class="material-icons">person</i>
                     <span>Benutzer</span>
@@ -71,18 +74,44 @@
                     <span>Qualifikationen</span>
                 </a>
             </li>
+
+            <li class="{{active('client.show')}}">
+                <a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}">
+                    <i class="material-icons">group</i>
+                    <span>Client</span>
+                </a>
+            </li>
+            @endcan
+            @can('superadministration')
+                <li class="header {{active('client.edit')}}">Super Administration</li>
+
+                <li class=@if(\Illuminate\Support\Facades\Route::current()->getPrefix() == '/superadmin') "{{active('superadmin.user')}}" @endif>
+                    <a href="{{ route('superadmin.user') }}">
+                        <i class="material-icons">person</i>
+                        <span>Alle Benutzer</span>
+                    </a>
+                </li>
+
+                <li class="{{active('client.*')}}">
+                    <a href="{{ action('ClientController@index') }}">
+                        <i class="material-icons">group</i>
+                        <span>Clients</span>
+                    </a>
+                </li>
             @endcan
         </ul>
     </div>
     <!-- #Menu -->
     <!-- Footer -->
     <div class="legal">
+        <a href="/impressum">Impressum</a> <a>|</a>
+        <a href="/datenschutz">Datenschutz</a>
         <div class="copyright">
             Design: &copy; 2016 - 2017 <a href="https://github.com/gurayyarar/AdminBSBMaterialDesign">AdminBSB - Material Design</a>. <br>
             Programming: &copy; 2017 - <?php echo date('Y') ?> <a href="https://github.com/Philhil/DienstplanDLRG">Philippe Käufer</a>.
         </div>
         <div class="version">
-            <b>Version: </b> 2018.1
+            <b>Version: </b> 2019.1
         </div>
     </div>
     <!-- #Footer -->
