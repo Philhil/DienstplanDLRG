@@ -26,14 +26,24 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $saison = Auth::user()->currentclient()->Season();
+
         $positions_user_past = Position::where('user_id', '=', Auth::user()->id)->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
+            ->where('services.date', '<', DB::raw('CURDATE()'))
+            ->whereBetween('services.date', [$saison["from"], $saison["to"]])
+            ->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
         $positions_total_past = Position::where('user_id', '!=', null)->join('services', 'positions.service_id', '=', 'services.id')
-                            ->where('services.date', '<', DB::raw('CURDATE()'))->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
+            ->where('services.date', '<', DB::raw('CURDATE()'))
+            ->whereBetween('services.date', [$saison["from"], $saison["to"]])
+            ->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
         $positions_free_required = Position::where('user_id', '=', null)->where('requiredposition', '=', 1)->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '>=', DB::raw('CURDATE()'))->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
+            ->where('services.date', '>=', DB::raw('CURDATE()'))
+            ->whereBetween('services.date', [$saison["from"], $saison["to"]])
+            ->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
         $top_users = Position::where('user_id', '!=', null)->with('user')->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))->where('services.client_id', '=', Auth::user()->currentclient_id)->selectRaw('user_id, count(*) as aggregate')
+            ->where('services.date', '<', DB::raw('CURDATE()'))
+            ->whereBetween('services.date', [$saison["from"], $saison["to"]])
+            ->where('services.client_id', '=', Auth::user()->currentclient_id)->selectRaw('user_id, count(*) as aggregate')
             ->groupBy('user_id')->limit(10)->orderby('aggregate', 'desc')->get();
 
         return view('home.index', compact('positions_user_past', 'positions_total_past', 'positions_free_required', 'top_users'));

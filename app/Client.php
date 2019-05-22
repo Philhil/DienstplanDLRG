@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -64,5 +65,23 @@ class Client extends Model
     public function Services()
     {
         return $this->hasMany( Service::class);
+    }
+
+    public function Season()
+    {
+        $season = $this->seasonStart;
+        $season->year(Carbon::now()->format('Y'));
+
+        if ($season->isFuture())
+        {
+            $from = $season->copy()->subYears(1);
+            $to = $season;
+        }
+        else
+        {
+            $from = $season;
+            $to = $season->copy()->addYear();
+        }
+        return ["from" => $from, "to" => $to];
     }
 }
