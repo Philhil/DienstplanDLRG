@@ -38,7 +38,7 @@ class WachplanToMail extends Mailable
 
         if (count($services) > 0)
         {
-            $pdf = PDF::loadView('email.serviceslist', ['services'=>$services, 'tableheader'=>$tableheader])->setPaper('a3', 'landscape');
+            $pdf = \PDF::loadView('email.serviceslist', ['services'=>$services, 'tableheader'=>$tableheader])->setPaper('a3', 'landscape');
 
             return $this->subject('Wachplan')->view('email.serviceslist_text', ['client' => $this->client])
                 ->from($this->client->mailReplyAddress, $this->client->mailSenderName)
