@@ -46,7 +46,7 @@ class SendServicePDF extends Command
         {
             if ($client->weeklyServiceviewEmail)
             {
-                $services_count = Service::where([['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addWeek(2)]])->orderBy('date')->with('positions.qualification')->count();
+                $services_count = Service::where(['client_id' => $client->id, ['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addWeek(2)]])->orderBy('date')->with('positions.qualification')->count();
 
                 if($services_count > 0) {
                     if ($client->isMailinglistCommunication) {

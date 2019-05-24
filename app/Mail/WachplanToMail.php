@@ -3,10 +3,11 @@
 namespace App\Mail;
 
 use App\Client;
+use App\Service;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\DB;
 
 class WachplanToMail extends Mailable
@@ -33,11 +34,15 @@ class WachplanToMail extends Mailable
     {
         $tableheader = $this->client->Qualifications()->where('isservicedefault', true)->get();
         //get all services of next 2 month
-        $services = \App\Service::where(['client_id' => $this->client->id,['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)]])->orderBy('date')->with('positions.qualification')->get();
+        $services = Service::where(['client_id' => $this->client->id,['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)]])->orderBy('date')->with('positions.qualification')->get();
 
-        return $this->subject('Wachplan')->view('email.serviceslist')->with([
-            'tableheader' => $tableheader,
-            'services' => $services,
-        ])->from($this->client->mailReplyAddress, $this->client->mailSenderName);
+        if (count($services) > 0)
+        {
+            $pdf = PDF::loadView('email.serviceslist', ['services'=>$services, 'tableheader'=>$tableheader])->setPaper('a3', 'landscape');
+
+            return $this->subject('Wachplan')->view('email.serviceslist_text', ['client' => $this->client])
+                ->from($this->client->mailReplyAddress, $this->client->mailSenderName)
+                ->attachData($pdf->output(), 'Dienstplan'.Carbon::now()->format('Ymd').'.pdf');
+        }
     }
 }

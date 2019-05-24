@@ -1,4 +1,12 @@
 <style>
+    @page {
+        size: 42cm 29.7cm;
+        margin: 5mm 2mm 5mm 2mm;
+    }
+    body {
+        width: 42cm;
+        height: 29.7cm;
+    }
     .nopos{
         background-color: #353535;
     }
@@ -10,9 +18,10 @@
         border-collapse: collapse;
         padding: 15px;
     }
+
 </style>
 <?php
-    foreach ($services as $service)
+foreach ($services as $service)
     {
         foreach ($service->positions as $position)
         {
@@ -23,7 +32,7 @@
         }
     }
 ?>
-
+<body>
 <table style="width:100%">
         <tr>
             <th>Datum</th>
@@ -58,3 +67,4 @@
             </tr>
         @endforeach
 </table>
+</body>
