@@ -26,7 +26,7 @@
 
                             <select class="bootstrap-select show-tick" data-live-search="true" name="client[]">
                                 @foreach(\App\Client::all() as $client)
-                                    <option value="{{$client->id}}">{{$client->name}}</option>
+                                    <option value="{{$client->id}}" @if(old('client') != null &&  old('client')[0] == $client->id) selected @endif >{{$client->name}}</option>
                                 @endforeach
                             </select>
 
@@ -44,7 +44,7 @@
                             <i class="material-icons">person</i>
                         </span>
                         <div class="form-line">
-                            <input type="text" id="first_name" class="form-control" name="first_name" {{ old('first_name') }} placeholder="Vorname" required autofocus>
+                            <input type="text" id="first_name" class="form-control" name="first_name" value="{{ old('first_name') }}" placeholder="Vorname" required autofocus>
                             @if ($errors->has('first_name'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('first_name') }}</strong>
@@ -57,7 +57,7 @@
                             <i class="material-icons">person</i>
                         </span>
                         <div class="form-line">
-                            <input type="text" id="name" class="form-control" name="name" {{ old('name') }} placeholder="Name" required>
+                            <input type="text" id="name" class="form-control" name="name" value="{{ old('name') }}" placeholder="Name" required>
                             @if ($errors->has('name'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('name') }}</strong>
@@ -100,6 +100,27 @@
                             @if ($errors->has('password_confirmation'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('password_confirmation') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <p style="text-align: center;  display: block;">
+                            {{captcha_img('flat')}}
+                        </p>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">vpn_key</i>
+                        </span>
+
+                        <div class="form-line">
+                            <input type="text" id="captcha" class="form-control" name="captcha" minlength="1" required>
+                            @if ($errors->has('captcha'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('captcha') }}</strong>
                                 </span>
                             @endif
                         </div>
