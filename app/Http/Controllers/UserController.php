@@ -138,7 +138,7 @@ class UserController extends Controller
         }
 
         User::findorFail($id)->delete();
-        return redirect(action('UserController@index'));
+        return redirect(route('superadmin.user'));
     }
 
     public function approve_user($id)
