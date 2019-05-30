@@ -42,8 +42,8 @@ class PositionAssigned extends Mailable implements ShouldQueue
         $vCalendar = new \Eluceo\iCal\Component\Calendar('www.dlrgdienstplan.de');
         $vEvent = new \Eluceo\iCal\Component\Event();
         $vEvent
-            ->setDtStart(new \DateTime($service->toDateString()))
-            ->setDtEnd(new \DateTime($service->toDateString()))
+            ->setDtStart(new \DateTime($service->date->toDateString()))
+            ->setDtEnd(new \DateTime($service->date->toDateString()))
             ->setNoTime(true)
             ->setSummary('DLRG Dienst' . $service->comment);
 
@@ -54,7 +54,7 @@ class PositionAssigned extends Mailable implements ShouldQueue
             'servicepositions' => $this->servicepositions,
             'authorizedby' => $this->authorizedby,
         ])->from($client->mailReplyAddress, $client->mailSenderName)
-        ->attachData($vCalendar->render(), 'dienst.ics', [
+        ->attachData($vCalendar->render(), 'dienst'.$service->date->toDateString().'.ics', [
             'mime' => 'text/calendar;charset=UTF-8;method=REQUEST',
         ]);
     }

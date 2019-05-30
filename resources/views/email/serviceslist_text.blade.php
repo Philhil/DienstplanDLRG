@@ -6,7 +6,7 @@
 <body>
 <h1>Dienstplan {{$client->name}}</h1>
 <p>Hallo zusammen,</p>
-<p>im Anhang die w&ouml;chentliche &Uuml;bersicht &uuml;ber den Dienstplan.</p>
+<p>im Anhang die w&ouml;chentliche &Uuml;bersicht des Dienstplanes.</p>
 <p>&nbsp;</p>
 <p>Viele Gr&uuml;&szlig;e&nbsp;</p>
 <p><a href="https://dlrgdienstplan.de/">https://dlrgdienstplan.de</a></p>
