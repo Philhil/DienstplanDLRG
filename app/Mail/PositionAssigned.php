@@ -45,7 +45,10 @@ class PositionAssigned extends Mailable implements ShouldQueue
             ->setDtStart(new \DateTime($service->date->toDateString()))
             ->setDtEnd(new \DateTime($service->date->toDateString()))
             ->setNoTime(true)
-            ->setSummary('DLRG Dienst' . $service->comment);
+            ->setSummary('DLRG Dienst')
+            ->setDescription($service->comment)
+            ->setCategories(['dlrg'])
+            ->setLocation('DLRG ' . $client->name . ', Mühlhäuser straße 319, 70378 Stuttgart', 'DLRG Rettungszentrum', '48.83725594965788,9.218654986470938');
 
         $vCalendar->addComponent($vEvent);
 
