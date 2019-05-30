@@ -9,6 +9,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
@@ -138,6 +139,8 @@ class UserController extends Controller
         }
 
         User::findorFail($id)->delete();
+
+        Session::flash('successmessage', 'User erfolgreich gelöscht');
         return redirect(route('superadmin.user'));
     }
 
@@ -158,6 +161,7 @@ class UserController extends Controller
         $user = User::findorFail($id);
         event(new UserApproved($user, Client::find(Auth::user()->currentclient_id), Auth::user()));
 
+        Session::flash('successmessage', $user->first_name .' '. $user->name .' wurde freigegeben');
         return redirect(action('UserController@index'));
     }
 

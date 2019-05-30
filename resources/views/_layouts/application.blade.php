@@ -111,6 +111,16 @@
 
             @if(Session::get('errormessage') != null)
                 showNotification('alert-info', '{{Session::get('errormessage')}}');
+            @php
+                Session::forget('errormessage');
+            @endphp
+            @endif
+
+            @if(Session::get('successmessage') != null)
+            showNotification('alert-success', '{{Session::get('successmessage')}}');
+            @php
+            Session::forget('successmessage');
+            @endphp
             @endif
         });
 

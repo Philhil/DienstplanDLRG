@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class ServiceController extends Controller
 {
@@ -114,6 +115,8 @@ class ServiceController extends Controller
                     }
                 }
             }
+
+            Session::flash('message', ' Neuen Dienst erfolgreich angelegt');
         }
 
         return redirect(action('ServiceController@create'));
