@@ -32,7 +32,7 @@
             <i class="material-icons">date_range</i>
         </span>
         <div class="form-line">
-            {{ Form::text('seasonStart', $client['seasonStart']->format('d.m'), ['class' => 'form-control saison', 'placeholder' => 'z.B: 01.03']) }}
+            {{ Form::text('seasonStart', isset($client['seasonStart']) ? $client['seasonStart']->format('d.m') : null, ['class' => 'form-control saison', 'placeholder' => 'z.B: 01.03']) }}
             {!! $errors->first('seasonStart', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
