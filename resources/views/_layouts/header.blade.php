@@ -4,25 +4,30 @@
         <div class="navbar-header">
             <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
             <a href="javascript:void(0);" class="bars"></a>
-            <a class="navbar-brand" href="/home">@if(empty(Auth::user()->currentclient())) DLRG Dienstplan @else {{Auth::user()->currentclient()->name}}@endif</a>
+                @if(empty(Auth::user()->currentclient())) <a class="navbar-brand" href="/home">DLRG Dienstplan</a>
+                @else
+                    @if(Illuminate\Support\Facades\Auth::user()->clients()->count() > 1)
+                    <ul class="header-dropdown" style="list-style: none;">
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle navbar-brand" aria-expanded="false" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                {{Illuminate\Support\Facades\Auth::user()->currentclient()->name}} <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" style="margin-left: 15px; margin-top: 40px !important;">
+                                @foreach(Illuminate\Support\Facades\Auth::user()->clients()->get() as $client)
+                                    <li><a href="/changeclient/{{$client->id}}" class=" waves-effect waves-block">{{$client->name}}</a></li>
+                                @endforeach
+                            </ul>
+                        </li>
+                    </ul>
+                    @else
+                    <a class="navbar-brand" href="/home">{{Auth::user()->currentclient()->name}}</a>
+                    @endif
+                @endif
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
 
                 <li><a href="{{ action('ClientController@apply') }}" class="" data-close="true" role="button"><i class="material-icons">group_add</i></a></li>
-
-                @if(Illuminate\Support\Facades\Auth::user()->clients()->count() > 1)
-                <!--Select current client-->
-                <li>
-                    <a>
-                    <select class="bootstrap-select" id="clientchange" data-live-search="true" name="client[]" style="margin-top: 100px">
-                        @foreach(Illuminate\Support\Facades\Auth::user()->clients()->get() as $client)
-                            <option value="{{$client->id}}" @if($client->id == Auth::user()->currentclient_id) selected @endif>{{$client->name}}</option>
-                        @endforeach
-                    </select>
-                    </a>
-                </li>
-                @endif
 
                 <!-- Notifications -->
                 <li class="dropdown">
