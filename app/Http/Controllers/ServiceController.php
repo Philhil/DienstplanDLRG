@@ -43,6 +43,32 @@ class ServiceController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexTraining()
+    {
+        if(Auth::user()->isAdmin())
+        {
+            $services = Service::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+                ->orderBy('date')->with('openpositions')->with('positions.qualification')->with('positions.user')
+                ->with('positions.candidatures')->with('positions.candidatures.user')->get();
+        } else
+        {
+            $services = Service::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+                ->orderBy('date')->with('openpositions')->with('positions.qualification')->with('positions.user')
+                ->with('positions.candidatures')->with(['positions.candidatures.user'=> function ($query) {
+                    $query->where('id', '=', Auth::user()->id);
+                }])->get();
+        }
+
+        $user = User::where(['id' => Auth::user()->id])->with('qualifications')->first();
+
+        return view('service.index', compact('services', 'user'));
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -67,6 +93,16 @@ class ServiceController extends Controller
 
         $users = Auth::user()->currentclient()->user()->orderBy('name')->get();
         return view('service.create', compact('service', 'positions', 'qualifications', 'users'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function createTraining()
+    {
+        return null;
     }
 
     /**

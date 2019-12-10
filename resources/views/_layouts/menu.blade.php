@@ -35,6 +35,12 @@
                     <span>Dienste</span>
                 </a>
             </li>
+            <li class="{{active('service.indexTraining')}}">
+                <a href="{{ action('ServiceController@indexTraining') }}">
+                    <i class="material-icons">library_books</i>
+                    <span>Ausbildungen</span>
+                </a>
+            </li>
             <li class="{{active('news.index')}} {{active('news.edit')}}">
                 <a href="{{ action('NewsController@index') }}">
                     <i class="material-icons">forum</i>
@@ -62,6 +68,12 @@
                     <span>Dienst anlegen</span>
                 </a>
             </li>
+                <li class="{{active('service.createTraining')}}">
+                    <a href="{{ action('ServiceController@createTraining') }}">
+                        <i class="material-icons">library_add</i>
+                        <span>Ausbildung anlegen</span>
+                    </a>
+                </li>
             <li class="{{active('news.create')}}">
                 <a href="{{ action('NewsController@create') }}">
                     <i class="material-icons">chat</i>

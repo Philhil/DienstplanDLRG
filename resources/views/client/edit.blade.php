@@ -50,6 +50,29 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Bonus-Punkte Typen</h2>
+                </div>
+                <div class="body">
+                    <div class="row">
+                        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+                            <div class="row clearfix" style="margin-left: 50px;">
+
+                                <!--
+                                Add
+                                send ajax and show in list
+                                when ajax error -> remove from list
+                                -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- #END# Input -->
     </div>
 @endsection

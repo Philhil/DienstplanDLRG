@@ -48,6 +48,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('service', 'ServiceController');
     Route::get('service/{service}/delete', 'ServiceController@delete')->name('service.delete');
+    Route::get('service/indexTraining', 'ServiceController@indexTraining')->name('service.indexTraining');
+    Route::get('service/createTraining', 'ServiceController@createTraining')->name('service.createTraining');
 
     Route::resource('news', 'NewsController');
     Route::get('news/{news}/delete', 'NewsController@delete')->name('news.delete');
