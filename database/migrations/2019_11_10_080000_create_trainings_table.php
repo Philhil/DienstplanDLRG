@@ -17,7 +17,7 @@ class CreateTrainingsTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->LONGTEXT('content');
-            $table->timestamp('sendbydatetime');
+            $table->timestamp('date');
             $table->timestamps();
         });
     }
