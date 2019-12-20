@@ -10,7 +10,7 @@
                 <ul class="dropdown-menu pull-right">
                     <li><a href="{{action('UserController@show', \Illuminate\Support\Facades\Auth::user()->id)}}"><i class="material-icons">person</i>Profil</a></li>
                     @can('administration')
-                    <li><a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}"><i class="material-icons">group</i>Client</a></li>
+                        <li><a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}"><i class="material-icons">group</i>Client</a></li>
                     @endcan
                     <li role="seperator" class="divider"></li>
                     <li><a href="{{ route('logout') }}"><i class="material-icons">input</i>Logout</a></li>
@@ -38,7 +38,7 @@
             <li class="{{active('service.indexTraining')}}">
                 <a href="{{ action('ServiceController@indexTraining') }}">
                     <i class="material-icons">library_books</i>
-                    <span>Ausbildungen</span>
+                    <span>Übungen/Fortbildungen</span>
                 </a>
             </li>
             <li class="{{active('news.index')}} {{active('news.edit')}}">
@@ -48,51 +48,51 @@
                 </a>
             </li>
             @can('administration')
-            <li class="header {{active('service.edit')}}">Administration</li>
+                <li class="header {{active('service.edit')}}">Administration</li>
 
-            <li class=@if(\Illuminate\Support\Facades\Route::current()->getPrefix() != '/superadmin') "{{active('user.*')}}" @endif>
-                <a href="{{ action('UserController@index') }}">
-                    <i class="material-icons">person</i>
-                    <span>Benutzer</span>
-                </a>
-            </li>
-            <li class="{{active('position.list_notAuthorized')}}">
-                <a href="{{action('PositionController@index_notAuthorized')}}">
-                    <i class="material-icons">check_circle</i>
-                    <span>Dienste bestätigen</span>
-                </a>
-            </li>
-            <li class="{{active('service.create')}}">
-                <a href="{{ action('ServiceController@create') }}">
-                    <i class="material-icons">note_add</i>
-                    <span>Dienst anlegen</span>
-                </a>
-            </li>
+                <li class=@if(\Illuminate\Support\Facades\Route::current()->getPrefix() != '/superadmin') "{{active('user.*')}}" @endif>
+                    <a href="{{ action('UserController@index') }}">
+                        <i class="material-icons">person</i>
+                        <span>Benutzer</span>
+                    </a>
+                </li>
+                <li class="{{active('position.list_notAuthorized')}}">
+                    <a href="{{action('PositionController@index_notAuthorized')}}">
+                        <i class="material-icons">check_circle</i>
+                        <span>Dienste bestätigen</span>
+                    </a>
+                </li>
+                <li class="{{active('service.create')}}">
+                    <a href="{{ action('ServiceController@create') }}">
+                        <i class="material-icons">note_add</i>
+                        <span>Dienst anlegen</span>
+                    </a>
+                </li>
                 <li class="{{active('service.createTraining')}}">
                     <a href="{{ action('ServiceController@createTraining') }}">
                         <i class="material-icons">library_add</i>
                         <span>Ausbildung anlegen</span>
                     </a>
                 </li>
-            <li class="{{active('news.create')}}">
-                <a href="{{ action('NewsController@create') }}">
-                    <i class="material-icons">chat</i>
-                    <span>Nachricht erstellen</span>
-                </a>
-            </li>
-            <li class="{{active('qualification.*')}}">
-                <a href="{{ action('QualificationController@index') }}">
-                    <i class="material-icons">local_activity</i>
-                    <span>Qualifikationen</span>
-                </a>
-            </li>
+                <li class="{{active('news.create')}}">
+                    <a href="{{ action('NewsController@create') }}">
+                        <i class="material-icons">chat</i>
+                        <span>Nachricht erstellen</span>
+                    </a>
+                </li>
+                <li class="{{active('qualification.*')}}">
+                    <a href="{{ action('QualificationController@index') }}">
+                        <i class="material-icons">local_activity</i>
+                        <span>Qualifikationen</span>
+                    </a>
+                </li>
 
-            <li class="{{active('client.show')}}">
-                <a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}">
-                    <i class="material-icons">group</i>
-                    <span>Client</span>
-                </a>
-            </li>
+                <li class="{{active('client.show')}}">
+                    <a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}">
+                        <i class="material-icons">group</i>
+                        <span>Client</span>
+                    </a>
+                </li>
             @endcan
             @can('superadministration')
                 <li class="header {{active('client.edit')}}">Super Administration</li>
