@@ -19,6 +19,9 @@ class CreateTrainingsTable extends Migration
             $table->integer('client_id')->unsigned(); 
             $table->LONGTEXT('content');
             $table->timestamp('date');
+            $table->timestamp('dateEnd')->nullable();
+            $table->text('location')->nullable();
+            
             $table->timestamp('sendbydatetime');
             $table->timestamps();
             
