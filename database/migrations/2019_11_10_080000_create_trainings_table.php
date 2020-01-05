@@ -16,11 +16,10 @@ class CreateTrainingsTable extends Migration
         Schema::create('trainings', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->integer('client_id')->unsigned();
-           
-            
+            $table->integer('client_id')->unsigned(); 
             $table->LONGTEXT('content');
             $table->timestamp('date');
+            $table->timestamp('sendbydatetime');
             $table->timestamps();
             
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
