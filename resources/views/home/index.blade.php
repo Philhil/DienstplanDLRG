@@ -23,6 +23,15 @@
                                 <div class="number count-to" data-from="0" data-to="{{$positions_user_past}}" data-speed="1000" data-fresh-interval="20">{{$positions_user_past}}</div>
                             </div>
                         </div>
+                        <div class="info-box bg-grey hover-expand-effect">
+                            <div class="icon">
+                                <i class="material-icons">playlist_add_check</i>
+                            </div>
+                            <div class="content">
+                                <div class="text"> Teilgenommene Übungen</div>
+                                <div class="number count-to" data-from="0" data-to="{{$positions_user_past_training}}" data-speed="1000" data-fresh-interval="20">{{$positions_user_past_training}}</div>
+                            </div>
+                        </div>
 
                         <div class="info-box bg-blue hover-expand-effect">
                             <div class="icon">
@@ -33,7 +42,6 @@
                                 <div class="number count-to" data-from="0" data-to="{{$positions_total_past}}" data-speed="1000" data-fresh-interval="20">{{$positions_total_past}}</div>
                             </div>
                         </div>
-
                         <div class="info-box bg-pink hover-expand-effect">
                             <div class="icon">
                                 <i class="material-icons">event_busy</i>

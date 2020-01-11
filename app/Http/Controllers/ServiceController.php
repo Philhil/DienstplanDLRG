@@ -7,6 +7,7 @@ use App\Position;
 use App\PositionCandidature;
 use App\Qualification;
 use App\Service;
+use App\Training;
 use App\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -47,25 +48,25 @@ class ServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function indexTraining()
     {
-        if(Auth::user()->isAdmin())
-        {
-            $services = Service::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+        if(Auth::user()->isAdmin()) {
+            $trainings = Training::where('date', '>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
                 ->orderBy('date')->with('openpositions')->with('positions.qualification')->with('positions.user')
                 ->with('positions.candidatures')->with('positions.candidatures.user')->get();
-        } else
-        {
-            $services = Service::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
-                ->orderBy('date')->with('openpositions')->with('positions.qualification')->with('positions.user')
-                ->with('positions.candidatures')->with(['positions.candidatures.user'=> function ($query) {
-                    $query->where('id', '=', Auth::user()->id);
-                }])->get();
-        }
+        }else
+            {
+                $trainings = Training::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+                    ->orderBy('date')->with('openpositions')->with('positions.qualification')->with('positions.user')
+                    ->with('positions.candidatures')->with(['positions.candidatures.user'=> function ($query) {
+                        $query->where('id', '=', Auth::user()->id);
+                    }])->get();
+            }
 
-        $user = User::where(['id' => Auth::user()->id])->with('qualifications')->first();
+            $user = User::where(['id' => Auth::user()->id])->with('qualifications')->first();
 
-        return view('service.index', compact('services', 'user'));
+          return view('training.index', compact('trainings', 'user'));
     }
 
     /**
@@ -102,7 +103,24 @@ class ServiceController extends Controller
      */
     public function createTraining()
     {
-        return null;
+        if(!Auth::user()->isAdmin()) {
+            abort(402, "Nope.");
+        }
+
+        $training = new Training();
+        $qualifications = Qualification::where('client_id', '=', Auth::user()->currentclient_id)->orderBy('name')->get();
+        $positions = new \Illuminate\Database\Eloquent\Collection();
+
+        foreach (Qualification::where(['client_id' => Auth::user()->currentclient_id, 'isservicedefault' => true])->get() as $quali)
+        {
+            for ($i = 0; $i < $quali->defaultcount; $i++)
+            {
+                $positions->push(new Position(['qualification_id' => $quali->id, 'requiredposition' => $quali->defaultrequiredasposition]));
+            }
+        }
+
+        $users = Auth::user()->currentclient()->user()->orderBy('name')->get();
+        return view('training.create', compact('training', 'positions', 'qualifications', 'users'));
     }
 
     /**
@@ -158,6 +176,52 @@ class ServiceController extends Controller
         return redirect(action('ServiceController@create'));
     }
 
+    public function storeTraining(Request $request){
+
+        if(!Auth::user()->isAdmin()) {
+            abort(402, "Nope.");
+        }
+
+        $training = new Training();
+        $training->date = Carbon::createFromFormat('d m Y', $request->get('date'))->startOfDay();
+        $training->comment = $request->get('comment');
+        $training->hastoauthorize = $request->get('hastoauthorize');
+        $training->client_id = Auth::user()->currentclient_id;
+        $training->save();
+
+        if ($request->has('qualification') && $request->get('qualification')) {
+            $qualifications = $request->get('qualification');
+            $users = $request->get('user');
+            $position_comment = $request->get('position_comment');
+            $position_required = $request->get('position_required');
+            for ($i = 0; $i < count($qualifications); $i++ ) {
+
+                if (Qualification::where(['id' => $qualifications[$i], 'client_id' => Auth::user()->currentclient_id])->count() > 0) {
+                    $position = new Position();
+                    $position->training_id = $training->id;
+                    $position->qualification_id = $qualifications[$i];
+                    $position->requiredposition = $position_required[$i];
+                    if ($users[$i] == "null") {
+                        $position->user_id = null;
+                    } else {
+                        $position->user_id = $users[$i];
+                    }
+                    $position->comment = $position_comment[$i];
+
+                    $saved = $position->save();
+
+                    //inform user about new pos assign
+                    if($saved && !is_null($position->user_id)) {
+                        event(new PositionAuthorized($position, Auth::user()));
+                    }
+                }
+            }
+
+            Session::flash('message', ' Neue Übung erfolgreich angelegt');
+        }
+
+        return redirect(action('ServiceController@createTraining'));
+    }
     /**
      * Display the specified resource.
      *
@@ -170,6 +234,12 @@ class ServiceController extends Controller
             abort(402, "Nope.");
         }
         // if admin or headofservice (service->positions where user && position->quali headofservice)
+    }
+
+    public function showTraining($id) {
+        if(!Auth::user()->isAdmin()) {
+            abort(402, "Nope.");
+        }
     }
 
     /**
@@ -189,6 +259,19 @@ class ServiceController extends Controller
         $positions = $service->positions()->get();
         $users = Auth::user()->currentclient()->user()->with('qualifications')->orderBy('name')->get();
         return view('service.create', compact('service', 'positions', 'qualifications', 'users'));
+    }
+
+    public function editTraining($id){
+        if(!Auth::user()->isAdmin()) {
+            abort(402, "Nope.");
+        }
+
+        $training = Training::findOrFail($id);
+        $qualifications = Qualification::where('client_id', '=', Auth::user()->currentclient_id)->orderBy('name')->get();
+        $positions = $training->positions()->get();
+        $users = Auth::user()->currentclient()->user()->with('qualifications')->orderB<('name')-get();
+
+        return view('service.createTraining', compact('training', 'positions', 'qualifications', 'users'));
     }
 
     /**
@@ -314,6 +397,7 @@ class ServiceController extends Controller
 
         return redirect(action('ServiceController@index'));
     }
+
 
     /**
      * Remove the specified resource from storage.

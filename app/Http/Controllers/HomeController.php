@@ -29,25 +29,30 @@ class HomeController extends Controller
     {
         $saison = Auth::user()->currentclient()->Season();
 
-        $positions_user_past = Position::where('user_id', '=', Auth::user()->id)->join('services', 'positions.service_id', '=', 'services.id')
+        $positions_user_past = Position::where('user_id', '=', Auth::user()->id)->where('positions.training_id', '=', '')->join('services', 'positions.service_id', '=', 'services.id')
             ->where('services.date', '<', DB::raw('CURDATE()'))
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
             ->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
-        $positions_total_past = Position::where('user_id', '!=', null)->join('services', 'positions.service_id', '=', 'services.id')
+        $positions_user_past_training = Position::where('user_id', '=', Auth::user()->id)->join('trainings', 'positions.training_id', '=', 'trainings.id')
+            ->where('trainings.date', '<', DB::raw('CURDATE()'))
+            ->whereBetween('trainings.date', [$saison["from"], $saison["to"]])
+            ->where('trainings.client_id', '=', Auth::user()->currentclient_id)->count();
+        $positions_total_past = Position::where('user_id', '!=', null)->where('positions.training_id', '=', '')->join('services', 'positions.service_id', '=', 'services.id')
             ->where('services.date', '<', DB::raw('CURDATE()'))
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
             ->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
-        $positions_free_required = Position::where('user_id', '=', null)->where('requiredposition', '=', 1)->join('services', 'positions.service_id', '=', 'services.id')
+        $positions_free_required = Position::where('user_id', '=', null)->where('positions.training_id', '=', null)
+            ->where('requiredposition', '=', 1)->join('services', 'positions.service_id', '=', 'services.id')
             ->where('services.date', '>=', DB::raw('CURDATE()'))
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
             ->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
-        $top_users = Position::where('user_id', '!=', null)->with('user')->join('services', 'positions.service_id', '=', 'services.id')
+        $top_users = Position::where('user_id', '!=', null)->with('user')->where('positions.training_id', '=', '')->join('services', 'positions.service_id', '=', 'services.id')
             ->where('services.date', '<', DB::raw('CURDATE()'))
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
             ->where('services.client_id', '=', Auth::user()->currentclient_id)->selectRaw('user_id, count(*) as aggregate')
             ->groupBy('user_id')->limit(10)->orderby('aggregate', 'desc')->get();
 
-        return view('home.index', compact('positions_user_past', 'positions_total_past', 'positions_free_required', 'top_users'));
+        return view('home.index', compact('positions_user_past', 'positions_user_past_training', 'positions_total_past', 'positions_free_required', 'top_users'));
     }
 
     public function mailtest(){

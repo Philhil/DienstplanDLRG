@@ -19,11 +19,14 @@ class CreatePositionTable extends Migration
             $table->integer('user_id')->unsigned()->nullable();
             $table->integer('qualification_id')->unsigned()->nullable();
             $table->string('comment')->nullable();
+            $table->integer('credit')->unsigned()->nullable();
+            $table->integer('credit_zwei')->unsigned()->nullable();
             $table->timestamps();
 
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('qualification_id')->references('id')->on('qualifications')->onDelete('cascade');
+
         });
     }
 
