@@ -1,17 +1,18 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
 class Training extends Model
 {
     protected $fillable = [
-        'date', 'hastoauthorize', 'content',
+        'title', 'client', 'content', 'date', 'dateEnd', 'location', 'sendbydatetime',
     ];
 
     protected $dates = [
-        'date',
+        'date', 'dateEnd'
     ];
-
-    protected $attributes = array(
-        'hastoauthorize' => 1,
-    );
-
 
     public function positions()
     {

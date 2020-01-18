@@ -48,6 +48,14 @@ class User extends Authenticatable
         return false;
     }
 
+    public function isTrainingEditor()
+    {
+        if (Client_user::where(['client_id' => Auth::user()->currentclient_id, 'user_id' => Auth::user()->id, 'isTrainingEditor' => true])->count() > 0)
+        {
+            return true;
+        }
+        return false;
+    }
 
     public function qualifications()
     {
