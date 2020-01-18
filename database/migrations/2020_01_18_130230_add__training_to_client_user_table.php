@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCredittypesTable extends Migration
+class AddTrainingToClientUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateCredittypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('credittypes', function (Blueprint $table) {
-            $table->increments('id');
-            $table->text('name');
-            $table->string('short');
-            $table->timestamps();
+        Schema::table('client_user', function (Blueprint $table) {
+            $table->boolean('isTrainingEditor')->default(false);
         });
     }
 
@@ -28,6 +25,8 @@ class CreateCredittypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('credittypes');
+        Schema::table('client_user', function (Blueprint $table) {
+            Schema::dropIfExists('isTrainingEditor');
+        });
     }
 }

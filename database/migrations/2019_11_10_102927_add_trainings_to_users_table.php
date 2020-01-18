@@ -14,7 +14,7 @@ class AddTrainingsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('showTrainings')->nullable();
+            $table->boolean('showTrainings')->default(false);
         });
     }
 
