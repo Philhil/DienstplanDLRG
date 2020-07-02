@@ -240,4 +240,33 @@ class ClientController extends Controller
 
         return redirect()->back();
     }
+
+    /**
+     * Update the specified module of this ressource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function module(Request $request)
+    {
+        if (!Auth::user()->isSuperAdmin() || !$request->has('client_id') || !$request->has('module') || !$request->has('state')){
+            abort(402, "Nope.");
+        }
+
+        $client = Client::findorfail($request->has('client_id'));
+
+        switch ($request->get('module')){
+            case "module_training":
+                $client->module_training = $request->get('state') == "true" ? 1 : 0;
+                break;
+            case "module_training_credit":
+                $client->module_training_credit = $request->get('state') == "true" ? 1 : 0;
+                break;
+        }
+        $client->save();
+
+        Session::flash('alert-success', 'Modul erfolgreich gespeichert!');
+        return "true";
+    }
 }

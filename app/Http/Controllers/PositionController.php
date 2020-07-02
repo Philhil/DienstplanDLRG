@@ -6,6 +6,7 @@ use App\Events\NewPositioncandidature;
 use App\Events\PositionAuthorized;
 use App\Position;
 use App\PositionCandidature;
+use App\Training_user;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -36,7 +37,22 @@ class PositionController extends Controller
     {
         $position = Position::findOrFail($id);
 
-        if ($position->user_id == null)
+        //Training
+        if ($position->training_id != null) {
+            $training = $position->training()->first();
+            if ($training->client_id == Auth::user()->currentclient_id
+                && Auth::user()->hasqualification($position->qualification()->first()->id)) {
+
+                //has user already approved position in this Training?
+                if(!$position->training->hasUserPositions(Auth::user()->id)) {
+                    Training_user::create(['training_id' => $training->id, 'user_id' => Auth::user()->id , 'position_id' => $position->id]);
+                    return $position;
+                }
+            }
+        }
+
+        //Service
+        if ($position->service_id != null && $position->user_id == null)
         {
             $service = $position->service()->first();
             if ($service->client_id == Auth::user()->currentclient_id
@@ -77,6 +93,17 @@ class PositionController extends Controller
      */
     public function unsubscribe($id)
     {
+        $position = Position::findOrFail($id);
+        //Training
+        if (!empty($position->training_id)) {
+            $training_user = Training_user::where(['position_id'=> $id, 'user_id' => Auth::user()->id])->select('id')->first();
+            if (!empty($training_user)) {
+                return redirect()->action('TrainingController@delete_training_user', ['id' => $training_user->id])->with('redirect', 'positionController@unsubscribe');
+            }
+
+            return "false";
+        }
+        //Service
         PositionCandidature::where(['position_id' => $id, 'user_id' =>  Auth::user()->id])->forceDelete();
         return $id;
     }
