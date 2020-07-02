@@ -54,23 +54,51 @@
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header">
-                    <h2>Bonus-Punkte Typen</h2>
+                    <h2>Dienstplan Module</h2>
+                    <small>Aktivierung/Deaktivierung erfolgt über den Administrator des Portals</small>
                 </div>
-                <div class="body">
-                    <div class="row">
-                        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
-                            <div class="row clearfix" style="margin-left: 50px;">
 
-                                <!--
-                                Add
-                                send ajax and show in list
-                                when ajax error -> remove from list
-                                -->
-
-                            </div>
-                        </div>
-                    </div>
+                <div class="body table-responsive modules">
+                    <table class="table table-striped" id="tblPositions">
+                        <thead>
+                        <tr>
+                            <th>Modul</th>
+                            <th>Beschreibung</th>
+                            <th>Aktion</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="strikeout">
+                                <td>Fortbildungen</td>
+                                <td>
+                                    <p>Aktiviert das Verwalten von Fortbildungen im Portal. Hierbei können unter anderem Infomails zeitlich vorgegeben automatisiert versendet werden</p>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label><input type="checkbox" id="module_training" @if($client->module_training)checked=""@endif @if(!\Illuminate\Support\Facades\Auth::user()->isSuperAdmin())disabled=""@endif><span class="lever"></span></label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="strikeout">
+                                <td>Credits für Fortbildungen</td>
+                                <td>
+                                    <p>Aufbauend auf dem Modul Fortbildungen können Credits für einzelne Fortbildungspositionen verwaltet werden.</p>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label><input type="checkbox" id="module_training_credit" @if($client->module_training_credit)checked=""@endif @if(!\Illuminate\Support\Facades\Auth::user()->isSuperAdmin())disabled=""@endif><span class="lever"></span></label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+                <!-- TODO
+                Add
+                send ajax and show in list
+                when ajax error -> remove from list
+                -->
+
             </div>
         </div>
         <!-- #END# Input -->
@@ -91,6 +119,27 @@
             $('.time24').inputmask('hh:mm', { placeholder: '__:__ _m', alias: 'time24', hourFormat: '24' });
             $('.saison').inputmask('d.m', { placeholder: '__.__', alias: 'saison'});
             $('.email').inputmask({ alias: "email" });
+
+            $('.modules input:checkbox').change(function () {
+                console.log($(this).is(':checked'));
+                $.ajax({
+                    type: "POST",
+                    url: '/client/module',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    'data' : {
+                        'module': $(this).attr('id'),
+                        'client_id': "{{$client->id}}",
+                        'state' : $(this).is(':checked')
+                    },
+                    success : function(data){
+                        if (data != "true") {
+                            $(this).prop("checked", !$(this).is(':checked'));
+                        }
+                    }
+                })
+            });
         });
 
         $('#client_user_adminselect').multiSelect({

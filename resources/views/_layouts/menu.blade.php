@@ -35,12 +35,14 @@
                     <span>Dienste</span>
                 </a>
             </li>
-            <li class="{{active('service.indexTraining')}}">
-                <a href="{{ action('ServiceController@indexTraining') }}">
+            @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_training)
+            <li class="{{active('training.index')}}">
+                <a href="{{ action('TrainingController@index') }}">
                     <i class="material-icons">library_books</i>
-                    <span>Übungen/Fortbildungen</span>
+                    <span>Fortbildungen</span>
                 </a>
             </li>
+            @endif
             <li class="{{active('news.index')}} {{active('news.edit')}}">
                 <a href="{{ action('NewsController@index') }}">
                     <i class="material-icons">forum</i>
@@ -70,12 +72,14 @@
                         </a>
                     </li>
                 @endcan
-                <li class="{{active('service.createTraining')}}">
-                    <a href="{{ action('ServiceController@createTraining') }}">
+                @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_training)
+                <li class="{{active('training.create')}}">
+                    <a href="{{ action('TrainingController@create') }}">
                         <i class="material-icons">library_add</i>
-                        <span>Ausbildung anlegen</span>
+                        <span>Fortbildung anlegen</span>
                     </a>
                 </li>
+                @endif
                 @can('administration')
                     <li class="{{active('news.create')}}">
                         <a href="{{ action('NewsController@create') }}">

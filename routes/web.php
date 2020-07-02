@@ -27,7 +27,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/', function (){return redirect('/service');});
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('/service/indexTraining', 'ServiceController@indexTraining');
     Route::get('/mailtest', 'HomeController@mailtest');
     Route::get('pdf','HomeController@generatePDF');
     Route::prefix('superadmin')->group(function () {
@@ -44,12 +43,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('/client/{clientid}/apply', 'ClientController@applyrequest')->name('clientapplyrequest');
     Route::any('/client/{clientid}/apply/revert', 'ClientController@applyrevert')->name('clientapplyrevert');
     Route::any('/client/{clientid}/removeuser/{userid}', 'ClientController@removeuser')->name('clientremoveuser');
+    Route::any('/client/module', 'ClientController@module')->name('clientmodule');
     Route::get('/changeclient/{client}', 'UserController@setcurrentclient')->name('changeclient');
 
     Route::resource('service', 'ServiceController');
     Route::get('service/{service}/delete', 'ServiceController@delete')->name('service.delete');
-    Route::get('service/indexTraining', 'ServiceController@indexTraining')->name('service.indexTraining');
-    Route::get('service/createTraining', 'ServiceController@createTraining')->name('service.createTraining');
+
+    Route::resource('training', 'TrainingController');
+    Route::get('training/{training}/delete', 'TrainingController@destroy')->name('training.delete');
+    Route::any('/training/training_user/{training_userid}/delete/', 'TrainingController@delete_training_user')->name('delete_training_user');
 
     Route::resource('news', 'NewsController');
     Route::get('news/{news}/delete', 'NewsController@delete')->name('news.delete');
