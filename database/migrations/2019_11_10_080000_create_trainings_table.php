@@ -23,6 +23,7 @@ class CreateTrainingsTable extends Migration
             $table->text('location')->nullable();
             
             $table->timestamp('sendbydatetime')->nullable();
+            $table->boolean('sended')->default(false);
             $table->timestamps();
             
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

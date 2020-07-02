@@ -14,12 +14,12 @@ class AddTrainingsToPositionsTable extends Migration
     public function up()
     {
         Schema::table('positions', function (Blueprint $table) {
+            //Service OR Training must not be NULL!
             $table->integer('training_id')->unsigned()->nullable();
             $table->foreign('training_id')->references('id')->on('trainings');
 
+            //Service OR Training must not be NULL!
             $table->integer('service_id')->unsigned()->nullable()->change();
-
-            $table->text('user_comment');
         });
     }
 
@@ -32,7 +32,6 @@ class AddTrainingsToPositionsTable extends Migration
     {
         Schema::table('positions', function (Blueprint $table) {
             Schema::dropIfExists('training_id');
-            Schema::dropIfExists('user_comment');
         });
     }
 }

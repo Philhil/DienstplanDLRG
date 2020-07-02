@@ -14,6 +14,7 @@ class AddTrainingsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
+            //show trainings to users in Dienste overwiew
             $table->boolean('showTrainings')->default(false);
         });
     }
