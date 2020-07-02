@@ -10,26 +10,21 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <span class="anchor" id="training{{$training->id}}"></span>
             <div class="card">
-                <div class="header">
+                <div class="header bg-amber">
                     <h2 data-toggle="collapse" data-target="#card_{{$training->id}}">
-                        @if(Browser::isDesktop())
-                            <span class="glyphicon glyphicon-collapse-up float-left"></span>
-                        @else
-                            <span class="glyphicon glyphicon-collapse-down float-left"></span>
-                            @if($training->openpositions_required->count() > 0)<span class="badge bg-red">{{$training->openpositions_required->count()}}</span>@endif
-                        @endif
-                        {{$training->date->format('l d m Y')}} <small>{{$training->comment}}</small>
+                        <span class="glyphicon glyphicon-collapse-up float-left"></span>
+                        {{$training->date->format('l d m Y')}} <small>{{$training->title}}</small>
                     </h2>
 
-                    @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
+                    @if($isAdmin || $isTrainingEditor)
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     <i class="material-icons">more_vert</i>
                                 </a>
                                 <ul class="dropdown-menu pull-right">
-                                    <li><a href="{{action('ServiceController@edit', $training->id) }}" class=" waves-effect waves-block"><i class="material-icons">mode_edit</i>Bearbeiten</a></li>
-                                    <li><a href="{{action('ServiceController@delete', $training->id) }}" class=" waves-effect waves-block"><i class="material-icons">delete</i> Löschen</a></li>
+                                    <li><a href="{{action('TrainingController@edit', $training->id) }}" class="btn-warning waves-effect waves-block"><i class="material-icons">mode_edit</i>Bearbeiten</a></li>
+                                    <li><a href="{{action('TrainingController@destroy', $training->id) }}" class="btn-danger waves-effect waves-block"><i class="material-icons">delete</i> Löschen</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -44,41 +39,16 @@
                             <table class="table">
                                 <tr>
                                     @foreach($training->positions as $position)
-                                        <th @if($position->requiredposition) class="font-underline"@endif>{{$position->qualification->name}}</th>
+                                        <th @if($position->requiredposition) class="font-underline"@endif>@if(!empty($position->qualification)){{$position->qualification->name}}@endif</th>
                                     @endforeach
                                 </tr>
                                 <tr>
-
+                                    {{-- List all Positions --}}
                                     @foreach($training->positions as $position)
+                                        {{-- show positions desc and list all teilnehmer --}}
                                         <td>
-                                            {{-- show candidates if nobody is approved --}}
-                                            @if(!isset($position->user))
-                                                @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
-                                                    @foreach($position->candidatures as $candidate)
-                                                        <row>
-                                                            <div class="col-md-12">
-                                                                <span class="badge bg-orange">
-                                                                    {{substr ($candidate->user->first_name, 0, 1)}}. {{$candidate->user->name}}
-                                                                    <button type="button" class="btn btn-xs bg-green btn-authorize" positionid="{{$position->id}}" candidateid="{{$candidate->id}}"><i class="material-icons">check</i></button>
-                                                                </span>
-                                                            </div>
-                                                        </row>
-                                                    @endforeach
-                                                @else
-                                                    <span class="badge bg-orange">{{count($position->candidatures)}}</span>
-                                                @endif
-                                            @endif
-                                            @if(isset($position->user))
-                                                <span class="badge @if($position->user->id == \Illuminate\Support\Facades\Auth::user()->id) bg-light-green @else bg-green @endif">
-                                                    {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
-                                                </span>
-                                                {{-- user has a Candidature for that pos --}}
-                                            @elseif($position->candidatures->contains('user', \Illuminate\Support\Facades\Auth::user()))
-                                                <button type="button" class="btn bg-orange waves-effect btn-unsubscribe" positionid="{{$position->id}}"><i class="material-icons">check_circle</i>
-                                                    Meldung zurückziehen
-                                                </button>
-                                                {{-- Has user this qualification? and Has user NOT already a Position at this training --}}
-                                            @elseif($user->qualifications->contains('id', $position->qualification->id) && !$training->positions->contains('user', \Illuminate\Support\Facades\Auth::user()))
+                                            {{-- Has user this qualification? and Has user NOT already a Position at this training --}}
+                                            @if((empty($position->qualification) || $user->qualifications->contains('id', $position->qualification->id)) && !$training->training_users->contains('user', \Illuminate\Support\Facades\Auth::user()))
                                                 <button type="button" class="btn bg-deep-orange waves-effect btn-subscribe" positionid="{{$position->id}}"><i class="material-icons">touch_app</i>
                                                     @if($training->hastoauthorize) Melden
                                                     @else Eintragen
@@ -95,6 +65,24 @@
                                                 <br>
                                                 <smal>({{$position->comment}})</smal>
                                             @endif
+
+                                            {{-- List all training_user_pos --}}
+                                            @foreach($training->training_users as $training_users)
+                                                @if($training_users->position_id == $position->id)
+                                                    <br>
+                                                    <span class="badge @if($training_users->user->id == \Illuminate\Support\Facades\Auth::user()->id) bg-light-green @else bg-green @endif m-t-5">
+                                                        {{substr ($training_users->user->first_name, 0, 1)}}. {{$training_users->user->name}}
+                                                        {{-- if is user -> possibility to remove him self --}}
+                                                        @if(($training_users->user->id == \Illuminate\Support\Facades\Auth::user()->id && !($training_users->training->date)->isToday()) || $isAdmin || $isTrainingEditor)
+                                                            {{ Form::open(['url' => '/training/training_user/'. $training_users->id .'/delete/', 'method' => 'delete', 'style'=>'display:inline-block']) }}
+                                                            <button type="submit" class="btn btn-xs btn-warning waves-effect btn-delete">
+                                                                <i class="material-icons">delete</i>
+                                                            </button>
+                                                            {{ Form::close() }}
+                                                        @endif
+                                                    </span>
+                                                @endif
+                                            @endforeach
                                         </td>
                                     @endforeach
                                 </tr>
@@ -109,37 +97,11 @@
                                 <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
                                     <div class="panel panel-default">
 
-                                        <b>{{$position->qualification->name}}:</b>
+                                        <b @if($position->requiredposition) class="font-underline"@endif>@if(!empty($position->qualification)){{$position->qualification->name}}@endif</b>
                                         <div class="panel-body">
 
-                                            {{-- show candidates if nobody is approved --}}
-                                            @if(!isset($position->user))
-                                                @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
-                                                    @foreach($position->candidatures as $candidate)
-                                                        <row>
-                                                            <div class="col-md-12">
-                                                                <span class="badge bg-orange">
-                                                                    {{substr ($candidate->user->first_name, 0, 1)}}. {{$candidate->user->name}}
-                                                                    <button type="button" class="btn btn-xs bg-green btn-authorize" positionid="{{$position->id}}" candidateid="{{$candidate->id}}"><i class="material-icons">check</i></button>
-                                                                </span>
-                                                            </div>
-                                                        </row>
-                                                    @endforeach
-                                                @else
-                                                    <span class="badge bg-orange">{{count($position->candidatures)}}</span>
-                                                @endif
-                                            @endif
-                                            @if(isset($position->user))
-                                                <span class="badge @if($position->user->id == \Illuminate\Support\Facades\Auth::user()->id) bg-light-green @else bg-green @endif">
-                                                    {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
-                                                </span>
-                                                {{-- user has a Candidature for that pos --}}
-                                            @elseif($position->candidatures->contains('user', \Illuminate\Support\Facades\Auth::user()))
-                                                <button type="button" class="btn bg-orange waves-effect btn-unsubscribe" positionid="{{$position->id}}"><i class="material-icons">check_circle</i>
-                                                    Meldung zurückziehen
-                                                </button>
-                                                {{-- Has user this qualification? and Has user NOT already a Position at this training --}}
-                                            @elseif($user->qualifications->contains('id', $position->qualification->id) && !$training->positions->contains('user', \Illuminate\Support\Facades\Auth::user()))
+                                            {{-- Has user this qualification? and Has user NOT already a Position at this training --}}
+                                            @if((empty($position->qualification) || $user->qualifications->contains('id', $position->qualification->id)) && !$training->positions->contains('user', \Illuminate\Support\Facades\Auth::user()))
                                                 <button type="button" class="btn bg-deep-orange waves-effect btn-subscribe" positionid="{{$position->id}}"><i class="material-icons">touch_app</i>
                                                     @if($training->hastoauthorize) Melden
                                                     @else Eintragen
@@ -156,6 +118,17 @@
                                                 <br>
                                                 <smal>({{$position->comment}})</smal>
                                             @endif
+
+                                            {{-- List all training_user_pos --}}
+                                            @foreach($training->training_users as $training_users)
+                                                @if($training_users->position_id == $position->id)
+                                                    <br>
+                                                    <span class="badge @if($training_users->user->id == \Illuminate\Support\Facades\Auth::user()->id) bg-light-green @else bg-green @endif m-t-5">
+                                                        {{substr ($training_users->user->first_name, 0, 1)}}. {{$training_users->user->name}}
+                                                    </span>
+                                                @endif
+                                            @endforeach
+
                                         </div>
                                     </div>
                                 </div>
@@ -223,7 +196,8 @@
                 });
             });
 
-            @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
+            //TODO: change to delete
+            @if($isAdmin || $isTrainingEditor)
             $('.btn-authorize').on('click', function () {
                 $(this).parent().attr("positionid", $(this).attr('positionid'));
                 $(this).remove();

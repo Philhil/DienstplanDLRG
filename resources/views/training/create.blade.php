@@ -15,11 +15,11 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        Übung anlegen
+                        Fortbildung anlegen
                     </h2>
                 </div>
                 <div class="body">
-                    @include('training._form')
+                    @include('training.form')
                 </div>
             </div>
         </div>
