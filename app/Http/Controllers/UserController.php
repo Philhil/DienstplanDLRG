@@ -75,86 +75,165 @@ class UserController extends Controller
 
         $saison = Auth::user()->currentclient()->Season();
 
-        $wrd1 = Position::where('user_id', '=', Auth::user()->id)
+       $wrd1 = Position::where('user_id', '=', Auth::user()->id)
             ->join('services', 'positions.service_id', '=', 'services.id')
             ->where('services.date', '<', DB::raw('CURDATE()'))
-            ->where('positions.credittype_id', '=', '1' )
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
-            ->where('services.client_id', '=', Auth::user()->currentclient_id)->sum('credit');
-        $boot1 = Position::where('user_id', '=', Auth::user()->id)
-            ->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))
-            ->where('positions.credittype_id', '=', '2' )
-            ->whereBetween('services.date', [$saison["from"], $saison["to"]])
-            ->where('services.client_id', '=', Auth::user()->currentclient_id)->sum('credit');
-        $sr1 = Position::where('user_id', '=', Auth::user()->id)
-            ->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))
-            ->where('positions.credittype_id', '=', '3' )
-            ->whereBetween('services.date', [$saison["from"], $saison["to"]])
-            ->where('services.client_id', '=', Auth::user()->currentclient_id)->sum('credit');
-        $rd1 = Position::where('user_id', '=', Auth::user()->id)
-            ->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))
-            ->where('positions.credittype_id', '=', '4' )
-            ->whereBetween('services.date', [$saison["from"], $saison["to"]])
-            ->where('services.client_id', '=', Auth::user()->currentclient_id)->sum('credit');
-        $f1 =Position::where('user_id', '=', Auth::user()->id)
-            ->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))
-            ->where('positions.credittype_id', '=', '5' )
-            ->whereBetween('services.date', [$saison["from"], $saison["to"]])
-            ->where('services.client_id', '=', Auth::user()->currentclient_id)->sum('credit');
-        $rsr1 = Position::where('user_id', '=', Auth::user()->id)
-            ->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))
-            ->where('positions.credittype_id', '=', '6'  )
-            ->whereBetween('services.date', [$saison["from"], $saison["to"]])
-            ->where('services.client_id', '=', Auth::user()->currentclient_id)->sum('credit');
-
+            ->where('services.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '3')
+            ->sum('points');
         $wrd2 = Position::where('user_id', '=', Auth::user()->id)
             ->join('services', 'positions.service_id', '=', 'services.id')
             ->where('services.date', '<', DB::raw('CURDATE()'))
-            ->where('positions.credittype_id_zwei', '=', '1' )
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
-            ->where('services.client_id', '=', Auth::user()->currentclient_id)->sum('credit_zwei');
-        $boot2 = Position::where('user_id', '=', Auth::user()->id)
+            ->where('services.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '6')
+            ->sum('points');
+        $wrd3 = Position::where('user_id', '=', Auth::user()->id)
             ->join('services', 'positions.service_id', '=', 'services.id')
             ->where('services.date', '<', DB::raw('CURDATE()'))
-            ->where('positions.credittype_id_zwei', '=', '2' )
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
-            ->where('services.client_id', '=', Auth::user()->currentclient_id)->sum('credit_zwei');
+            ->where('services.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '7')
+            ->sum('points');
+        $wrd4 = Position::where('user_id', '=', Auth::user()->id)
+            ->join('trainings', 'positions.training_id', '=', 'trainings.id')
+            ->where('trainings.dateEnd', '<', DB::raw('CURDATE()'))
+            ->whereBetween('trainings.dateEnd', [$saison["from"], $saison["to"]])
+            ->where('trainings.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '3')
+            ->sum('points');
+        $wrd5 = Position::where('user_id', '=', Auth::user()->id)
+            ->join('trainings', 'positions.training_id', '=', 'trainings.id')
+            ->where('trainings.dateEnd', '<', DB::raw('CURDATE()'))
+            ->whereBetween('trainings.dateEnd', [$saison["from"], $saison["to"]])
+            ->where('trainings.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '6')
+            ->sum('points');
+        $wrd6 = Position::where('user_id', '=', Auth::user()->id)
+            ->join('trainings', 'positions.training_id', '=', 'trainings.id')
+            ->where('trainings.dateEnd', '<', DB::raw('CURDATE()'))
+            ->whereBetween('trainings.dateEnd', [$saison["from"], $saison["to"]])
+            ->where('trainings.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '7')
+            ->sum('points');
+        $wrd7 = Position::where('user_id', '=', Auth::user()->id)
+            ->join('trainings', 'positions.training_id', '=', 'trainings.id')
+            ->where('trainings.dateEnd', '<', DB::raw('CURDATE()'))
+            ->whereBetween('trainings.dateEnd', [$saison["from"], $saison["to"]])
+            ->where('trainings.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '9')
+            ->sum('points');
+        $wrd8 = Position::where('user_id', '=', Auth::user()->id)
+            ->join('trainings', 'positions.training_id', '=', 'trainings.id')
+            ->where('trainings.dateEnd', '<', DB::raw('CURDATE()'))
+            ->whereBetween('trainings.dateEnd', [$saison["from"], $saison["to"]])
+            ->where('trainings.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '10')
+            ->sum('points');
+        $wrd9 = Position::where('user_id', '=', Auth::user()->id)
+            ->join('trainings', 'positions.training_id', '=', 'trainings.id')
+            ->where('trainings.dateEnd', '<', DB::raw('CURDATE()'))
+            ->whereBetween('trainings.dateEnd', [$saison["from"], $saison["to"]])
+            ->where('trainings.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '11')
+            ->sum('points');
+
+        $wrd = $wrd1 + $wrd2 + $wrd3 + $wrd4 + $wrd5 + $wrd6 + $wrd7 + $wrd8 + $wrd9;
+
+        $boot1 = Position::where('user_id', '=', Auth::user()->id)
+            ->join('trainings', 'positions.training_id', '=', 'trainings.id')
+            ->where('trainings.dateEnd', '<', DB::raw('CURDATE()'))
+            ->whereBetween('trainings.dateEnd', [$saison["from"], $saison["to"]])
+            ->where('trainings.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '5')
+            ->sum('points');
+        $boot2 =  Position::where('user_id', '=', Auth::user()->id)
+            ->join('services', 'positions.service_id', '=', 'services.id')
+            ->where('services.date', '<', DB::raw('CURDATE()'))
+            ->whereBetween('services.date', [$saison["from"], $saison["to"]])
+            ->where('services.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '5')
+            ->sum('points');
+
+        $boot = $boot1 + $boot2;
+
+        $sr1 = Position::where('user_id', '=', Auth::user()->id)
+            ->join('trainings', 'positions.training_id', '=', 'trainings.id')
+            ->where('trainings.dateEnd', '<', DB::raw('CURDATE()'))
+            ->whereBetween('trainings.dateEnd', [$saison["from"], $saison["to"]])
+            ->where('trainings.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '8')
+            ->sum('points');
         $sr2 = Position::where('user_id', '=', Auth::user()->id)
             ->join('services', 'positions.service_id', '=', 'services.id')
             ->where('services.date', '<', DB::raw('CURDATE()'))
-            ->where('positions.credittype_id_zwei', '=', '3' )
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
-            ->where('services.client_id', '=', Auth::user()->currentclient_id)->sum('credit_zwei');
+            ->where('services.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '8')
+            ->sum('points');
+
+        $sr = $sr1 + $sr2;
+
+        $rd1 = Position::where('user_id', '=', Auth::user()->id)
+            ->join('trainings', 'positions.training_id', '=', 'trainings.id')
+            ->where('trainings.dateEnd', '<', DB::raw('CURDATE()'))
+            ->whereBetween('trainings.dateEnd', [$saison["from"], $saison["to"]])
+            ->where('trainings.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '4')
+            ->sum('points');
         $rd2 = Position::where('user_id', '=', Auth::user()->id)
             ->join('services', 'positions.service_id', '=', 'services.id')
             ->where('services.date', '<', DB::raw('CURDATE()'))
-            ->where('positions.credittype_id_zwei', '=', '4' )
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
-            ->where('services.client_id', '=', Auth::user()->currentclient_id)->sum('credit_zwei');
-        $f2 =Position::where('user_id', '=', Auth::user()->id)
-            ->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))
-            ->where('positions.credittype_id_zwei', '=', '5' )
-            ->whereBetween('services.date', [$saison["from"], $saison["to"]])
-            ->where('services.client_id', '=', Auth::user()->currentclient_id)->sum('credit_zwei');
-        $rsr2 = Position::where('user_id', '=', Auth::user()->id)
-            ->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))
-            ->where('positions.credittype_id_zwei', '=', '6'  )
-            ->whereBetween('services.date', [$saison["from"], $saison["to"]])
-            ->where('services.client_id', '=', Auth::user()->currentclient_id)->sum('credit_zwei');
+            ->where('services.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '4')
+            ->sum('points');
 
-        $wrd = $wrd1 + $wrd2;
-        $boot = $boot1 + $boot2;
-        $sr = $sr1 + $sr2;
         $rd = $rd1 + $rd2;
+
+        $f1 = Position::where('user_id', '=', Auth::user()->id)
+            ->join('trainings', 'positions.training_id', '=', 'trainings.id')
+            ->where('trainings.dateEnd', '<', DB::raw('CURDATE()'))
+            ->whereBetween('trainings.dateEnd', [$saison["from"], $saison["to"]])
+            ->where('trainings.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '1')
+            ->sum('points');
+        $f2 =  Position::where('user_id', '=', Auth::user()->id)
+            ->join('services', 'positions.service_id', '=', 'services.id')
+            ->where('services.date', '<', DB::raw('CURDATE()'))
+            ->whereBetween('services.date', [$saison["from"], $saison["to"]])
+            ->where('services.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '1')
+            ->sum('points');
+
         $f = $f1 + $f2;
-        $rsr = $rsr1 + $rsr2;
+
+        $rsr = Position::where('user_id', '=', Auth::user()->id)
+            ->join('trainings', 'positions.training_id', '=', 'trainings.id')
+            ->where('trainings.dateEnd', '<', DB::raw('CURDATE()'))
+            ->whereBetween('trainings.dateEnd', [$saison["from"], $saison["to"]])
+            ->where('trainings.client_id', '=', Auth::user()->currentclient_id)
+            ->join('credits', 'credits.position_id', '=', 'positions.id')
+            ->where('credits.qualification_id', '=', '12')
+            ->sum('points');
 
         return view('user.profile', compact('wrd', 'boot', 'sr', 'rd', 'f', 'rsr'))->with('user', $user);
     }
