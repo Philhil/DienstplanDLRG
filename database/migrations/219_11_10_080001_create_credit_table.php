@@ -17,10 +17,10 @@ class CreateCreditTable extends Migration
             $table->increments('id');
 
             $table->integer('position_id')->unsigned();
-            $table->foreign('position_id')->references('id')->on('positions');
+            $table->foreign('position_id')->references('id')->on('positions')->onDelete('cascade');
 
             $table->integer('qualification_id')->unsigned();
-            $table->foreign('qualification_id')->references('id')->on('qualifications');
+            $table->foreign('qualification_id')->references('id')->on('qualifications')->onDelete('cascade');
 
             $table->double('points', 8, 2);
             $table->timestamps();
