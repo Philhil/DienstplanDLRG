@@ -194,8 +194,8 @@ class ServiceController extends Controller
             }
 
             //If there are more qualifications than position: User has Add new Positions
-            $positions = array();
-            if (count($positions) < count($qualifications))
+            if(empty($positions)) {$positions = array();}
+            if (!empty($qualifications) && count($positions) < count($qualifications))
             {
                 for ($i = count($positions); $i < count($qualifications); $i++ )
                 {
