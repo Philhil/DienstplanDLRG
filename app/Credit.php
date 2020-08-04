@@ -19,21 +19,6 @@ class Credit extends Model
         return $this->belongsTo(Qualification::class);
     }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function service()
-    {
-        return $this->belongsTo(Service::class);
-    }
-
-    public function training()
-    {
-        return $this->belongsTo(Training::class);
-    }
-
     public function position()
     {
         return $this->belongsTo(Position::class);
