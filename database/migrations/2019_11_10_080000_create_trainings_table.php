@@ -19,11 +19,11 @@ class CreateTrainingsTable extends Migration
             $table->integer('client_id')->unsigned(); 
             $table->LONGTEXT('content');
             $table->timestamp('date');
-            $table->timestamp('dateEnd')->nullable();
-            $table->text('location')->nullable();
+            $table->timestamp('dateEnd')->nullable()->default(null);
+            $table->text('location')->nullable()->default(null);
             
-            $table->timestamp('sendbydatetime')->nullable();
-            $table->boolean('sended')->default(false);
+            $table->timestamp('sendbydatetime')->nullable()->default(null);
+            $table->timestamp('sended')->nullable()->default(null);
             $table->timestamps();
             
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
