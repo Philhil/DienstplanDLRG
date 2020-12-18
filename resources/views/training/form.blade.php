@@ -57,7 +57,7 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('location') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('location', 'Ort (Mit Koordniaten darstellbar auf Karte):') }}
+                    {{ Form::label('location', 'Ort (Mit Koordinaten darstellbar auf Karte):') }}
                     {{ Form::text('location', old('location', $training->location), ['id' => 'location', 'class' => 'location form-control', 'placeholder'=>'Ort eingeben...']) }}
                     {!! $errors->first('location', '<p class="help-block">:message</p>') !!}
                 </div>
@@ -126,54 +126,6 @@
             </tbody>
         </table>
     </div>
-
-@if(\Illuminate\Support\Facades\Route::current()->getName() == 'training.edit')
-<!--
-    <div class="body table-responsive" style="padding-bottom: 100px">
-        <label for="tblTrainingusers">Teilnehmende:</label>
-        <table class="table table-striped" id="tblTrainingusers">
-            <thead>
-            <tr>
-                <th>User</th>
-                <th>Position</th>
-                <th>Kommentar</th>
-                <th>Aktion</th>
-                <th>Punkte</th>
-            </tr>
-            </thead>
-            <tbody>
-            @if(isset($positions) && $positions instanceof \Illuminate\Database\Eloquent\Collection)
-                @foreach($training_users as $training_user)
-                    <tr training_user_id="{{$training_user->id}}" class="strikeout">
-                        <td>
-                            {{Form::hidden('training_user[]',$training_user->id)}}
-                            {{$training_user->user->first_name . " " . $training_user->user->name}}
-                        </td>
-                        <td>
-                            {{$training_user->position->qualification->name}}
-                        </td>
-                        <td>
-                            <input class="form-control" placeholder="Kommentar..." type="text" value="{{$training_user->comment}}" name="position_comment[]" >
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger waves-effect btn-delete delete_training_user">
-                                <i class="material-icons">delete</i>
-                            </button>
-                        </td>
-                         <td>
-                            <select class="bootstrap-select show-tick" name="credit" id="credit">
-                                <option value="1">Ja</option>
-                                <option value="2">Nein</option>
-                            </select>
-                        </td>
-                    </tr>
-                @endforeach
-            @endif
-            </tbody>
-        </table>
-    </div>
--->
-@endif
 </div>
 
 <div class="row clearfix">
