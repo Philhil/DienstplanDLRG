@@ -10,7 +10,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <span class="anchor" id="training{{$training->id}}"></span>
             <div class="card">
-                <div class="header bg-amber">
+                <div class="header bg-blue-grey">
                     <h2 data-toggle="collapse" data-target="#card_{{$training->id}}">
                         <span class="glyphicon glyphicon-collapse-up float-left"></span>
                         {{$training->date->format('l d m Y')}} <small>{{$training->title}}</small>
@@ -23,8 +23,8 @@
                                     <i class="material-icons">more_vert</i>
                                 </a>
                                 <ul class="dropdown-menu pull-right">
-                                    <li><a href="{{action('TrainingController@edit', $training->id) }}" class="btn-warning waves-effect waves-block"><i class="material-icons">mode_edit</i>Bearbeiten</a></li>
-                                    <li><a href="{{action('TrainingController@destroy', $training->id) }}" class="btn-danger waves-effect waves-block"><i class="material-icons">delete</i> Löschen</a></li>
+                                    <li><a href="{{action('TrainingController@edit', $training->id) }}" class="btn-warning waves-effect"><i class="material-icons">mode_edit</i>Bearbeiten</a></li>
+                                    <li><a href="{{action('TrainingController@destroy', $training->id) }}" class="btn-danger waves-effect"><i class="material-icons">delete</i> Löschen</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -47,7 +47,7 @@
                                     @foreach($training->positions as $position)
                                         {{-- show positions desc and list all teilnehmer --}}
                                         <td>
-                                            {{-- Has user this qualification? and Has user NOT already a Position at this training --}}
+                                            {{-- Has user this qualification? and has user NOT already a Position at this training --}}
                                             @if((empty($position->qualification) || $user->qualifications->contains('id', $position->qualification->id)) && !$training->training_users->contains('user', \Illuminate\Support\Facades\Auth::user()))
                                                 <button type="button" class="btn bg-deep-orange waves-effect btn-subscribe" positionid="{{$position->id}}"><i class="material-icons">touch_app</i>
                                                     @if($training->hastoauthorize) Melden

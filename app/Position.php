@@ -44,4 +44,9 @@ class Position extends Model
     {
         return $this->candidatures()->where('user_id', $user_id);
     }
+
+    public function getCredit()
+    {
+        return $this->hasOne(Credit::class);
+    }
 }
