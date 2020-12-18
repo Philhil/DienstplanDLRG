@@ -161,7 +161,7 @@ class TrainingController extends Controller
             $positions = $training->positions()->get();
             $training_users = $training->training_users()->get();
 
-            return view('training.create', compact('training', 'positions', 'qualifications', 'training_users'));
+            return view('training.edit', compact('training', 'positions', 'qualifications', 'training_users'));
         }
 
         abort(402, "Nope.");
