@@ -84,6 +84,7 @@ class TrainingController extends Controller
      */
     public function store(Request $request)
     {
+
         if(Auth::user()->isAdmin()  || Auth::user()->isTrainingEditor()) {
             $training = new Training();
             $training->date = Carbon::createFromFormat('d m Y H:i', $request->get('date'));
@@ -99,6 +100,8 @@ class TrainingController extends Controller
             if ($request->has('qualification') && $request->get('qualification')) {
                 $qualifications = $request->get('qualification');
                 $position_comment = $request->get('position_comment');
+                $credits = $request->input('credit');
+
                 for ($i = 0; $i < count($qualifications); $i++ ) {
 
                     if (Qualification::where(['id' => $qualifications[$i], 'client_id' => Auth::user()->currentclient_id])->count() > 0) {
@@ -110,21 +113,16 @@ class TrainingController extends Controller
                         $position->user_id = null;
                         $position->comment = $position_comment[$i];
                         $position->save();
+
+                        //add credit
+                        $credit = new Credit();
+                        $credit->position_id = $position->id;
+                        $credit->qualification_id = $position->qualification_id;
+                        $credit->points = !is_numeric($credits[$i]) ? 1 : $credits[$i];
+                        $credit->save();
                     }
                 }
             }
-
-            //add credit
-
-            $credit_selected = $request->input('credit');
-            if($credit_selected == "1") {
-                $credit = new Credit();
-                $credit->position_id = $position->id;
-                $credit->qualification_id = $position->qualification_id;
-                $credit->points = '1';
-                $credit->save();
-            }
-
 
             Session::flash('successmessage', ' Neue Fortbildung erfolgreich angelegt');
             return redirect(action('TrainingController@create'));
@@ -181,6 +179,7 @@ class TrainingController extends Controller
         if(!Auth::user()->isAdmin() && !Auth::user()->isTrainingEditor()) {
             abort(402, "Nope.");
         }
+
         $training = Training::findOrFail($id);
 
         if(!Auth::user()->isAdminOfClient($training->client_id) && !Auth::user()->isTrainingEditorOfClient($training->client_id)) {
@@ -200,12 +199,13 @@ class TrainingController extends Controller
             $qualifications = $request->get('qualification');
             $position_comment = $request->get('position_comment');
             $positions = $request->get('position');
+            $credits = $request->get('credit');
 
             //remove deleted positions (with candidatures)
             if($request->has('delete_position')) {
                 foreach ($request->get('delete_position') as $delete_position) {
                     if ($delete_position >= 0) {
-                        Position::where('id', $delete_position)->forceDelete();
+                        Position::where('id', $delete_position)->delete();
                     }
                 }
             }
@@ -225,6 +225,13 @@ class TrainingController extends Controller
                         $position->user_id = null;
                         $position->comment = $position_comment[$i];
                         $position->save();
+
+                        //add credit
+                        $credit = new Credit();
+                        $credit->position_id = $position->id;
+                        $credit->qualification_id = $position->qualification_id;
+                        $credit->points = !is_numeric($credits[$i]) ? 1 : $credits[$i];
+                        $credit->save();
                     }
                 }
             }
@@ -232,23 +239,22 @@ class TrainingController extends Controller
             //are there changed positions
             for ($i = 0; $i < $poscount; $i++ ) {
                 $pos = Position::findOrFail($positions[$i]);
+                $credit = $pos->getCredit;
 
-                //just security reasons -> no manipulation of foreign positions
-                if ($pos->training_id == $id){
-                    //changed comment?
-                    //=>Update without inform
-                    if (strcmp($pos->comment, $position_comment[$i]) != 0) {
-                        $pos->comment = $position_comment[$i];
-                    }
+                //just security reasons -> no manipulation of foreign positions and credits
+                if ($pos->training_id == $id && $credit->position_id == $pos->id){
+                    $pos->comment = $position_comment[$i];
 
-                    //changed qualification and not null?
-                    if ($pos->qualification_id != $qualifications[$i] && !empty($qualifications[$i])
-                        &&  Qualification::where(['id' => $qualifications[$i], 'client_id' => Auth::user()->currentclient_id])->count() > 0)
+                    //changed to qualification of own client and not null?
+                    if (!empty($qualifications[$i]) && Qualification::where(['id' => $qualifications[$i], 'client_id' => Auth::user()->currentclient_id])->count() > 0)
                     {
                         $pos->qualification_id = $qualifications[$i];
+                        $credit->qualification_id = $qualifications[$i];
                     }
-
                     $pos->save();
+
+                    $credit->points = !is_numeric($credits[$i]) ? 1 : $credits[$i];
+                    $credit->save();
                 }
             }
         }
@@ -268,7 +274,13 @@ class TrainingController extends Controller
             abort(402, "Nope.");
         }
 
-        Training::findOrFail($id)->forceDelete();
+        $training = Training::findOrFail($id);
+        //check if Training is of current client
+        if(!Auth::user()->isAdminOfClient($training->client_id) && !Auth::user()->isTrainingEditorOfClient($training->client_id)) {
+            abort(402, "Nope.");
+        }
+
+        $training->forceDelete();
         return redirect(action('TrainingController@index'));
     }
 
@@ -280,13 +292,15 @@ class TrainingController extends Controller
      */
     public function delete_training_user($id)
     {
-        if(Auth::user()->isAdmin() || Auth::user()->isTrainingEditor() ||
+        $training_user = Training_user::findOrFail($id);
+
+        if(Auth::user()->isAdminOfClient($training_user->training->client_id) || Auth::user()->isTrainingEditorOfClient($training_user->training->client_id) ||
             (Training_user::where(['id' => $id, 'user_id' => Auth::user()->id])->count() > 0 && !(Training_user::findOrFail($id)->training->date)->isToday())) {
 
-            Session::flash('successmessage', 'Meldung der Fortbildung erfolgreich zurückgezogen');
-            $training_user = Training_user::findOrFail($id);
             $posid = $training_user->position_id;
             $training_user->forceDelete();
+
+            Session::flash('successmessage', 'Meldung der Fortbildung erfolgreich zurückgezogen');
 
             if(Session::has('redirect')) {
                 return $posid;
