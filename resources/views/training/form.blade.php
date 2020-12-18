@@ -94,6 +94,7 @@
                 <th>Qualifikation</th>
                 <th>Kommentar</th>
                 <th>Aktion</th>
+                <th>Punkte</th>
             </tr>
             </thead>
             <tbody>
@@ -116,6 +117,12 @@
                                 <i class="material-icons">delete</i>
                             </button>
                         </td>
+                        <td>
+                            <select class="bootstrap-select show-tick" name="credit" id="credit">
+                                <option value="1">Ja</option>
+                                <option value="2">Nein</option>
+                            </select>
+                        </td>
                     </tr>
                 @endforeach
             @endif
@@ -134,6 +141,7 @@
                 <th>Position</th>
                 <th>Kommentar</th>
                 <th>Aktion</th>
+                <th>Punkte</th>
             </tr>
             </thead>
             <tbody>
@@ -154,6 +162,12 @@
                             <button type="button" class="btn btn-danger waves-effect btn-delete delete_training_user">
                                 <i class="material-icons">delete</i>
                             </button>
+                        </td>
+                         <td>
+                            <select class="bootstrap-select show-tick" name="credit" id="credit">
+                                <option value="1">Ja</option>
+                                <option value="2">Nein</option>
+                            </select>
                         </td>
                     </tr>
                 @endforeach
@@ -248,6 +262,10 @@
                 prot += ' </select> </td>';
                 prot += ' <td> <input class="form-control" placeholder="Kommentar..." type="text" value="" name="position_comment[]" > </td>';
                 prot += '<td><button type="button" class="btn btn-danger waves-effect btn-delete delete_position"><i class="material-icons">delete</i></button></td>';
+                prot += '<td><select class="bootstrap-select show-tick" name="credit" id="credit">'
+                prot += '<option value="1">Ja</option>'
+                prot += '<option value="2">Nein</option></select>'
+                prot +=  '</td>'
                 prot += '</tr>';
 
                 $("#tblPositions tbody").append(prot);

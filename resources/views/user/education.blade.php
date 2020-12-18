@@ -1,9 +1,8 @@
 @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_training_credit)
-    <?php
-            //not jet done. Concept is not fully ready
-    /*
+
+
     @foreach($qualifications as $qualification)
-        <div class="col-sm-6">
+        <div class="col-sm-12">
                 <b>{{$qualification->name}}: <span class="badge bg-orange">
                     @if(array_key_exists($qualification->name, $qualfication_credits))
                         {{$qualfication_credits[$qualification->name]}}
@@ -13,6 +12,5 @@
                     </span></b>
         </div>
     @endforeach
-     */
-    ?>
+
 @endif

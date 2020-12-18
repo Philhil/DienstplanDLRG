@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Credit;
 use App\Position;
 use App\Qualification;
 use App\Training;
@@ -67,8 +68,9 @@ class TrainingController extends Controller
             $qualifications = Qualification::where('client_id', '=', Auth::user()->currentclient_id)->orderBy('name')->get();
             $positions = new \Illuminate\Database\Eloquent\Collection(); //initial no positions
             $training_users = new \Illuminate\Database\Eloquent\Collection(); //initial no training_users
+            $credit = new \Illuminate\Database\Eloquent\Collection(); //initial no credit
 
-            return view('training.create', compact('training', 'positions', 'qualifications', 'training_users'));
+            return view('training.create', compact('training', 'positions', 'qualifications', 'training_users', 'credit'));
         }
 
         abort(402, "Nope.");
@@ -111,6 +113,18 @@ class TrainingController extends Controller
                     }
                 }
             }
+
+            //add credit
+
+            $credit_selected = $request->input('credit');
+            if($credit_selected == "1") {
+                $credit = new Credit();
+                $credit->position_id = $position->id;
+                $credit->qualification_id = $position->qualification_id;
+                $credit->points = '1';
+                $credit->save();
+            }
+
 
             Session::flash('successmessage', ' Neue Fortbildung erfolgreich angelegt');
             return redirect(action('TrainingController@create'));

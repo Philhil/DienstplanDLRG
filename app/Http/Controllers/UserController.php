@@ -83,7 +83,7 @@ class UserController extends Controller
         $saison = Auth::user()->currentclient()->Season();
 
         //get all qualifications of user with sum of credit points
-/*
+
         $qualfication_credits = Qualification::selectRaw('sum(credits.points) as sum_points, qualifications.name')
             ->join('qualification_users', 'qualification_users.qualification_id', '=', 'qualifications.id')
             ->join('positions', 'positions.qualification_id', '=', 'qualifications.id')
@@ -95,7 +95,7 @@ class UserController extends Controller
             ->whereBetween('trainings.date', [$saison["from"], DB::raw('CURDATE()')])
             ->groupBy('qualifications.name')
             ->pluck('sum_points', 'name')->toArray();
-*/
+
         $qualifications = $user->qualifications()->get();
 
         return view('user.profile', compact('qualfication_credits', 'qualifications'))->with('user', $user);
