@@ -63,8 +63,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('client_user/admin', 'ClientController@adminClient_User');
 
     Route::match(['get', 'post'], 'position/{id}/subscribe', 'PositionController@subscribe');
+    Route::match(['get', 'post'], 'position/{positionid}/subscribe_user/{userid}', 'PositionController@subscribe_user');
     Route::match(['get', 'post'], 'position/{id}/unsubscribe', 'PositionController@unsubscribe');
+    Route::match(['get', 'post'], 'position/{positionid}/unsubscribe_user/{userid}', 'PositionController@unsubscribe_user');
     Route::match(['get', 'post'], 'position/{id}/authorize', 'PositionController@authorizePos');
     Route::match(['get', 'post'], 'position/{id}/deauthorize', 'PositionController@deauthorizePos');
     Route::match(['get', 'post'], 'position/list_notAuthorized', 'PositionController@index_notAuthorized')->name('position.list_notAuthorized');
+    Route::match(['get', 'post'], 'position/{id}/position_user', 'PositionController@position_user');
 });

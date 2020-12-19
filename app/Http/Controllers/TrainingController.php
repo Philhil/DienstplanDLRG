@@ -20,7 +20,7 @@ class TrainingController extends Controller
     {
         $this->middleware(function ($request, $next) {
             if(!Auth::user()->currentclient()->module_training) {
-                abort(402, "Nope.");
+                abort(402, "Module not activated.");
             }
 
             return $next($request);
@@ -298,13 +298,17 @@ class TrainingController extends Controller
             (Training_user::where(['id' => $id, 'user_id' => Auth::user()->id])->count() > 0 && !(Training_user::findOrFail($id)->training->date)->isToday())) {
 
             $posid = $training_user->position_id;
+            $userid = $training_user->user_id;
             $training_user->forceDelete();
 
-            Session::flash('successmessage', 'Meldung der Fortbildung erfolgreich zurückgezogen');
-
-            if(Session::has('redirect')) {
+            //if this is called via ajax (position_user)
+            if(Session::has('returnUserId')) {
+                return $userid;
+            }
+            else if(Session::has('redirect')) {
                 return $posid;
             }
+            Session::flash('successmessage', 'Meldung der Fortbildung erfolgreich zurückgezogen');
             return redirect(action('TrainingController@index'));
         }
 

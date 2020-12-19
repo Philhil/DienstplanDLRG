@@ -49,4 +49,18 @@ class Position extends Model
     {
         return $this->hasOne(Credit::class);
     }
+
+    public function getClientId()
+    {
+        $client = -1;
+        if ($this->service()->exists())
+        {
+            $client = $this->service->client_id;
+        }
+        elseif ($this->training()->exists())
+        {
+            $client = $this->training->client_id;
+        }
+        return $client;
+    }
 }

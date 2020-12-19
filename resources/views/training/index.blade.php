@@ -61,6 +61,14 @@
                                                     @endif
                                                 </button>
                                             @endif
+                                            @if($isAdmin || $isTrainingEditor)
+                                                {{ Form::open(['url' => '/position/'. $position->id .'/position_user/', 'method' => 'get', 'style'=>'display:inline-block']) }}
+                                                <button type="submit" class="btn btn-xs bg-deep-orange waves-effect btn-delete">
+                                                    <i class="material-icons">playlist_add</i>
+                                                </button>
+                                                {{ Form::close() }}
+                                            @endif
+
                                             @if($position->comment)
                                                 <br>
                                                 <smal>({{$position->comment}})</smal>
@@ -113,6 +121,13 @@
                                                     @else Eintragen
                                                     @endif
                                                 </button>
+                                            @endif
+                                            @if($isAdmin || $isTrainingEditor)
+                                                {{ Form::open(['url' => '/position/'. $position->id .'/position_user', 'method' => 'get', 'style'=>'display:inline-block']) }}
+                                                <button type="submit" class="btn btn-xs bg-deep-orange waves-effect btn-delete">
+                                                    <i class="material-icons">playlist_add</i>
+                                                </button>
+                                                {{ Form::close() }}
                                             @endif
                                             @if($position->comment)
                                                 <br>
