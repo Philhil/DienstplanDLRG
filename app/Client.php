@@ -57,6 +57,20 @@ class Client extends Model
             ->where('isAdmin', '=', true)->orderBy('name');
     }
 
+    public function noTrainingEditors()
+    {
+        return $this->belongsToMany(User::class, 'client_user')
+            ->where('client_user.approved', '=', true)
+            ->where('isTrainingEditor', '=', false)->orderBy('name');
+    }
+
+    public function TrainingEditors()
+    {
+        return $this->belongsToMany(User::class, 'client_user')
+            ->where('client_user.approved', '=', true)
+            ->where('isTrainingEditor', '=', true)->orderBy('name');
+    }
+
     public function Qualifications()
     {
         return $this->hasMany( Qualification::class);

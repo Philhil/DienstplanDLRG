@@ -15,7 +15,6 @@ class AddModuleTrainingToClientsTable extends Migration
     {
         Schema::table('clients', function (Blueprint $table) {
             $table->boolean('module_training')->default(false);
-            $table->boolean('module_training_credit')->default(false);
         });
     }
 
@@ -28,7 +27,6 @@ class AddModuleTrainingToClientsTable extends Migration
     {
         Schema::table('clients', function (Blueprint $table) {
             Schema::dropIfExists('module_training');
-            Schema::dropIfExists('module_training_credit');
         });
     }
 }

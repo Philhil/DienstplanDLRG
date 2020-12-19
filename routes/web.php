@@ -61,6 +61,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::match(['get', 'post'], 'qualification_user/delete/{user_id}/{qualification_id}', 'QualificationController@deleteQualification_User');
 
     Route::post('client_user/admin', 'ClientController@adminClient_User');
+    Route::post('client_user/trainingeditor', 'ClientController@trainingeditorClient_User');
 
     Route::match(['get', 'post'], 'position/{id}/subscribe', 'PositionController@subscribe');
     Route::match(['get', 'post'], 'position/{positionid}/subscribe_user/{userid}', 'PositionController@subscribe_user');

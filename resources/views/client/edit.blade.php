@@ -51,6 +51,33 @@
             </div>
         </div>
 
+        @if(true)
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Fortbildung Editor</h2>
+                </div>
+                <div class="body">
+                    <div class="row">
+                        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+                            <div class="row clearfix" style="margin-left: 50px;">
+                                <select id='client_user_trainingeditorselect' class="ms" multiple='multiple' style="position: absolute; left: -9999px;">
+                                    @foreach($notrainingeditorsOfClient as $notrainingeditorOfClient)
+                                        <option value='{{$notrainingeditorOfClient->id}}' >{{$notrainingeditorOfClient->name}} {{$notrainingeditorOfClient->first_name}}</option>
+                                    @endforeach
+
+                                    @foreach($trainingeditorsOfClient as $trainingeditorOfClient)
+                                        <option value='{{$trainingeditorOfClient->id}}' selected>{{$trainingeditorOfClient->name}} {{$trainingeditorOfClient->first_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header">
@@ -79,26 +106,9 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr class="strikeout">
-                                <td>Credits für Fortbildungen</td>
-                                <td>
-                                    <p>Aufbauend auf dem Modul Fortbildungen können Credits für einzelne Fortbildungspositionen verwaltet werden.</p>
-                                </td>
-                                <td>
-                                    <div class="switch">
-                                        <label><input type="checkbox" id="module_training_credit" @if($client->module_training_credit)checked=""@endif @if(!\Illuminate\Support\Facades\Auth::user()->isSuperAdmin())disabled=""@endif><span class="lever"></span></label>
-                                    </div>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
-                <!-- TODO
-                Add
-                send ajax and show in list
-                when ajax error -> remove from list
-                -->
-
             </div>
         </div>
         <!-- #END# Input -->
@@ -142,9 +152,58 @@
             });
         });
 
-        $('#client_user_adminselect').multiSelect({
+        $('#client_user_trainingeditorselect').multiSelect({
             selectableHeader: "<h6>Benutzer von {{$client->name}}</h6>",
             selectionHeader: "<h6>Admins von {{$client->name}}</div>",
+            selectableFooter: "<div class='custom-header'></div>",
+            selectionFooter: "<div class='custom-header'></div>",
+
+            afterSelect: function(value){
+                $.ajax({
+                    type: "POST",
+                    url: '/client_user/trainingeditor',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    'data' : {
+                        'user_id': value[0],
+                        'client_id': "{{$client->id}}",
+                        'isTrainingEditor' : 1
+                    },
+                    success : function(data){
+                        if (data == "true") {
+                            showNotification("alert-success", "Zuordnung gespeichert", "top", "center", "", "");
+                        } else {
+                            showNotification("alert-warning", "Fehler beim speichern der Zuordnung", "top", "center", "", "");
+                        }
+                    }
+                });
+            },
+            afterDeselect: function(value){
+                $.ajax({
+                    type: "POST",
+                    url: '/client_user/trainingeditor',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },'data' : {
+                        'user_id': value[0],
+                        'client_id': "{{$client->id}}",
+                        'isTrainingEditor' : 0
+                    },
+                    success : function(data){
+                        if (data == "true") {
+                            showNotification("alert-success", "Zuordnung gelöscht", "top", "center", "", "");
+                        } else {
+                            showNotification("alert-warning", "Fehler beim löschen der zuordnung", "top", "center", "", "");
+                        }
+                    }
+                });
+            }
+        });
+
+        $('#client_user_adminselect').multiSelect({
+            selectableHeader: "<h6>Benutzer von {{$client->name}}</h6>",
+            selectionHeader: "<h6>Fortbildungs Editor von {{$client->name}}</div>",
             selectableFooter: "<div class='custom-header'></div>",
             selectionFooter: "<div class='custom-header'></div>",
 
@@ -172,7 +231,7 @@
             afterDeselect: function(value){
                 $.ajax({
                     type: "POST",
-                    url: '/client_user/admin/',
+                    url: '/client_user/admin',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },'data' : {
