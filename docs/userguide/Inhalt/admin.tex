@@ -39,6 +39,14 @@ In diesem Kapitel wird die Sicht eines Administrators beleuchtet und dessen spez
 		\item Absender Name: Name welcher als Absender von ausgehenden Mails angezeigt wird.
 		\item Antworten an E-Mail Adresse: E-Mail Adresse von welcher E-Mails versendet werden. Hier sollte eine ...@gliederung.dlrg.de Adresse hinterlegt sein.
 	\end{itemize}
+	\item[\textbf{Admin Zuteilung:}]
+	\begin{itemize}
+		\item Hier können der Gliederung weitere Administratoren zugeordnet werden. 
+	\end{itemize}
+	\item[\textbf{Fortbildung Editor:}]
+	\begin{itemize}
+		\item Die Berechtigung Fortbildung Editor ermöglicht die Verwaltung von Fortbildungen expliziten Benutzern zu übertragen welche keine Administrationsrechte inne haben.
+	\end{itemize}
 \end{itemize}
 
 \begin{figure}[h]
@@ -95,12 +103,54 @@ Dienste bestehen aus mindestens einer und beliebig vielen Positionen. Über den 
 	\begin{itemize}
 		\item \textbf{Qualifikation:} Definiert die Qualifikation für diese Position.
 		\item \textbf{Person:} Zugewiesene Person. Beim anlegen kann dies auf \glqq -- Bitte wählen -- \grqq{} gesetzt bleiben. Soll Direkt eine Person zugewiesen werden ist diese aus dem Dropdown zu wählen. Die Liste ist nach Nachnamen sortiert, auch wenn die Anzeige den ersten Buchstabe des Vornamens mit anzeigt. Personen mit passender Qualifikation sind grün hinterlegt. Personen welche Positionen neu zugeteilt wurden, werden via E-Mail automatisch darüber in Kenntnis gesetzt.
-		\item \textbf{Kommentar:} Optinales Feld für z.B. Infos wenn eine Position eine extra Sonderaufgabe zugewiesen wird oder eine andere Dienstzeit aufweist.
+		\item \textbf{Kommentar:} Optionales Feld für z.B. Infos wenn eine Position eine extra Sonderaufgabe zugewiesen wird oder eine andere Dienstzeit aufweist.
 		\item \textbf{Erforderlich:} Ist diese Position zwingend zu besetzten oder optional? Hat Auswirkung auf die Rote Zahl der freien Dienste in der Dienstauflistung (\ref{cha:dienste} \nameref{cha:dienste}) sowie auf die Statistiken.
 	\end{itemize}
 \end{itemize}
 Melden sich Personen selbständig für Dienste bzw. deren Positionen, werden alle Admins via E-Mail darüber in Kenntnis gesetzt. Die Freigabe erfolgt über die Admins auf der Dienste Ansicht (ref.: \ref{cha:dienste} \nameref{cha:dienste}). Eine Freigabe löst wiederum eine automatische Benachrichtigung der betroffenen Person aus.
 
+\section{Fortbildungsverwaltung}
+\label{sec:admin_training}
+\textit{{\small Um diese Funktion zu nutzen, muss das Modul Fortbildungen freigeschaltet sein.}}
+Fortbildungen bestehen aus mindestens einer und beliebig vielen Positionen. Über den Menüpunkt Fortbildungen (Kapitel \ref{cha:fortbildungen} \nameref{cha:fortbildungen}) werden alle angelegten Fortbildungen der aktuellen Saison gezeigt. Das Anlegen von Fortbildungen unterliegt den Administratoren und Fortbildungs Editoren einer Gliederung und erfolgt unter dem Menüpunkt \glqq Fortbildung anlegen \grqq{}. Eine Fortbildung hat folgende Eigenschaften:
+
+\begin{itemize}
+	\item[\textbf{Datum von:}] Start Datum und Uhrzeit der Fortbildung.
+	\item[\textbf{Datum von:}] End Datum und Uhrzeit der Fortbildung.
+	\item[\textbf{Titel:}] Titel der Fortbildung welcher in der Auflistung Fortbildungen mit angezeigt wird.
+	\item[\textbf{Text:}] Dieses Feld beschreibt die Fortbildung und wird in der Ankündigungs- E-Mail als Text verwendet.
+	\item[\textbf{Ort:}] Beschreibt den Ort der Fortbildung. Wenn hier GPS Koordinaten eingetragen werden können die Fortbildungen in einer Späteren Version des Portals auf einer Karte dargestellt werden.
+	\item[\textbf{E-Mail:}] Wenn hier ein Datum mit Zeit hinterlegt ist, wird je nach Einstellung der Gliederung, eine Ankündigungs- E-Mail an alle Nutzer oder an die Mailingliste versendet. Die E-Mail enthält Titel, Start- und End-Datum wie auch der Beschreibungstext.
+	\item[\textbf{Positionen:}] Es können beliebig viele Positionen mit folgenden Eigenschaften hinzugefügt werden:
+	\begin{itemize}
+		\item \textbf{Qualifikation:} Definiert die Qualifikation für diese Position.
+		\item \textbf{Kommentar:} Optionales Feld für z.B. Infos wenn eine Position eine extra Sonderaufgabe zugewiesen wird oder eine andere Dienstzeit aufweist.
+		\item \textbf{Punkte:} Jeder Position können Fortbildungspunkte zugewiesen werden. Hiermit ist eine Fortbildungs-Übersicht möglich. Wird dieses Feature nicht aktiv genutzt, sollte der default wert 1 verwendet werden.
+	\end{itemize}
+\end{itemize}
+
+\noindent Zuweisungen von Nutzern zu Fortbildungen:
+Analog den Diensten (Kapitel \ref{cha:dienste} \nameref{cha:dienste}) kann sich jeder Nutzer selbst auf Positionen von Fortbildungen für welche die entsprechende Qualifikation vorliegt melden. Fortbildungs-Editoren und Administratoren können des weiteren unabhängig der Qualifikation Nutzer den Positionen zuteilen. Hierzu wird in der Ansicht Fortbildungen (Abbildung \ref{fig:view_training_admin} \textit{\nameref{fig:view_training_admin}}) ein Button bei jeder Position dargestellt. Über diesen Button wird die Helfer Zuteilung der jeweiligen Position geöffnet.
+
+\begin{figure}[h]
+	\begin{addmargin}{-0.2\linewidth}
+		\centering 
+		\includegraphics[width=20cm]{Bilder/view_training_admin.png}
+	\end{addmargin} 
+	\caption[Gliederungsverwaltung]{DLRG Dienstplan Fortbildungsansicht für Admin und Fortbildungs-Editor}
+	\label{fig:view_training_admin}
+\end{figure}
+Über die Helfer Zuteilung (Abbildung \ref{fig:view_training_assign} \textit{\nameref{fig:view_training_assign}}) können Nutzer der Position zugeteilt werden. Die Spalte Qualifikation wird bei Nutzern welche die entsprechende Qualifikation der Position inne haben grün markiert. Zugeteilte Nutzer werden durch eine der Farbe Cyan markierte Zeile dargestellt. Mit Klick auf die Zeile werden Nutzer zugeteilt bzw. eine Zuteilung entfernt. Nutzer erhalten im Gegensatz zu Diensten keine E-Mail-Benachrichtigung hiervon.
+
+\begin{figure}[h]
+	\begin{addmargin}{-0.2\linewidth}
+		\centering 
+		\includegraphics[width=20cm]{Bilder/view_training_assign.png}
+	\end{addmargin} 
+	\caption[Gliederungsverwaltung]{DLRG Dienstplan Fortbildungs-Zuweisung}
+	\label{fig:view_training_assign}
+\end{figure}
+		
 \section{Nachrichtenverwaltung}
 \label{sec:admin_news}
 Verfasste Nachrichten werden an alle Nutzer versendet. Je nach Einstellung der Gliederung wird eine E-Mail an die Mailingliste oder aber an jeden Benutzer einzeln versendet.
