@@ -11,6 +11,10 @@ class Position extends Model
         'qualification_id', 'service_id', 'requiredposition'
     ];
 
+    protected $dates = [
+        'create_at', 'updated_at'
+    ];
+
     public function qualification()
     {
         return $this->belongsTo(Qualification::class);
@@ -26,6 +30,11 @@ class Position extends Model
         return $this->belongsTo(Service::class);
     }
 
+    public function training()
+    {
+        return $this->belongsTo(Training::class);
+    }
+
     public function candidatures()
     {
         return $this->hasMany(PositionCandidature::class);
@@ -34,5 +43,24 @@ class Position extends Model
     public function candidaturesOfUser($user_id)
     {
         return $this->candidatures()->where('user_id', $user_id);
+    }
+
+    public function getCredit()
+    {
+        return $this->hasOne(Credit::class);
+    }
+
+    public function getClientId()
+    {
+        $client = -1;
+        if ($this->service()->exists())
+        {
+            $client = $this->service->client_id;
+        }
+        elseif ($this->training()->exists())
+        {
+            $client = $this->training->client_id;
+        }
+        return $client;
     }
 }

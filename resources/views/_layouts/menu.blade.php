@@ -10,7 +10,7 @@
                 <ul class="dropdown-menu pull-right">
                     <li><a href="{{action('UserController@show', \Illuminate\Support\Facades\Auth::user()->id)}}"><i class="material-icons">person</i>Profil</a></li>
                     @can('administration')
-                    <li><a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}"><i class="material-icons">group</i>Client</a></li>
+                        <li><a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}"><i class="material-icons">group</i>Client</a></li>
                     @endcan
                     <li role="seperator" class="divider"></li>
                     <li><a href="{{ route('logout') }}"><i class="material-icons">input</i>Logout</a></li>
@@ -35,53 +35,74 @@
                     <span>Dienste</span>
                 </a>
             </li>
+            @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_training)
+            <li class="{{active('training.index')}}">
+                <a href="{{ action('TrainingController@index') }}">
+                    <i class="material-icons">library_books</i>
+                    <span>Fortbildungen</span>
+                </a>
+            </li>
+            @endif
             <li class="{{active('news.index')}} {{active('news.edit')}}">
                 <a href="{{ action('NewsController@index') }}">
                     <i class="material-icons">forum</i>
                     <span>Nachrichten</span>
                 </a>
             </li>
-            @can('administration')
-            <li class="header {{active('service.edit')}}">Administration</li>
 
-            <li class=@if(\Illuminate\Support\Facades\Route::current()->getPrefix() != '/superadmin') "{{active('user.*')}}" @endif>
-                <a href="{{ action('UserController@index') }}">
-                    <i class="material-icons">person</i>
-                    <span>Benutzer</span>
-                </a>
-            </li>
-            <li class="{{active('position.list_notAuthorized')}}">
-                <a href="{{action('PositionController@index_notAuthorized')}}">
-                    <i class="material-icons">check_circle</i>
-                    <span>Dienste bestätigen</span>
-                </a>
-            </li>
-            <li class="{{active('service.create')}}">
-                <a href="{{ action('ServiceController@create') }}">
-                    <i class="material-icons">note_add</i>
-                    <span>Dienst anlegen</span>
-                </a>
-            </li>
-            <li class="{{active('news.create')}}">
-                <a href="{{ action('NewsController@create') }}">
-                    <i class="material-icons">chat</i>
-                    <span>Nachricht erstellen</span>
-                </a>
-            </li>
-            <li class="{{active('qualification.*')}}">
-                <a href="{{ action('QualificationController@index') }}">
-                    <i class="material-icons">local_activity</i>
-                    <span>Qualifikationen</span>
-                </a>
-            </li>
+            @if(\Illuminate\Support\Facades\Gate::check('administration') || \Illuminate\Support\Facades\Gate::check('trainingeditor'))
+                <li class="header {{active('service.edit')}}">Administration</li>
+                @can('administration')
+                    <li class=@if(\Illuminate\Support\Facades\Route::current()->getPrefix() != '/superadmin') "{{active('user.*')}}" @endif>
+                        <a href="{{ action('UserController@index') }}">
+                            <i class="material-icons">person</i>
+                            <span>Benutzer</span>
+                        </a>
+                    </li>
+                    <li class="{{active('position.list_notAuthorized')}}">
+                        <a href="{{action('PositionController@index_notAuthorized')}}">
+                            <i class="material-icons">check_circle</i>
+                            <span>Dienste bestätigen</span>
+                        </a>
+                    </li>
+                    <li class="{{active('service.create')}}">
+                        <a href="{{ action('ServiceController@create') }}">
+                            <i class="material-icons">note_add</i>
+                            <span>Dienst anlegen</span>
+                        </a>
+                    </li>
+                @endcan
+                @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_training)
+                <li class="{{active('training.create')}}">
+                    <a href="{{ action('TrainingController@create') }}">
+                        <i class="material-icons">library_add</i>
+                        <span>Fortbildung anlegen</span>
+                    </a>
+                </li>
+                @endif
+                @can('administration')
+                    <li class="{{active('news.create')}}">
+                        <a href="{{ action('NewsController@create') }}">
+                            <i class="material-icons">chat</i>
+                            <span>Nachricht erstellen</span>
+                        </a>
+                    </li>
+                    <li class="{{active('qualification.*')}}">
+                        <a href="{{ action('QualificationController@index') }}">
+                            <i class="material-icons">local_activity</i>
+                            <span>Qualifikationen</span>
+                        </a>
+                    </li>
 
-            <li class="{{active('client.show')}}">
-                <a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}">
-                    <i class="material-icons">group</i>
-                    <span>Client</span>
-                </a>
-            </li>
-            @endcan
+                    <li class="{{active('client.show')}}">
+                        <a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}">
+                            <i class="material-icons">group</i>
+                            <span>Client</span>
+                        </a>
+                    </li>
+                @endcan
+            @endif
+
             @can('superadministration')
                 <li class="header {{active('client.edit')}}">Super Administration</li>
 
@@ -111,7 +132,7 @@
             Programming: &copy; 2017 - <?php echo date('Y') ?> <a href="https://github.com/Philhil/DienstplanDLRG">Philippe Käufer</a>.
         </div>
         <div class="version">
-            <b>Version: </b> 2019.1
+            <b>Version: </b> 2020.1
         </div>
     </div>
     <!-- #Footer -->

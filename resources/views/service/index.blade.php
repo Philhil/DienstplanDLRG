@@ -108,7 +108,7 @@
                                 <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
                                     <div class="panel panel-default">
 
-                                        <b>{{$position->qualification->name}}:</b>
+                                        <b>@if($position->requiredposition) class="font-underline"@endif>{{$position->qualification->name}}:</b>
                                         <div class="panel-body">
 
                                             {{-- show candidates if nobody is approved --}}

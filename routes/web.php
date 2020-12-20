@@ -29,7 +29,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/mailtest', 'HomeController@mailtest');
     Route::get('pdf','HomeController@generatePDF');
-
     Route::prefix('superadmin')->group(function () {
         Route::get('user', 'UserController@index')->name('superadmin.user');
     });
@@ -44,10 +43,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('/client/{clientid}/apply', 'ClientController@applyrequest')->name('clientapplyrequest');
     Route::any('/client/{clientid}/apply/revert', 'ClientController@applyrevert')->name('clientapplyrevert');
     Route::any('/client/{clientid}/removeuser/{userid}', 'ClientController@removeuser')->name('clientremoveuser');
+    Route::any('/client/module', 'ClientController@module')->name('clientmodule');
     Route::get('/changeclient/{client}', 'UserController@setcurrentclient')->name('changeclient');
 
     Route::resource('service', 'ServiceController');
     Route::get('service/{service}/delete', 'ServiceController@delete')->name('service.delete');
+
+    Route::resource('training', 'TrainingController');
+    Route::get('training/{training}/delete', 'TrainingController@destroy')->name('training.delete');
+    Route::any('/training/training_user/{training_userid}/delete/', 'TrainingController@delete_training_user')->name('delete_training_user');
 
     Route::resource('news', 'NewsController');
     Route::get('news/{news}/delete', 'NewsController@delete')->name('news.delete');
@@ -57,10 +61,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::match(['get', 'post'], 'qualification_user/delete/{user_id}/{qualification_id}', 'QualificationController@deleteQualification_User');
 
     Route::post('client_user/admin', 'ClientController@adminClient_User');
+    Route::post('client_user/trainingeditor', 'ClientController@trainingeditorClient_User');
 
     Route::match(['get', 'post'], 'position/{id}/subscribe', 'PositionController@subscribe');
+    Route::match(['get', 'post'], 'position/{positionid}/subscribe_user/{userid}', 'PositionController@subscribe_user');
     Route::match(['get', 'post'], 'position/{id}/unsubscribe', 'PositionController@unsubscribe');
+    Route::match(['get', 'post'], 'position/{positionid}/unsubscribe_user/{userid}', 'PositionController@unsubscribe_user');
     Route::match(['get', 'post'], 'position/{id}/authorize', 'PositionController@authorizePos');
     Route::match(['get', 'post'], 'position/{id}/deauthorize', 'PositionController@deauthorizePos');
     Route::match(['get', 'post'], 'position/list_notAuthorized', 'PositionController@index_notAuthorized')->name('position.list_notAuthorized');
+    Route::match(['get', 'post'], 'position/{id}/position_user', 'PositionController@position_user');
 });

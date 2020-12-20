@@ -1,7 +1,10 @@
 {
     "name": "laravel/laravel",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
@@ -10,7 +13,7 @@
         "doctrine/dbal": "^2.5",
         "eluceo/ical": "^0.15.0",
         "hisorange/browser-detect": "^3.1",
-        "laravel/framework": "5.7.*",
+        "laravel/framework": "^5.8.0",
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.5.0",
@@ -56,7 +59,7 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover"
-    	]
+        ]
     },
     "config": {
         "preferred-install": "dist",

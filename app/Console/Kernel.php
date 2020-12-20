@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('SendTrainingInfo')->everyFiveMinutes();
         $schedule->command('SendServicePDF')->cron('0 7 * * 1');
 
         $schedule->command('backup:clean')->daily()->at('01:00');

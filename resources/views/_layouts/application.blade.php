@@ -110,14 +110,14 @@
             @endif
 
             @if(Session::get('errormessage') != null)
-                showNotification('alert-info', '{{Session::get('errormessage')}}');
+                showNotification('alert-info', '{{Session::get('errormessage')}}', "top", "center", "", "");
             @php
                 Session::forget('errormessage');
             @endphp
             @endif
 
             @if(Session::get('successmessage') != null)
-            showNotification('alert-success', '{{Session::get('successmessage')}}');
+            showNotification('alert-success', '{{Session::get('successmessage')}}', "top", "center", "", "");
             @php
             Session::forget('successmessage');
             @endphp

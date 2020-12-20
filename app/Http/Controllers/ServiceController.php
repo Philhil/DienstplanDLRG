@@ -7,6 +7,7 @@ use App\Position;
 use App\PositionCandidature;
 use App\Qualification;
 use App\Service;
+use App\Training;
 use App\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -116,7 +117,7 @@ class ServiceController extends Controller
                 }
             }
 
-            Session::flash('message', ' Neuen Dienst erfolgreich angelegt');
+            Session::flash('successmessage', ' Neuen Dienst erfolgreich angelegt');
         }
 
         return redirect(action('ServiceController@create'));
@@ -193,7 +194,8 @@ class ServiceController extends Controller
             }
 
             //If there are more qualifications than position: User has Add new Positions
-            if (count($positions) < count($qualifications))
+            if(empty($positions)) {$positions = array();}
+            if (!empty($qualifications) && count($positions) < count($qualifications))
             {
                 for ($i = count($positions); $i < count($qualifications); $i++ )
                 {
@@ -278,6 +280,7 @@ class ServiceController extends Controller
 
         return redirect(action('ServiceController@index'));
     }
+
 
     /**
      * Remove the specified resource from storage.

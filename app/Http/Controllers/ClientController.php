@@ -107,9 +107,10 @@ class ClientController extends Controller
         $client = Client::findOrFail($id);
         $usersOfClient = $client->noAdmins()->get();
         $adminsOfClient = $client->Admins()->get();
+        $notrainingeditorsOfClient = $client->noTrainingEditors()->get();
+        $trainingeditorsOfClient = $client->TrainingEditors()->get();
 
-        return view('client.edit')->with(['client' => $client,
-            'usersOfClient' => $usersOfClient, 'adminsOfClient' => $adminsOfClient]);
+        return view('client.edit', compact('client', 'usersOfClient', 'adminsOfClient', 'notrainingeditorsOfClient', 'trainingeditorsOfClient'));
     }
 
     /**
@@ -184,7 +185,7 @@ class ClientController extends Controller
 
             $isAdmin = $request->get('isAdmin');
 
-            if ($isAdmin == true)
+            if ($isAdmin)
             { //set admin
                 $clientuser->isAdmin = true;
                 $clientuser->save();
@@ -196,6 +197,30 @@ class ClientController extends Controller
                 $clientuser->save();
                 return "true";
             }
+        }
+        return "false";
+    }
+
+    /**
+     * Set TrainingEditor rights to the specified resource and user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool as String :D
+     */
+    public function trainingeditorClient_User(Request $request)
+    {
+        $clientuser = Client_user::where(['client_id' => $request->get('client_id'), 'user_id' => $request->get('user_id')])->first();
+
+        if ( !is_null($clientuser))
+        {
+            //kann nur von admins oder superadmin erfolgen.
+            if(!Auth::user()->isAdminOfClient($request->get('client_id')) && !Auth::user()->isSuperAdmin()) {
+                abort(402, "Nope.");
+            }
+
+            $clientuser->isTrainingEditor = $request->get('isTrainingEditor') == 1 ? true : false;
+            $clientuser->save();
+            return "true";
         }
         return "false";
     }
@@ -239,5 +264,34 @@ class ClientController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    /**
+     * Update the specified module of this ressource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function module(Request $request)
+    {
+        if (!Auth::user()->isSuperAdmin() || !$request->has('client_id') || !$request->has('module') || !$request->has('state')){
+            abort(402, "Nope.");
+        }
+
+        $client = Client::findorfail($request->has('client_id'));
+
+        switch ($request->get('module')){
+            case "module_training":
+                $client->module_training = $request->get('state') == "true" ? 1 : 0;
+                break;
+            case "module_training_credit":
+                $client->module_training_credit = $request->get('state') == "true" ? 1 : 0;
+                break;
+        }
+        $client->save();
+
+        Session::flash('alert-success', 'Modul erfolgreich gespeichert!');
+        return "true";
     }
 }
