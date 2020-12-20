@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        @if(true)
+        @if($client->module_training)
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header">
@@ -152,9 +152,10 @@
             });
         });
 
+        @if($client->module_training)
         $('#client_user_trainingeditorselect').multiSelect({
             selectableHeader: "<h6>Benutzer von {{$client->name}}</h6>",
-            selectionHeader: "<h6>Admins von {{$client->name}}</div>",
+            selectionHeader: "<h6>Fortbildungs Editor von {{$client->name}}</div>",
             selectableFooter: "<div class='custom-header'></div>",
             selectionFooter: "<div class='custom-header'></div>",
 
@@ -200,10 +201,10 @@
                 });
             }
         });
-
+        @endif
         $('#client_user_adminselect').multiSelect({
             selectableHeader: "<h6>Benutzer von {{$client->name}}</h6>",
-            selectionHeader: "<h6>Fortbildungs Editor von {{$client->name}}</div>",
+            selectionHeader: "<h6>Admins von {{$client->name}}</div>",
             selectableFooter: "<div class='custom-header'></div>",
             selectionFooter: "<div class='custom-header'></div>",
 
