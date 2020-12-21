@@ -81,4 +81,14 @@ class HomeController extends Controller
 
         return $pdf->download();
     }
+
+    public function getUserGuide()
+    {
+        $file = base_path('docs/userguide/dlrgdienstplan.pdf');
+        $headers = array(
+            'Content-Type: application/pdf',
+        );
+
+        return \response()->download($file, 'dlrg_dienstplan.pdf', $headers);
+    }
 }

@@ -49,7 +49,12 @@
                     <span>Nachrichten</span>
                 </a>
             </li>
-
+            <li class="">
+                <a href="{{ action('HomeController@getUserGuide') }}">
+                    <i class="material-icons">help</i>
+                    <span>Anleitung</span>
+                </a>
+            </li>
             @if(\Illuminate\Support\Facades\Gate::check('administration') || \Illuminate\Support\Facades\Gate::check('trainingeditor'))
                 <li class="header {{active('service.edit')}}">Administration</li>
                 @can('administration')
