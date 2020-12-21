@@ -106,6 +106,17 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr class="strikeout">
+                                <td>Credits für Fortbildungen</td>
+                                <td>
+                                    <p>Aufbauend auf dem Modul Fortbildungen können Credits für einzelne Fortbildungspositionen verwaltet werden.</p>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label><input type="checkbox" id="module_training_credit" @if($client->module_training_credit)checked=""@endif @if(!\Illuminate\Support\Facades\Auth::user()->isSuperAdmin())disabled=""@endif><span class="lever"></span></label>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

@@ -90,7 +90,7 @@ class UserController extends Controller
             ->join('training_users', 'training_users.position_id', '=', 'positions.id')
             ->join('credits', 'credits.position_id', '=', 'positions.id')
             ->join('trainings', 'trainings.id', '=', 'training_users.training_id')
-            ->where(['qualification_users.user_id' => $id, 'training_users.user_id' => $id, 'trainings.client_id' => Auth::user()->currentclient_id])
+            ->where(['qualification_users.user_id' => $user->id, 'training_users.user_id' => $user->id, 'trainings.client_id' => Auth::user()->currentclient_id])
             ->whereNull('positions.service_id')
             ->whereBetween('trainings.date', [$saison["from"], DB::raw('CURDATE()')])
             ->groupBy('qualifications.name')
