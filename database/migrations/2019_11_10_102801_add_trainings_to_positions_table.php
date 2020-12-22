@@ -16,7 +16,7 @@ class AddTrainingsToPositionsTable extends Migration
         Schema::table('positions', function (Blueprint $table) {
             //Service OR Training must not be NULL!
             $table->integer('training_id')->unsigned()->nullable();
-            $table->foreign('training_id')->references('id')->on('trainings');
+            $table->foreign('training_id')->references('id')->on('trainings')->onDelete('cascade');
 
             //Service OR Training must not be NULL!
             $table->integer('service_id')->unsigned()->nullable()->change();

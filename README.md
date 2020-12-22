@@ -8,13 +8,13 @@ A production version could be found here https://dlrgdienstplan.de. If you want 
 A Demo Application is providet here: https://demo.dlrgdienstplan.de. 
 
 Login as a Admin with 
->user: admin 
->password: admin 
+>user: user.demodienstplan@philhil.de 
+>password: user 
 
 or as a User with 
 
->user: user 
->password: user
+>user: admin.demodienstplan@philhil.de 
+>password: admin
 
 ## Issues & Feature requests
 

@@ -28,9 +28,17 @@ class Kernel extends ConsoleKernel
         $schedule->command('SendTrainingInfo')->everyFiveMinutes();
         $schedule->command('SendServicePDF')->cron('0 7 * * 1');
 
-        $schedule->command('backup:clean')->daily()->at('01:00');
-        $schedule->command('backup:run --only-db')->daily()->at('02:00');
-        $schedule->command('backup:run')->weekly()->mondays()->at('02:30');
+        if(env("IS_DEMO", false))
+        {
+            $schedule->command('demo:createDemoClient')->daily()->at('03:00');
+        }
+        else
+        {
+            //backups not in DEMO mode
+            $schedule->command('backup:clean')->daily()->at('01:00');
+            $schedule->command('backup:run --only-db')->daily()->at('02:00');
+            $schedule->command('backup:run')->weekly()->mondays()->at('02:30');
+        }
     }
 
     /**

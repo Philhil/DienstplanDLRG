@@ -132,6 +132,10 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(env("IS_DEMO", false)) {
+            abort(402, "Not allowed in Demo Mode.");
+        }
+
         if (Auth::user()->isSuperAdmin() && Auth::user()->id != $id)
         {
             $user = User::findorFail($id);
@@ -169,6 +173,10 @@ class UserController extends Controller
     {
         if(!Auth::user()->isSuperAdmin()) {
             abort(402, "Nope.");
+        }
+
+        if(env("IS_DEMO", false)) {
+            abort(402, "Not allowed in Demo Mode.");
         }
 
         User::findorFail($id)->delete();

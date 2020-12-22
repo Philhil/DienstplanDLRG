@@ -81,6 +81,13 @@
                 <div class="body">
                     <form id="sign_in" method="POST" class="form-horizontal" action="{{ route('login') }}">
                         <div class="msg">Anmelden um loszulegen</div>
+
+                        @if(env("IS_DEMO", false))
+                        <h4 class="text-center btn-dlrg">!! Demo Portal !!</h4>
+                        <div class="msg">Admin: admin.demodienstplan@philhil.de <br> Passwort: admin</div>
+                        <div class="msg">User: user.demodienstplan@philhil.de <br> Passwort: user</div>
+                        @endif
+
                         {{ csrf_field() }}
 
                         <noscript>

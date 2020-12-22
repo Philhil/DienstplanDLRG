@@ -55,6 +55,10 @@ class ClientController extends Controller
             abort(402, "Nope.");
         }
 
+        if(env("IS_DEMO", false)) {
+            abort(402, "Not allowed in Demo Mode.");
+        }
+
         $validatedData = $request->validate([
             'name' => 'required|unique:clients|max:255',
             'seasonStart' => 'required',
@@ -126,6 +130,10 @@ class ClientController extends Controller
             abort(402, "Nope.");
         }
 
+        if(env("IS_DEMO", false)) {
+            abort(402, "Not allowed in Demo Mode.");
+        }
+
         $validatedData = $request->validate([
             'seasonStart' => 'required',
             'isMailinglistCommunication' => 'boolean',
@@ -159,6 +167,11 @@ class ClientController extends Controller
         if(!Auth::user()->isSuperAdmin()) {
             abort(402, "Nope.");
         }
+
+        if(env("IS_DEMO", false)) {
+            abort(402, "Not allowed in Demo Mode.");
+        }
+
         //Cascate deleting: user_client, news, qualifications, services (services->Position, services->Position->PositionCandidates)
 
         Client::findorfail($id)->Delete();
@@ -249,6 +262,10 @@ class ClientController extends Controller
     {
         if(Auth::user()->isAdminOfClient($request->get('client_id'))) {
             abort(402, "Nope.");
+        }
+
+        if(env("IS_DEMO", false)) {
+            abort(402, "Not allowed in Demo Mode.");
         }
 
         if ($user_id != Auth::user()->id)

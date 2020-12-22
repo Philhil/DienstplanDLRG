@@ -116,7 +116,7 @@
                             </p>
                         </div>
 
-                        <div class="input-group">
+                        <div class="input-group form-group{{ $errors->has('captcha') ? ' has-error' : '' }}">
                             <span class="input-group-addon">
                                 <i class="material-icons">vpn_key</i>
                             </span>
