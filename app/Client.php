@@ -19,7 +19,9 @@ class Client extends Model
         'mailSenderName',
         'mailReplyAddress',
         'defaultServiceStart',
-        'defaultServiceEnd'
+        'defaultServiceEnd',
+        'module_training',
+        'module_training_credit'
     ];
 
     protected $dates = [

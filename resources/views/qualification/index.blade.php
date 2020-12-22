@@ -9,7 +9,7 @@
             <div class="header">
                 <h2>
                     Qualifikationen
-                    <small>Positionen können beim anlegen von Diensten mit den hier definierten Qualifikationen belegt werden.</small>
+                    <small>Positionen können beim Anlegen von Diensten mit den hier definierten Qualifikationen belegt werden.</small>
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <a href="{{action('QualificationController@create')}}">

@@ -15,7 +15,7 @@
                 </div>
                 <div class="card">
                     <div class="body">
-                        <div class="msg"><h4>Erfolgreich registriert! <br><br>Dein Benutzer muss erst freigeschaltet werden. Du wirst per E-Mail benachrichtigt.</h4></div>
+                        <div class="msg"><h4>Erfolgreich registriert! <br><br>Die Gliederung sowie der Benutzer wurden erfolgreich angelegt und via E-Mail bestätigt. In der E-Mail sind außerdem weitern Informationen und Schritte enthalten.</h4></div>
                     </div>
                 </div>
             </div>

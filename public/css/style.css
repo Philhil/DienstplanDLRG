@@ -2828,10 +2828,10 @@ section.content {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   position: relative;
   margin-bottom: 30px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  border-radius: 2px; }
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  border-radius: 6px; }
   .card .card-inside-title {
     margin-top: 25px;
     margin-bottom: 15px;
@@ -7721,7 +7721,7 @@ fieldset[disabled] .form-control {
 
 /* Login Page ================================== */
 .login-page {
-  background-color: #00BCD4;
+  background-color: transparent;
   padding-left: 0;
   max-width: 360px;
   margin: 5% auto;
@@ -7733,7 +7733,7 @@ fieldset[disabled] .form-control {
   .login-page .login-box a {
     font-size: 14px;
     text-decoration: none;
-    color: #00BCD4; }
+    color: #575756; }
   .login-page .login-box .logo {
     margin-bottom: 20px; }
     .login-page .login-box .logo a {
@@ -7741,12 +7741,12 @@ fieldset[disabled] .form-control {
       display: block;
       width: 100%;
       text-align: center;
-      color: #fff; }
+      color: #ffed00; }
     .login-page .login-box .logo small {
       display: block;
       width: 100%;
       text-align: center;
-      color: #fff;
+      color: #ffed00;
       margin-top: -5px; }
 
 /* Sign Up Page ================================ */
@@ -7771,12 +7771,12 @@ fieldset[disabled] .form-control {
       display: block;
       width: 100%;
       text-align: center;
-      color: #fff; }
+      color: #ffed00; }
     .signup-page .signup-box .logo small {
       display: block;
       width: 100%;
       text-align: center;
-      color: #fff;
+      color: #ffed00;
       margin-top: -5px; }
 
 /* Forgot Password Page ======================== */

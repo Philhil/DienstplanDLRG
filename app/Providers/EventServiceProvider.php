@@ -40,6 +40,10 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\NewPositioncandidature' => [
             'App\Listeners\NewPositioncandidatureListener',
         ],
+
+        'App\Events\ClientRegistered' => [
+            'App\Listeners\ClientRegisteredListener',
+        ],
     ];
 
     /**

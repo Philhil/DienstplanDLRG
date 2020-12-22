@@ -1,13 +1,14 @@
 @extends('_layouts.base')
 
-@section('body')
+@section('head')
+    <!-- Login Page Css -->
+    <link href="/css/login.css" rel="stylesheet">
+
     <style>
-        /* Shared */
         .loginBtn {
             box-sizing: border-box;
             position: relative;
             /* width: 13em;  - apply for fixed size */
-            margin: 0.2em;
             padding: 0 15px 0 46px;
             border: none;
             text-align: left;
@@ -65,83 +66,115 @@
             background: #E74B37;
         }
     </style>
-    <body class="login-page">
+@endsection
 
-    <div class="login-box">
-        <div class="logo">
-            <a href="javascript:void(0);"><b>DLRG</b></a>
-            <small>Online Dienstplan</small>
-        </div>
-        <div class="card">
-            <div class="body">
-                <form id="sign_in" method="POST" class="form-horizontal" action="{{ route('login') }}">
-                    <div class="msg">Anmelden um loszulegen</div>
-                    {{ csrf_field() }}
+@section('body')
+    <body class="login-background">
 
-                    <noscript>
-                        <div class="msg">
-                            <span class="badge bg-red">JavaScript muss für diese Seite aktiviert sein!</span>
-                        </div>
-                    </noscript>
+    <div class="login-page">
+        <div class="login-box">
+            <div class="logo card-header">
+                <a href="javascript:void(0);"><b>DLRG</b></a>
+                <small>Online Dienstplan</small>
+            </div>
+            <div class="card">
+                <div class="body">
+                    <form id="sign_in" method="POST" class="form-horizontal" action="{{ route('login') }}">
+                        <div class="msg">Anmelden um loszulegen</div>
+                        {{ csrf_field() }}
 
-                    <div class="input-group form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                        <span class="input-group-addon">
-                            <i class="material-icons">person</i>
-                        </span>
-                        <div class="form-line">
-                            <input type="email" id="email"  class="form-control" name="email" placeholder="E-Mail" value="{{ old('email') }}" required autofocus>
-                            @if ($errors->has('email'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('email') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
+                        <noscript>
+                            <div class="msg">
+                                <span class="badge bg-red">JavaScript muss für diese Seite aktiviert sein!</span>
+                            </div>
+                        </noscript>
 
-                    <div class="input-group form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                        <span class="input-group-addon">
-                            <i class="material-icons">lock</i>
-                        </span>
-                        <div class="form-line">
-                            <input type="password" id="password"  class="form-control" name="password" placeholder="Passwort" required>
-                            @if ($errors->has('password'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('password') }}</strong>
-                                </span>
-                            @endif
+                        <div class="input-group form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                            <span class="input-group-addon">
+                                <i class="material-icons">person</i>
+                            </span>
+                            <div class="form-line">
+                                <input type="email" id="email"  class="form-control" name="email" placeholder="E-Mail" value="{{ old('email') }}" required autofocus>
+                                @if ($errors->has('email'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-xs-8 p-t-5">
-                            <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }} id="remember" class="filled-in chk-col-pink">
-                            <label for="remember">Angemeldet bleiben</label>
+                        <div class="input-group form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                            <span class="input-group-addon">
+                                <i class="material-icons">lock</i>
+                            </span>
+                            <div class="form-line">
+                                <input type="password" id="password"  class="form-control" name="password" placeholder="Passwort" required>
+                                @if ($errors->has('password'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
                         </div>
-                        <div class="col-xs-4">
-                            <button class="btn btn-block bg-pink waves-effect" type="submit">Anmelden</button>
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <button type="button" class="loginBtn loginBtn--facebook" onclick="location.href='redirect';">
-                                Facebook Login
-                            </button>
+                        <div class="row">
+                            <div class="col-xs-8 p-t-5">
+                                <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }} id="remember" class="filled-in chk-col-pink">
+                                <label for="remember">Angemeldet bleiben</label>
+                            </div>
+                            <div class="col-xs-4">
+                                <button class="btn btn-block btn-dlrg waves-effect" type="submit">Anmelden</button>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row m-t-15 m-b--20">
-                        <div class="col-xs-6">
-                            <a href="{{ route('register') }}">Registrieren!</a>
+                        <div class="row">
+                            <div class="col-xs-8 p-t-5"></div>
+                            <div class="col-xs-4">
+                                <button type="button" class="btn btn-block loginBtn loginBtn--facebook" onclick="location.href='redirect';">Login</button>
+                            </div>
                         </div>
-                        <div class="col-xs-6 align-right">
-                            <a href="{{ route('password.request') }}">Passwort vergessen?</a>
+
+                        <div class="row m-t-15 m-b--20">
+                            <div class="col-xs-6">
+                                <a href="{{ route('register') }}"><button type="button" class="btn btn-default waves-effect">Registrieren!</button></a>
+                            </div>
+                            <div class="col-xs-6 align-right">
+                                <a href="{{ route('password.request') }}"><button type="button" class="btn btn-default waves-effect">Passwort vergessen?</button></a>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
+        @if(!env("OFFER.DIENSTPLAN", true))
+            <div class="pull-right top-buffer footer-register">
+                <a href="/impressum">Impressum</a> <a>|</a>
+                <a href="/datenschutz">Datenschutz</a>
+            </div>
+        @endif
     </div>
+
+    @if(env("OFFER.DIENSTPLAN", true))
+    <footer class="text-center footer-login footer-login-buttom">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <a href="{{ action('OrderController@index') }}">
+                        <button type="button" class="btn btn-dlrg waves-effect">
+                            <i class="material-icons">flight_takeoff</i>
+                            <span>Hol dir den Dienstplan für deine Gliederung!</span>
+                        </button>
+                    </a>
+                </div>
+
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <h2></h2>
+                    <a href="/impressum">Impressum</a> | <a href="/datenschutz">Datenschutz</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    @endif
 
     <!-- Jquery Core Js -->
     <script src="plugins/jquery/jquery.min.js"></script>
@@ -157,11 +190,6 @@
 
     <!-- Custom Js -->
     <script src="js/admin.js"></script>
-    <script src="js/pages/examples/sign-in.js"></script>
 
-    <div class="pull-right top-buffer">
-        <a href="/impressum">Impressum</a> <a>|</a>
-        <a href="/datenschutz">Datenschutz</a>
-    </div>
     </body>
 @endsection

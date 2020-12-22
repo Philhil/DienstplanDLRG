@@ -23,12 +23,18 @@ Route::get('/callback', 'SocialAuthController@callback');
 Route::get('/impressum', function () {return view('legal.impressum');});
 Route::get('/datenschutz', function () {return view('legal.datenschutz');});
 
+Route::get('/order', 'OrderController@index');
+Route::get('/order/create/{package}', 'OrderController@create');
+Route::post('/order/{package}', 'OrderController@store');
+
+
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/', function (){return redirect('/service');});
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/mailtest', 'HomeController@mailtest');
     Route::get('pdf','HomeController@generatePDF');
+    Route::get('/userguide', 'HomeController@getUserGuide');
     Route::prefix('superadmin')->group(function () {
         Route::get('user', 'UserController@index')->name('superadmin.user');
     });

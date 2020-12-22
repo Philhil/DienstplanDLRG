@@ -1,0 +1,65 @@
+.login-background {
+    background-color: #05040a;
+    background-image: url('/images/background_login.jpg');
+    background-size: auto;
+    background-position: top center;
+    background-repeat: no-repeat;
+    align-items: center;
+}
+
+.login-box {
+    max-width: 360px;
+    overflow: visible;
+}
+
+.login-box .msg{
+    margin-top: 20px;
+}
+
+.btn-dlrg {
+    background-color: rgba(227, 6, 19, 0.95);
+    color: #ffed00;
+}
+
+.card-header {
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -ms-border-radius: 6px;
+    border-radius: 6px;
+    padding: 5px;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(233, 30, 99, 0.4);
+    margin-bottom: -30px !important;
+    margin-left: 15px;
+    margin-right: 15px;
+    position: relative;
+    z-index: 3 !important;
+    border-bottom: none;
+    background: linear-gradient(40deg, rgba(227, 6, 19, 0.85), rgba(227, 6, 19, 0.95));
+    text-align: center !important;
+    color: #ffed00;
+}
+
+.footer-login-buttom {
+    position:fixed;
+    bottom:20px;
+ }
+.footer-login {
+    width:100%;
+    font-size: 13px;
+    color: #ffed00;
+}
+.footer-login a {
+    font-size: 13px;
+    color: #ffed00; }
+
+.footer-register {
+    max-width: 360px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #ffed00;
+}
+.footer-register a{
+    font-size: 13px;
+    color: #ffed00;
+}

@@ -38,13 +38,13 @@
                                 <div class="form-line">
                                     {{ Form::hidden('isservicedefault',0)}}
                                     {{ Form::checkbox('isservicedefault', 1, old('isservicedefault') or $qualification->isservicedefault != 0 ? true : false, ['class' => 'filled-in', 'id' => "isservicedefault"]) }}
-                                    {{ Form::label('isservicedefault', 'Soll die Qualifikation bei anlegen von einem Service automatisch erstellt werden?') }}
+                                    {{ Form::label('isservicedefault', 'Soll die Qualifikation beim Anlegen eines Dienstes automatisch erstellt werden?') }}
                                     {!! $errors->first('isservicedefault', '<p class="help-block">:message</p>') !!}
                                 </div>
                             </div>
                             <div class="form-group {{ $errors->has('defaultcount') ? 'has-error' : ''}}">
                                 <div class="form-line">
-                                    {{ Form::label('defaultcount', 'Anzahl der default Qualifikation:') }}
+                                    {{ Form::label('defaultcount', 'Wie viele Positionen dieser Qualifikation sollen automatisch angelegt werden?:') }}
                                     {{ Form::number('defaultcount', 1, ['class' => 'form-control']) }}
                                     {!! $errors->first('defaultcount', '<p class="help-block">:message</p>') !!}
                                 </div>
@@ -53,7 +53,7 @@
                                 <div class="form-line">
                                     {{ Form::hidden('defaultrequiredasposition',0)}}
                                     {{ Form::checkbox('defaultrequiredasposition', 1, old('defaultrequiredasposition') or $qualification->defaultrequiredasposition != 0 ? true : false, ['class' => 'filled-in', 'id' => "defaultrequiredasposition"]) }}
-                                    {{ Form::label('defaultrequiredasposition', 'Ist das Besetzen der Positionen unbedingt erforderlich, welche mit dieser Qualifikation automatisch erstellt werden?') }}
+                                    {{ Form::label('defaultrequiredasposition', 'Ist dies eine notwendige oder optionale Position?') }}
                                     {!! $errors->first('defaultrequiredasposition', '<p class="help-block">:message</p>') !!}
                                 </div>
                             </div>

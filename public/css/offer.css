@@ -1,0 +1,72 @@
+html {
+    font-size: 14px;
+}
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.offer-container {
+    max-width: 1140px;
+    width: 100%;
+    height: 100%;
+    padding-right: 20px;
+    padding-left: 20px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
+.card-offer-focus {
+    background-color: rgba(87, 87, 86, 0.65);
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -ms-border-radius: 6px;
+    border-radius: 6px;
+    padding: 5px;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 0, 0, 0.14);
+    color: #fff;
+}
+
+.card-offer {
+    background-color: rgba(153, 153, 152, 0.65);
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -ms-border-radius: 6px;
+    border-radius: 6px;
+    padding: 5px;
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 0, 0, 0.14);
+    color: #fff;
+}
+
+.card-offer-header {
+    color: #ffed00;
+}
+
+.card-offer-body {
+    padding: 15px;
+    text-align: center;
+    position: relative;
+    color: #fff;
+}
+.card-offer-footer {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.offer-icon i {
+    text-align: center;
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 55px;
+    border: 1px solid #E5E5E5;
+    border-radius: 50%;
+    width: 130px;
+    line-height: 130px;
+    height: 130px;
+}

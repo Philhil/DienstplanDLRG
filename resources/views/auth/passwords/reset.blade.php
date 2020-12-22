@@ -1,10 +1,16 @@
 @extends('_layouts.base')
 
+@section('head')
+    <!-- Login Page Css -->
+    <link href="/css/login.css" rel="stylesheet">
+@endsection
+
 @section('body')
-    <body class="fp-page">
-    <div class="fp-box">
-        <div class="logo">
-            <a href="javascript:void(0);"><b>DLRG</b> Stuttgart</a>
+<body class="login-background">
+<div class="login-page">
+    <div class="login-box">
+        <div class="logo card-header">
+            <a href="javascript:void(0);"><b>DLRG</b></a>
             <small>Online Dienstplan</small>
         </div>
         <div class="card">
@@ -61,31 +67,31 @@
                             @endif
                         </div>
                     </div>
-                    <button class="btn btn-block btn-lg bg-pink waves-effect" type="submit">Passwort setzen</button>
+                    <button class="btn btn-block btn-lg btn-dlrg waves-effect" type="submit">Passwort setzen</button>
                 </form>
             </div>
         </div>
     </div>
-
-    <!-- Jquery Core Js -->
-    <script src="/plugins/jquery/jquery.min.js"></script>
-
-    <!-- Bootstrap Core Js -->
-    <script src="/plugins/bootstrap/js/bootstrap.js"></script>
-
-    <!-- Waves Effect Plugin Js -->
-    <script src="/plugins/node-waves/waves.js"></script>
-
-    <!-- Validation Plugin Js -->
-    <script src="/plugins/jquery-validation/jquery.validate.js"></script>
-
-    <!-- Custom Js -->
-    <script src="/js/admin.js"></script>
-    <script src="/js/pages/examples/forgot-password.js"></script>
-
-    <div class="pull-right top-buffer">
+    <div class="pull-right top-buffer footer-register">
         <a href="/impressum">Impressum</a> <a>|</a>
         <a href="/datenschutz">Datenschutz</a>
     </div>
-    </body>
+</div>
+
+<!-- Jquery Core Js -->
+<script src="/plugins/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core Js -->
+<script src="/plugins/bootstrap/js/bootstrap.js"></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src="/plugins/node-waves/waves.js"></script>
+
+<!-- Validation Plugin Js -->
+<script src="/plugins/jquery-validation/jquery.validate.js"></script>
+
+<!-- Custom Js -->
+<script src="/js/admin.js"></script>
+<script src="/js/pages/examples/forgot-password.js"></script>
+</body>
 @endsection

@@ -69,6 +69,11 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        if ($data['zip'] != "spamprevention" || !empty($data['street']))
+        {
+            return null;
+        }
+
         $user = User::create([
             'name' => $data['name'],
             'first_name' => $data['first_name'],
@@ -111,6 +116,6 @@ class RegisterController extends Controller
 
     public function success()
     {
-        return view('auth.success', compact('clients_candidature', 'clients_nocandidature'));
+        return view('auth.success');
     }
 }
