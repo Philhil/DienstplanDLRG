@@ -1,9 +1,9 @@
 Hallo {{$position->user->first_name}},
-
-du wurdest soeben für den Dienst am <b>{{$position->service->date->format('d M Y')}}</b> @if(!empty($position->service->comment))({{$position->service->comment}})@endif als {{$position->qualification->name}} zugeteilt.
+<br>
+Du wurdest soeben für den Dienst am <b>{{$position->service->date->format('d M Y')}}</b> @if(!empty($position->service->comment))({{$position->service->comment}})@endif als {{$position->qualification->name}} zugeteilt.
 
 <br><br>
-Bisher sind mit dir eingetragen:<br>
+Bisher sind mit Dir eingetragen:<br>
 <table>
     <tbody>
     @foreach($servicepositions as $pos)
@@ -17,5 +17,5 @@ Bisher sind mit dir eingetragen:<br>
 </table>
 
 <br><br>
-Viele Grüße<br>
+Viele Grüße,<br>
 @if(isset($authorizedby)){{$authorizedby->first_name}}@endif

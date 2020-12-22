@@ -52,7 +52,7 @@ class PositionAssigned extends Mailable implements ShouldQueue
 
         $vCalendar->addComponent($vEvent);
 
-        return $this->subject('DLRG DIENSTE: Dienst zugewiesen')->view('email.position')->with([
+        return $this->subject('DLRG DIENSTE📟: Dienst zugewiesen')->view('email.position')->with([
             'position' => $this->position,
             'servicepositions' => $this->servicepositions,
             'authorizedby' => $this->authorizedby,

@@ -41,7 +41,7 @@ class WachplanToMail extends Mailable
         {
             $pdf = PDF::loadView('email.serviceslist', ['services'=>$services, 'tableheader'=>$tableheader])->setPaper('a3', 'landscape');
 
-            return $this->subject('Wachplan')->view('email.serviceslist_text', ['client' => $this->client])
+            return $this->subject('Dienstplan🚑')->view('email.serviceslist_text', ['client' => $this->client])
                 ->from($this->client->mailReplyAddress, $this->client->mailSenderName)
                 ->attachData($pdf->output(), 'Dienstplan'.Carbon::now()->format('Ymd').'.pdf');
         }

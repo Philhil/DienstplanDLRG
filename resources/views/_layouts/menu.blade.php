@@ -102,7 +102,7 @@
                     <li class="{{active('client.show')}}">
                         <a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}">
                             <i class="material-icons">group</i>
-                            <span>Client</span>
+                            <span>Gliederung</span>
                         </a>
                     </li>
                 @endcan
@@ -121,7 +121,7 @@
                 <li class="{{active('client.*')}}">
                     <a href="{{ action('ClientController@index') }}">
                         <i class="material-icons">group</i>
-                        <span>Clients</span>
+                        <span>Gliederungen</span>
                     </a>
                 </li>
             @endcan

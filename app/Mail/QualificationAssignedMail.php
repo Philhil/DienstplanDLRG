@@ -35,7 +35,7 @@ class QualificationAssignedMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('DLRG DIENSTE: Qualifikation zugewiesen')->view('email.qualification')->with([
+        return $this->subject('DLRG DIENSTE🏅: Qualifikation zugewiesen')->view('email.qualification')->with([
             'user' => $this->qualification_user->user()->first(),
             'qualification' => $this->qualification_user->qualification()->first(),
             'authorizedby' => $this->authorizedby,

@@ -40,7 +40,7 @@ class PositionCandidatureMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->subject('DLRG DIENSTE: New Positioncandidature')->view('email.positioncandidate')
+        return $this->subject('DLRG DIENSTE👮: New Positioncandidature')->view('email.positioncandidate')
             ->with([
                 'position' => $this->position,
                 'positionCandidature' => $this->positionCandidature,
