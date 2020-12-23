@@ -1,7 +1,7 @@
 @if(\Illuminate\Support\Facades\Route::current()->getName() == 'training.edit')
-    {{ Form::model($training->toArray() + $positions->toArray(), ['action' => ['TrainingController@update', 'id' => $training->id], 'method' => 'PUT']) }}
+    {{ Form::model($training->toArray() + $positions->toArray(), ['action' => ['TrainingController@update', $training->id], 'method' => 'PUT']) }}
 @else
-    {{ Form::model($training->toArray() + $positions->toArray(), ['action' => ['TrainingController@store', 'id' => $training->id]]) }}
+    {{ Form::model($training->toArray() + $positions->toArray(), ['action' => ['TrainingController@store', $training->id]]) }}
 @endif
 
 <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12">
@@ -87,7 +87,7 @@
         </div>
     </div>
 
-    <div class="body table-responsive" style="padding-bottom: 100px">
+    <div class="body table-responsive" style="padding-bottom: 100px; overflow: auto">
         <table class="table table-striped" id="tblPositions">
             <thead>
             <tr>

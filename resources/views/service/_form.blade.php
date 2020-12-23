@@ -1,7 +1,7 @@
 @if(\Illuminate\Support\Facades\Route::current()->getName() == 'service.edit')
-    {{ Form::model($service->toArray() + $positions->toArray(), ['action' => ['ServiceController@update', 'id' => $service->id], 'method' => 'PUT']) }}
+    {{ Form::model($service->toArray() + $positions->toArray(), ['action' => ['ServiceController@update', $service->id], 'method' => 'PUT']) }}
 @else
-    {{ Form::model($service->toArray() + $positions->toArray(), ['action' => ['ServiceController@store', 'id' => $service->id]]) }}
+    {{ Form::model($service->toArray() + $positions->toArray(), ['action' => ['ServiceController@store', $service->id]]) }}
 @endif
 
 <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
@@ -52,7 +52,7 @@
         </div>
     </div>
 
-    <div class="body table-responsive" style="padding-bottom: 100px">
+    <div class="body table-responsive" style="padding-bottom: 100px; overflow: auto">
         <table class="table table-striped" id="tblPositions">
             <thead>
             <tr>
@@ -69,14 +69,15 @@
                     <tr pos_id="{{$position->id}}" class="strikeout">
                         <td>
                             {{Form::hidden('position[]',$position->id)}}
-                            <select class="bootstrap-select show-tick" data-live-search="true" name="qualification[]">
+
+                            <select class="bootstrap-select show-tick" data-live-search="true" name="qualification[]" data-size="5">
                                 @foreach($qualifications as $qualification)
                                     <option value="{{$qualification->id}}" @if($position->qualification_id == $qualification->id) selected @endif>{{$qualification->name}}</option>
                                 @endforeach
                             </select>
                         </td>
                         <td>
-                            <select class="bootstrap-select show-tick" data-live-search="true" name="user[]">
+                            <select class="btn-group bootstrap-select form-control show-tick" data-live-search="true" name="user[]" data-size="5">
                                 <option value="null">-- Bitte wählen --</option>
                                 @foreach($users as $key => $user)
                                     <option @if($user->qualifications->contains('id', $position->qualification_id))class="bg-green" @endif  value="{{$user->id}}" @if($position->user_id == $user->id) selected @endif>{{substr ($user->first_name, 0, 1)}}. {{$user->name}}</option>
@@ -88,7 +89,7 @@
                             <input class="form-control" placeholder="Kommentar..." type="text" value="{{$position->comment}}" name="position_comment[]" >
                         </td>
                         <td>
-                            <select class="bootstrap-select show-tick" name="position_required[]">
+                            <select class="form-control bootstrap-select show-tick" name="position_required[]">
                                 <option value="0">Optional</option>
                                 <option value="1" {{$position->requiredposition ? "selected" : ""}}>Erforderlich</option>
                             </select>

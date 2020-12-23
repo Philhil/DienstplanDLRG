@@ -35,6 +35,18 @@ return [
                  * Determines if symlinks should be followed.
                  */
                 'followLinks' => false,
+
+                /*
+                 * Determines if it should avoid unreadable folders.
+                 */
+                'ignore_unreadable_directories' => false,
+
+                /*
+                 * This path is used to make directories in resulting zip-file relative
+                 * Set to `null` to include complete absolute path
+                 * Example: base_path()
+                 */
+                'relative_path' => null,
             ],
 
             /*
@@ -47,9 +59,17 @@ return [
         ],
 
         /*
-         * The database dump can be gzipped to decrease diskspace usage.
+         * The database dump can be compressed to decrease diskspace usage.
+         *
+         * Out of the box Laravel-backup supplies
+         * Spatie\DbDumper\Compressors\GzipCompressor::class.
+         *
+         * You can also create custom compressor. More info on that here:
+         * https://github.com/spatie/db-dumper#using-compression
+         *
+         * If you do not want any compressor at all, set it to null.
          */
-        'gzip_database_dump' => false,
+        'database_dump_compressor' => null,
 
         'destination' => [
 
@@ -66,6 +86,11 @@ return [
                 's3',
             ],
         ],
+
+        /*
+         * The directory where the temporary files will be stored.
+         */
+        'temporary_directory' => storage_path('app/backup-temp'),
     ],
 
     /*
@@ -78,12 +103,12 @@ return [
     'notifications' => [
 
         'notifications' => [
-            \Spatie\Backup\Notifications\Notifications\BackupHasFailed::class         => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\UnhealthyBackupWasFound::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\CleanupHasFailed::class        => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\BackupWasSuccessful::class     => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\HealthyBackupWasFound::class   => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\CleanupWasSuccessful::class    => ['mail'],
+            \Spatie\Backup\Notifications\Notifications\BackupHasFailedNotification::class => ['mail'],
+            \Spatie\Backup\Notifications\Notifications\UnhealthyBackupWasFoundNotification::class => ['mail'],
+            \Spatie\Backup\Notifications\Notifications\CleanupHasFailedNotification::class => ['mail'],
+            \Spatie\Backup\Notifications\Notifications\BackupWasSuccessfulNotification::class => ['mail'],
+            \Spatie\Backup\Notifications\Notifications\HealthyBackupWasFoundNotification::class => ['mail'],
+            \Spatie\Backup\Notifications\Notifications\CleanupWasSuccessfulNotification::class => ['mail'],
         ],
 
         /*
@@ -94,6 +119,11 @@ return [
 
         'mail' => [
             'to' => env('MAIL_FROM_ADDRESS'),
+
+            'from' => [
+                'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+                'name' => env('MAIL_FROM_NAME', 'Example'),
+            ],
         ],
 
         'slack' => [
@@ -103,6 +133,10 @@ return [
              * If this is set to null the default channel of the webhook will be used.
              */
             'channel' => null,
+
+            'username' => null,
+
+            'icon' => null,
         ],
     ],
 
@@ -111,15 +145,17 @@ return [
      * If a backup does not meet the specified requirements the
      * UnHealthyBackupWasFound event will be fired.
      */
-    'monitorBackups' => [
+    'monitor_backups' => [
         [
             'name' => config('app.name'),
             'disks' => [
                 //'local',
                 's3'
             ],
-            'newestBackupsShouldNotBeOlderThanDays' => 1,
-            'storageUsedMayNotBeHigherThanMegabytes' => 4000,
+            'health_checks' => [
+                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
+                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 5000,
+            ],
         ],
 
         /*
@@ -144,38 +180,38 @@ return [
          */
         'strategy' => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
 
-        'defaultStrategy' => [
+        'default_strategy' => [
 
             /*
              * The number of days for which backups must be kept.
              */
-            'keepAllBackupsForDays' => 7,
+            'keep_all_backups_for_days' => 7,
 
             /*
              * The number of days for which daily backups must be kept.
              */
-            'keepDailyBackupsForDays' => 14,
+            'keep_daily_backups_for_days' => 14,
 
             /*
              * The number of weeks for which one weekly backup must be kept.
              */
-            'keepWeeklyBackupsForWeeks' => 8,
+            'keep_weekly_backups_for_weeks' => 8,
 
             /*
              * The number of months for which one monthly backup must be kept.
              */
-            'keepMonthlyBackupsForMonths' => 4,
+            'keep_monthly_backups_for_months' => 4,
 
             /*
              * The number of years for which one yearly backup must be kept.
              */
-            'keepYearlyBackupsForYears' => 2,
+            'keep_yearly_backups_for_years' => 2,
 
             /*
              * After cleaning up the backups remove the oldest backup until
              * this amount of megabytes has been reached.
              */
-            'deleteOldestBackupsWhenUsingMoreMegabytesThan' => 4000,
+            'delete_oldest_backups_when_using_more_megabytes_than' => 5000,
         ],
     ],
 ];

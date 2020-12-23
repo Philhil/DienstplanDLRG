@@ -1,7 +1,7 @@
 @if(\Illuminate\Support\Facades\Route::current()->getName() == 'news.edit')
-    {{ Form::model($news, ['action' => ['NewsController@update', 'id' => $news->id], 'method' => 'PUT']) }}
+    {{ Form::model($news, ['action' => ['NewsController@update', $news->id], 'method' => 'PUT']) }}
 @else
-    {{ Form::model($news, ['action' => ['NewsController@store', 'id' => $news->id]]) }}
+    {{ Form::model($news, ['action' => ['NewsController@store', $news->id]]) }}
 @endif
 
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

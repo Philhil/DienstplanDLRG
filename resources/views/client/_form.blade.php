@@ -1,6 +1,6 @@
 @if(\Illuminate\Support\Facades\Route::current()->getName() == 'client.create')
 
-    {{ Form::model($client, ['action' => ['ClientController@store', 'id' => $client->id]]) }}
+    {{ Form::model($client, ['action' => ['ClientController@store', $client->id]]) }}
 
     <div class="col-md-12">
         <div class="form-group {{ $errors->has('name') ? 'has-error' : ''}}">
@@ -12,7 +12,7 @@
         </div>
     </div>
 @else
-    {{ Form::model($client, ['action' => ['ClientController@update', 'id' => $client->id], "method" => "PUT"]) }}
+    {{ Form::model($client, ['action' => ['ClientController@update', $client->id], "method" => "PUT"]) }}
 
     <div class="col-md-12">
         <div class="form-group {{ $errors->has('name') ? 'has-error' : ''}}">

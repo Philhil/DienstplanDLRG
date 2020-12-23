@@ -142,7 +142,6 @@
             $('.email').inputmask({ alias: "email" });
 
             $('.modules input:checkbox').change(function () {
-                console.log($(this).is(':checked'));
                 $.ajax({
                     type: "POST",
                     url: '/client/module',

@@ -1,4 +1,4 @@
-{{ Form::model($user, ['action' => ['UserController@update', 'id' => $user->id], "method" => "PUT"]) }}
+{{ Form::model($user, ['action' => ['UserController@update', $user->id], "method" => "PUT"]) }}
 <div class="col-sm-10">
     <div class="form-group {{ $errors->has('name') ? 'has-error' : ''}}">
         <div class="form-line">

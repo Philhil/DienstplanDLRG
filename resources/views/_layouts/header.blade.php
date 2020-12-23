@@ -89,9 +89,9 @@
                     </ul>
                 </li>
                 <!-- #END# MyQualifications-->
-                <li><a href="{{action('UserController@show', \Illuminate\Support\Facades\Auth::user()->id)}}"><i class="material-icons">person</i></a></li>
+                <li><a href="{{action('UserController@show', \Illuminate\Support\Facades\Auth::user()->id) }}"><i class="material-icons">person</i></a></li>
                 @can('administration')
-                    <li><a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id)}}"><i class="material-icons">group</i></a></li>
+                    <li><a href="{{action('ClientController@show', \Illuminate\Support\Facades\Auth::user()->currentclient_id) }}"><i class="material-icons">group</i></a></li>
                 @endcan
                 <li class="pull-right"><a href="{{ route('logout') }}" class="js-right-sidebar" data-close="true"><i class="material-icons">input</i></a></li>
             </ul>
