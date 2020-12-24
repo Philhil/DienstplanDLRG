@@ -6,6 +6,92 @@
 @endsection
 
 @section('content')
+    @if(\Illuminate\Support\Facades\Auth::user()->can('administration'))
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Admin Panel</h2>
+                </div>
+                <div class="body">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs tab-col-deep-orange" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#action_with_icon_title" data-toggle="tab" aria-expanded="true">
+                                <i class="material-icons">record_voice_over</i> Aktionen
+                            </a>
+                        </li>
+                        <li role="presentation" class="">
+                            <a href="#hilfe_with_icon_title" data-toggle="tab" aria-expanded="false">
+                                <i class="material-icons">feedback</i> Hilfe
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="action_with_icon_title">
+                            <b></b>
+                            <div class="row clearfix">
+
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" style="padding-left: 15px; padding-right: 15px;">
+                                    <a href="{{ action('HomeController@generatePDF')}}" class="btn btn-block btn-lg bg-red waves-effect">Dienstplan (PDF) herunterladen</a>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" style="padding-left: 15px; padding-right: 15px;">
+                                    <button type="button" class="btn btn-block btn-lg bg-red waves-effect" data-toggle="modal" data-target="#smallModal">Dienstplan E-Mail an alle Versenden</button>
+                                </div>
+
+                                <div class="modal fade" id="smallModal" tabindex="-1" role="dialog" style="display: none;">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content modal-col-red">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="smallModalLabel">E-Mail Massenversand</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                Mit dieser Aktion wird
+                                                @if(Auth::user()->currentclient()->isMailinglistCommunication)
+                                                    eine E-Mail an den zentralen Mailverteiler
+                                                @else
+                                                    an jeden Helfer eine E-Mail
+                                                @endif
+                                                versendet.
+                                                Soll wirklich eine E-Mail an alle Helfer versendet werden?
+
+                                                <br>
+                                                <br>
+                                                <small>Nur einmal klicken um Mehrfachversand zu vermeiden - auch wenn es mal etwas länger dauert</small>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="{{ action('HomeController@sendServicePDF')}}" class="btn btn-link waves-effect">Dienstplan E-Mail an alle Versenden</a>
+                                                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="hilfe_with_icon_title">
+                            <b>Hilfe und Ideen</b>
+                            <ul>
+                                <li>Fehlt für eure Gliederung die entsprechende Funktion oder hast du eine Verbesserung?</li>
+                                <li>Hast du einen Fehler in der Software entdeckt?</li>
+                                <li>Benötigt ihr Hilfe oder kommt irgendwo nicht weiter? </li>
+                            </ul>
+                            <a href="mailto:{{env("impressum.mail")}}?subject=Dienstplan%20Anfrage&amp;body=Hallo%20{{env("impressum.name")}},">
+                                <button type="button" class="btn btn-dlrg waves-effect">
+                                    <i class="material-icons">contact_mail</i>
+                                    <span> Schreibt mir gerne</span>
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+    <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
             <div class="header">
@@ -102,6 +188,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 @endsection
 

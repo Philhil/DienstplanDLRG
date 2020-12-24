@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\WachplanToMail;
 use App\Position;
 use App\Service;
 use App\Training_user;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
@@ -70,16 +74,38 @@ class HomeController extends Controller
     public function generatePDF()
     {
         $tableheader = Auth::user()->currentclient()->Qualifications()->where('isservicedefault', true)->get();
-        //get all services of next 2 month
-        $services = \App\Service::where(['client_id' => Auth::user()->currentclient_id,['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)]])->orderBy('date')->with('positions.qualification')->get();
 
+        $services = \App\Service::where(['client_id' => Auth::user()->currentclient_id,['date','>=', DB::raw('CURDATE()')]])->orderBy('date')->with('positions.qualification')->get();
 
         $pdf = PDF::loadView('email.serviceslist', [
             'tableheader' => $tableheader,
             'services' => $services,
         ])->setPaper('a3', 'landscape');
 
-        return $pdf->download();
+        return $pdf->download('Dienstplan'.Carbon::now()->format('Ymd').'.pdf');
+    }
+
+    public function sendServicePDF()
+    {
+        if(!Auth::user()->isAdmin()) {
+            abort(402, "Nope.");
+        }
+
+        $services_count = Service::where(['client_id' => Auth::user()->currentclient_id, ['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addWeek(2)]])->orderBy('date')->with('positions.qualification')->count();
+
+        if($services_count > 0) {
+            $client = Auth::user()->currentclient();
+            if ($client->isMailinglistCommunication) {
+                Mail::to($client->mailinglistAddress)->queue(new WachplanToMail($client));
+            } else {
+                foreach ($client->user()->get() as $user) {
+                    Mail::to($user->email)->queue(new WachplanToMail($client));
+                }
+            }
+        }
+
+        Session::flash('successmessage', ' E-Mail Versand erfolgreich gestartet!');
+        return back();
     }
 
     public function getUserGuide()

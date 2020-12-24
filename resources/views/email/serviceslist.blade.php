@@ -34,6 +34,7 @@ foreach ($services as $service)
 ?>
 <body>
 <table style="width:100%">
+    Stand: {{now()->format('d.m.Y H:m')}} Uhr
         <tr>
             <th>Datum</th>
             @foreach($tableheader as $qualification)
@@ -56,7 +57,7 @@ foreach ($services as $service)
                             @else
                                 {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
                             @endif
-                            @if(isset($position->comment))
+                            @if(!empty($position->comment))
                                 <small>({{$position->comment}})</small>
                             @endif
                             </div>

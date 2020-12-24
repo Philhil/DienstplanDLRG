@@ -33,7 +33,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::redirect('/', '/service');
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/mailtest', 'HomeController@mailtest');
-    Route::get('pdf','HomeController@generatePDF');
+    Route::get('/pdf','HomeController@generatePDF');
+    Route::match(['get', 'post'], '/sendServicePDF', 'HomeController@sendServicePDF');
     Route::get('/userguide', 'HomeController@getUserGuide');
     Route::prefix('superadmin')->group(function () {
         Route::get('user', 'UserController@index')->name('superadmin.user');
