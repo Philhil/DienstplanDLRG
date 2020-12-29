@@ -19,7 +19,7 @@
                     </h2>
                 </div>
                 <div class="body">
-                    @include('training.form')
+                    @include('training._form')
                 </div>
             </div>
         </div>
