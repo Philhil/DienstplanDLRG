@@ -83,9 +83,12 @@ class ServiceController extends Controller
         }
 
         $service = new Service();
-        $service->date = Carbon::createFromFormat('d m Y', $request->get('date'))->startOfDay();
+        $service->date = Carbon::createFromFormat('d m Y H:i', $request->get('date'));
+        $dateEnd =  empty($request->get('dateEnd')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('dateEnd'));
+        $service->dateEnd = ($dateEnd == null || $dateEnd->lessThanOrEqualTo($service->date)) ? null : $dateEnd;
         $service->comment = $request->get('comment');
         $service->hastoauthorize = $request->get('hastoauthorize');
+        $service->location = $request->get('location');
         $service->client_id = Auth::user()->currentclient_id;
         $service->save();
 
@@ -153,7 +156,7 @@ class ServiceController extends Controller
         $qualifications = Qualification::where('client_id', '=', Auth::user()->currentclient_id)->orderBy('name')->get();
         $positions = $service->positions()->get();
         $users = Auth::user()->currentclient()->user()->with('qualifications')->orderBy('name')->get();
-        return view('service.create', compact('service', 'positions', 'qualifications', 'users'));
+        return view('service.edit', compact('service', 'positions', 'qualifications', 'users'));
     }
 
     /**
@@ -170,8 +173,11 @@ class ServiceController extends Controller
         }
 
         $service = Service::findOrFail($id);
-        $service->date = Carbon::createFromFormat('d m Y', $request->get('date'))->startOfDay();
+        $service->date = Carbon::createFromFormat('d m Y H:i', $request->get('date'));
+        $dateEnd =  empty($request->get('dateEnd')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('dateEnd'));
+        $service->dateEnd = ($dateEnd == null || $dateEnd->lessThanOrEqualTo($service->date)) ? null : $dateEnd;
         $service->comment = $request->get('comment');
+        $service->location = $request->get('location');
         $service->hastoauthorize = $request->get('hastoauthorize');
         $service->save();
 

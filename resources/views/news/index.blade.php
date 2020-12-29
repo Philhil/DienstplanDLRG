@@ -10,7 +10,7 @@
             <div class="card">
                 <div class="header bg-blue-grey">
                     <h2>
-                        {{$news->title}} <small>{{$news->created_at->format('l d.m.Y')}} @if(isset($news->user))von {{$news->user->first_name}} {{$news->user->name}} @endif</small>
+                        {{$news->title}} <small>{{$news->created_at->isoFormat('ddd  DD.MM.YY H:mm')}} @if(isset($news->user))von {{$news->user->first_name}} {{$news->user->name}} @endif</small>
                     </h2>
                     @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
                         <ul class="header-dropdown m-r--5">

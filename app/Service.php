@@ -12,11 +12,11 @@ class Service extends Model
      * @var array
      */
     protected $fillable = [
-        'date', 'hastoauthorize', 'comment',
+        'date', 'hastoauthorize', 'comment', 'dateEnd', 'location'
     ];
 
     protected $dates = [
-        'date',
+        'date', 'dateEnd',
     ];
 
     protected $attributes = array(

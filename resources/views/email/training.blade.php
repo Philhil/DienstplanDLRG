@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>{{$training->title}}</h1>
-<smal>{{$training->date->format('l d.m.Y H:i')}} @if(!empty($training->dateEnd)) - {{$training->dateEnd->format('l d.m.Y H:i')}}@endif</smal>
+<smal>{{$training->date->isoFormat('ddd  DD.MM.YY H:mm')}} @if(!empty($training->dateEnd)) - {{$training->dateEnd->isoFormat('ddd  DD.MM.YY H:mm')}}@endif</smal>
 <br>
 
 {!! html_entity_decode($training->content) !!}

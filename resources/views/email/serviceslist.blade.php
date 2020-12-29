@@ -33,8 +33,8 @@ foreach ($services as $service)
     }
 ?>
 <body>
+Stand: {{Carbon\Carbon::now()->isoFormat('ddd  DD.MM.YY H:mm')}} Uhr
 <table style="width:100%">
-    Stand: {{now()->format('d.m.Y H:m')}} Uhr
         <tr>
             <th>Datum</th>
             @foreach($tableheader as $qualification)
@@ -45,7 +45,7 @@ foreach ($services as $service)
 
         @foreach($services as $service)
             <tr>
-                <td>{{$service->date->format('d.m.Y')}}</td>
+                <td>{{$service->date->isoFormat('ddd  DD.MM.YY H:mm')}} Uhr @if(!empty($service->dateEnd)) - {{$service->dateEnd->isoFormat('DD.MM.YY H:mm')}} Uhr @endif</td>
                 @foreach($tableheader as $qualification)
                     <?php $positionswithqualification = $service->positionwithQualification($qualification->id)->with('user')->get()  ?>
 

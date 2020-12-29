@@ -1,6 +1,6 @@
 Hallo {{$position->user->first_name}},
 <br>
-Du wurdest soeben für den Dienst am <b>{{$position->service->date->format('d M Y')}}</b> @if(!empty($position->service->comment))({{$position->service->comment}})@endif als {{$position->qualification->name}} zugeteilt.
+Du wurdest soeben für den Dienst am <b>{{$position->service->date->isoFormat('ddd  DD.MM.YY H:mm')}} Uhr @if(!empty($position->service->dateEnd)) - {{$position->service->dateEnd->isoFormat('DD.MM.YY H:mm')}} Uhr @endif</b> @if(!empty($position->service->comment))({{$position->service->comment}})@endif als {{$position->qualification->name}} zugeteilt.
 
 <br><br>
 Bisher sind mit Dir eingetragen:<br>

@@ -11,7 +11,19 @@
             <div class="form-group {{ $errors->has('date') ? 'has-error' : ''}}">
                 <div class="form-line">
                     {{ Form::label('date', 'Datum:') }}
-                    {{ Form::text('date', old('date', !empty($service->date) ? $service->date->format('d m Y') : ''), ['id' => 'datepicker', 'class' => 'datepicker form-control', 'placeholder'=>'Datum auswählen...', 'required'=>"true"]) }}
+                    {{ Form::text('date', old('date', !empty($service->date) ? $service->date->format('d m Y H:i') : ''), ['id' => 'date-start', 'class' => 'datepicker form-control', 'placeholder'=>'Datum auswählen...', 'required'=>"true"]) }}
+                    {!! $errors->first('date', '<p class="help-block">:message</p>') !!}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-sm-10">
+            <div class="form-group {{ $errors->has('dateEnd') ? 'has-error' : ''}}">
+                <div class="form-line">
+                    {{ Form::label('dateEnd', 'Datum Ende:') }}
+                    {{ Form::text('dateEnd', old('dateEnd', !empty($service->dateEnd) ? $service->dateEnd->format('d m Y H:i') : ''), ['id' => 'date-end', 'class' => 'datepicker form-control', 'placeholder'=>'Datum auswählen...']) }}
                     {!! $errors->first('date', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -25,6 +37,18 @@
                 {{ Form::checkbox('hastoauthorize', 1, old('hastoauthorize') or $service->hastoauthorize != 0 ? true : false, ['class' => 'filled-in', 'id' => "hastoauthorize"]) }}
                 {{ Form::label('hastoauthorize', 'Muss freigegeben werden') }}
                 {!! $errors->first('hastoauthorize', '<p class="help-block">:message</p>') !!}
+            </div>
+        </div>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-sm-10">
+            <div class="form-group {{ $errors->has('location') ? 'has-error' : ''}}">
+                <div class="form-line">
+                    {{ Form::label('location', 'Ort (Mit Koordinaten darstellbar auf Karte):') }}
+                    {{ Form::text('location', old('location', $service->location), ['id' => 'location', 'class' => 'location form-control', 'placeholder'=>'Ort eingeben...']) }}
+                    {!! $errors->first('location', '<p class="help-block">:message</p>') !!}
+                </div>
             </div>
         </div>
     </div>
@@ -133,17 +157,35 @@
     <script>
         $( document ).ready(function() {
 
-            $('.datepicker').bootstrapMaterialDatePicker({
-                format: 'DD MM YYYY',
+            $('#date-end').bootstrapMaterialDatePicker({
+                format: 'DD MM YYYY HH:mm',
                 clearButton: true,
                 weekStart: 1,
-                time: false,
                 lang : 'de',
                 minDate : new Date()
             });
 
-            $('#add_qualification').on("click", function () {
+            $('#date-start').bootstrapMaterialDatePicker({
+                format: 'DD MM YYYY HH:mm',
+                clearButton: true,
+                weekStart: 1,
+                lang : 'de',
+                minDate : new Date()
+            }).on('change', function(e, date)
+            {
+                <!-- date holds the old value :( -->
+                date = $('#date-start').bootstrapMaterialDatePicker().val();
+                date = moment(date, 'DD MM YYYY hh:mm');
 
+                $('#date-end').bootstrapMaterialDatePicker('setMinDate', date);
+                {{-- Take diff of defaultStart and defaultEnd as default time gap --}}
+                $('#date-end').bootstrapMaterialDatePicker('setDate', date.add({{\Carbon\Carbon::parse(\Illuminate\Support\Facades\Auth::user()->currentclient()->defaultServiceStart)->diffInHours(\Illuminate\Support\Facades\Auth::user()->currentclient()->defaultServiceEnd)}}, 'hours'));
+            });
+            @if(\Illuminate\Support\Facades\Route::current()->getName() != 'service.edit')
+            $('#date-start').val("{{\Carbon\Carbon::today()->setDateTimeFrom(\Illuminate\Support\Facades\Auth::user()->currentclient()->defaultServiceStart)->format('d m Y H:i')}}");
+            @endif
+
+            $('#add_qualification').on("click", function () {
                 var date = new Date;
                 var prot = '<tr pos_id="-1" >';
                 prot += '<td><select class="bootstrap-select show-tick" data-live-search="true" name="qualification[]">';

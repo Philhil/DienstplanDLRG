@@ -152,6 +152,7 @@ class GenerateDemoClient extends Command
             //create Services & Positions (in past and future)
             $service_yesterday = new Service();
             $service_yesterday->date = Carbon::yesterday()->startOfDay();
+            $service_yesterday->dateEnd = Carbon::yesterday()->endOfDay();
             $service_yesterday->comment = "Das ist ein Kommentar";
             $service_yesterday->hastoauthorize = true;
             $service_yesterday->client_id = $client->id;
@@ -176,6 +177,7 @@ class GenerateDemoClient extends Command
 
             $service_tomorrow = new Service();
             $service_tomorrow->date = Carbon::tomorrow()->startOfDay();
+            $service_tomorrow->dateEnd = Carbon::tomorrow()->endOfDay();
             $service_tomorrow->comment = "Das ist ein Kommentar";
             $service_tomorrow->hastoauthorize = true;
             $service_tomorrow->client_id = $client->id;
@@ -208,6 +210,7 @@ class GenerateDemoClient extends Command
 
             $service_nextweek = new Service();
             $service_nextweek->date = Carbon::today()->addWeek()->startOfDay();
+            $service_nextweek->dateEnd = Carbon::today()->addWeek()->endOfDay();
             $service_nextweek->comment = "Das ist ein Kommentar";
             $service_nextweek->hastoauthorize = true;
             $service_nextweek->client_id = $client->id;

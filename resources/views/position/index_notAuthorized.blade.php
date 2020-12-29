@@ -28,7 +28,7 @@
                             {{--has user already approved position in this service?--}}
                             @if(!$position->service->hasUserPositions($candidature->user_id))
                             <tr positionid="{{$position->id}}">
-                                <td>{{$position->service->date->format('d m Y')}}</td>
+                                <td>{{$position->service->date->isoFormat('ddd  DD.MM.YY H:mm')}}</td>
                                 <td>{{$position->qualification->name}}</td>
                                 <td>{{$candidature->user->first_name}} {{$candidature->user->name}}</td>
                                 <td>

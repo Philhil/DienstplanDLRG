@@ -1,7 +1,6 @@
 @extends('_layouts.application')
 
 @section('head')
-
 @endsection
 
 @section('content')
@@ -18,7 +17,9 @@
                             <span class="glyphicon glyphicon-collapse-down float-left"></span>
                             @if($service->openpositions_required->count() > 0)<span class="badge bg-red">{{$service->openpositions_required->count()}}</span>@endif
                         @endif
-                        {{$service->date->format('l d m Y')}} <small>{{$service->comment}}</small>
+                        {{$service->date->isoFormat('ddd  DD.MM.YY H:mm')}} Uhr @if(!empty($service->dateEnd)) - {{$service->dateEnd->isoFormat('DD.MM.YY H:mm')}} Uhr @endif
+                        <small>{{$service->comment}}</small>
+                        @if(!empty($service->location)) <small>{{$service->location}}</small> @endif
                     </h2>
 
                     @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())

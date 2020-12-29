@@ -13,7 +13,7 @@
                 <div class="header bg-blue-grey">
                     <h2 data-toggle="collapse" data-target="#card_{{$training->id}}">
                         <span class="glyphicon glyphicon-collapse-up float-left"></span>
-                        {{$training->date->format('l d m Y')}} <small>{{$training->title}}</small>
+                        {{$training->date->isoFormat('ddd  DD.MM.YY H:mm')}} Uhr <small>{{$training->title}}</small>
                     </h2>
 
                     @if($isAdmin || $isTrainingEditor)

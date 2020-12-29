@@ -95,7 +95,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
             <div class="header">
-                <h2>Übersicht und Statistik von {{Auth::user()->currentclient()->name}} ({{Auth::user()->currentclient()->Season()['from']->formatLocalized('%d. %B %Y')}} - {{Auth::user()->currentclient()->Season()['to']->formatLocalized('%d. %B %Y')}})</h2>
+                <h2>Übersicht und Statistik von {{Auth::user()->currentclient()->name}} ({{Auth::user()->currentclient()->Season()['from']->isoFormat('DD. MMMM Y')}} - {{Auth::user()->currentclient()->Season()['to']->isoFormat('DD. MMMM Y')}})</h2>
             </div>
             <div class="body">
                 <div class="row clearfix">
@@ -176,7 +176,7 @@
                             <div class="card">
                                 <div class="header bg-blue-grey">
                                     <h2>
-                                        {{$news->title}} <small>{{$news->created_at->format('l d.m.Y')}}</small>
+                                        {{$news->title}} <small>{{$news->created_at->isoFormat('ddd  DD.MM.YY H:mm')}} @if(isset($news->user))von {{$news->user->first_name}} {{$news->user->name}} @endif</small>
                                     </h2>
                                 </div>
                                 <div class="body">
