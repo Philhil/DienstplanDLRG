@@ -55,7 +55,7 @@ class HomeController extends Controller
             ->where('services.date', '>=', DB::raw('CURDATE()'))
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
             ->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
-        $top_users = Position::where('user_id', '!=', null)->whereNull('positions.service_id')->with('user')->join('services', 'positions.service_id', '=', 'services.id')
+        $top_users = Position::where('user_id', '!=', null)->whereNotNull('positions.service_id')->with('user')->join('services', 'positions.service_id', '=', 'services.id')
             ->where('services.date', '<', DB::raw('CURDATE()'))
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
             ->where('services.client_id', '=', Auth::user()->currentclient_id)->selectRaw('user_id, count(*) as aggregate')
