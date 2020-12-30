@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\SendServicePDF;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Rinvex\Statistics\Jobs\CleanStatisticsRequests;
 use Rinvex\Statistics\Jobs\CrunchStatistics;
 
 class Kernel extends ConsoleKernel
@@ -29,6 +30,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('SendTrainingInfo')->everyFiveMinutes();
         $schedule->command('SendServicePDF')->cron('0 7 * * 1');
         $schedule->job(new CrunchStatistics)->daily();
+        $schedule->job(new CleanStatisticsRequests)->daily();
 
         if(env("IS_DEMO", false))
         {
