@@ -188,7 +188,7 @@
                                 <div class="col-sm-12">
                                     <div class="input-group">
                                         <p style=" display: block;">
-                                            {{captcha_img('flat')}}
+                                            {!! captcha_img('flat') !!}
                                         </p>
                                     </div>
 

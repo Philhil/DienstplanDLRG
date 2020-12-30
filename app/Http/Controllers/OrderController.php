@@ -68,7 +68,6 @@ class OrderController extends Controller
             'client_name' => 'required|string|min:4|unique:clients,name',
             'client_billing' => 'required|string|email|min:9|max:255|regex:/(.*)dlrg\.de$/i',
             'client_billing_address' => 'required|string',
-
             'captcha' => 'required|captcha',
         ]);
     }

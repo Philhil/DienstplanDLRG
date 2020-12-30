@@ -112,7 +112,7 @@
 
                         <div class="input-group">
                             <p style="text-align: center;  display: block;">
-                                {{captcha_img('flat')}}
+                                {!! captcha_img('flat') !!}
                             </p>
                         </div>
 
