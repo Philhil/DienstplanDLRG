@@ -115,6 +115,6 @@ class HomeController extends Controller
             'Content-Type: application/pdf',
         );
 
-        return \response()->download($file, 'dlrg_dienstplan.pdf', $headers);
+        return \response()->download($file, 'dienstplan_userguide.pdf', $headers);
     }
 }
