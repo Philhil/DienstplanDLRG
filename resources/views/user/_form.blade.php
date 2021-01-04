@@ -33,7 +33,7 @@
     <div class="form-group {{ $errors->has('email') ? 'has-error' : ''}}">
         <div class="form-line">
             {{ Form::label('email', 'E-Mail:') }}
-            {{ Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'mail@dlrg-stuttgart.de']) }}
+            {{ Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'mail@example.org']) }}
             {!! $errors->first('email', '<p class="help-block">:message</p>') !!}
         </div>
     </div>

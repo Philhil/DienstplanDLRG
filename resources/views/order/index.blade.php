@@ -31,7 +31,7 @@
                     </div>
                     <div class="card-offer-footer">
                         <a href="{{ action('OrderController@create', "basic") }}">
-                            <button class="btn btn-block btn-dlrg waves-effect" type="submit">Auswählen</button>
+                            <button class="btn btn-block btn-nicered waves-effect" type="submit">Auswählen</button>
                         </a>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                     </div>
                     <div class="card-offer-footer">
                         <a href="{{ action('OrderController@create', "module") }}">
-                            <button class="btn btn-block btn-dlrg waves-effect" type="submit">Auswählen</button>
+                            <button class="btn btn-block btn-nicered waves-effect" type="submit">Auswählen</button>
                         </a>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
                     </div>
                     <div class="card-offer-footer">
                         <a href="{{ action('OrderController@create', "support") }}">
-                            <button class="btn btn-block btn-dlrg waves-effect" type="submit">Auswählen</button>
+                            <button class="btn btn-block btn-nicered waves-effect" type="submit">Auswählen</button>
                         </a>
                     </div>
                 </div>
@@ -82,14 +82,14 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 mb-4 mb-md-0">
                     <a href="mailto:{{env("impressum.mail")}}?subject=Dienstplan%20Anfrage&amp;body=Hallo%20{{env("impressum.name")}},">
-                        <button type="button" class="btn btn-dlrg waves-effect">
+                        <button type="button" class="btn btn-nicered waves-effect">
                             <i class="material-icons">contact_mail</i>
                             <span>Fragen?</span>
                         </button>
                     </a>
 
                     <a href="https://demo.dlrgdienstplan.de/">
-                        <button type="button" class="btn btn-dlrg waves-effect">
+                        <button type="button" class="btn btn-nicered waves-effect">
                             <i class="material-icons">new_releases</i>
                             <span>Demo</span>
                         </button>

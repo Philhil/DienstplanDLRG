@@ -79,7 +79,7 @@
                                 <li>Benötigt ihr Hilfe oder kommt irgendwo nicht weiter? </li>
                             </ul>
                             <a href="mailto:{{env("impressum.mail")}}?subject=Dienstplan%20Anfrage&amp;body=Hallo%20{{env("impressum.name")}},">
-                                <button type="button" class="btn btn-dlrg waves-effect">
+                                <button type="button" class="btn btn-nicered waves-effect">
                                     <i class="material-icons">contact_mail</i>
                                     <span> Schreibt mir gerne</span>
                                 </button>

@@ -10,8 +10,8 @@
 <div class="login-page">
     <div class="login-box">
         <div class="logo card-header">
-            <a href="javascript:void(0);"><b>DLRG</b></a>
-            <small>Online Dienstplan</small>
+            <a href="javascript:void(0);"><b>Dienstplan</b></a>
+            <small>Online</small>
         </div>
         <div class="card">
             <div class="body">
@@ -41,7 +41,7 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-block btn-lg btn-dlrg waves-effect" type="submit">Passwort zurücksetzen</button>
+                    <button class="btn btn-block btn-lg btn-nicered waves-effect" type="submit">Passwort zurücksetzen</button>
 
                     <div class="row m-t-20 m-b--5 align-center">
                         <a href="{{ route('login') }}"><button type="button" class="btn btn-default waves-effect">Login!</button></a>

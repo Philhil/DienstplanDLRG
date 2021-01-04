@@ -4,7 +4,7 @@
         <div class="navbar-header">
             <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
             <a href="javascript:void(0);" class="bars"></a>
-                @if(empty(Auth::user()->currentclient())) <a class="navbar-brand" href="/home">DLRG Dienstplan</a>
+                @if(empty(Auth::user()->currentclient())) <a class="navbar-brand" href="/home">Dienstplan</a>
                 @else
                     @if(Illuminate\Support\Facades\Auth::user()->clients()->count() > 1)
                     <ul class="header-dropdown" style="list-style: none;">

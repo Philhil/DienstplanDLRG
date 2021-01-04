@@ -67,7 +67,7 @@ class GenerateDemoClient extends Command
                 'isMailinglistCommunication' => false,
                 'weeklyServiceviewEmail' => true,
                 'mailinglistAddress' => null,
-                'mailSenderName' => env("MAIL_FROM_NAME","DLRG Dienstplan"),
+                'mailSenderName' => env("MAIL_FROM_NAME","Dienstplan"),
                 'mailReplyAddress' => env("MAIL_FROM_ADDRESS","demodienstplan@philhil.de"),
                 'module_training' => true,
                 'module_training_credit' => true

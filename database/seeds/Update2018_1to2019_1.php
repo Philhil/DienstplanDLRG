@@ -22,7 +22,7 @@ class Update2018_1to2019_1 extends Seeder
                 'isMailinglistCommunication' => true,
                 'weeklyServiceviewEmail' => true,
                 'mailinglistAddress' => NULL,
-                'mailSenderName' => "DLRG Dienstplan",
+                'mailSenderName' => "Dienstplan",
                 'mailReplyAddress' => "INSERT_REPLYRADDR",
                 'defaultServiceStart' => \Carbon\Carbon::createFromTime(9, 15, 00),
                 'defaultServiceEnd' => \Carbon\Carbon::createFromTime(19, 15, 00)

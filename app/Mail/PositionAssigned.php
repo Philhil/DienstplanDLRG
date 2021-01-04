@@ -47,14 +47,13 @@ class PositionAssigned extends Mailable implements ShouldQueue
             ->setDtStart(new \DateTime($service->date->toDateString()))
             ->setDtEnd(new \DateTime($dateEnd))
             ->setNoTime($setTime)
-            ->setSummary('DLRG Dienst')
+            ->setSummary('Wachdienst')
             ->setDescription($service->comment)
-            ->setCategories(['dlrg'])
             ->setLocation($service->location);
 
         $vCalendar->addComponent($vEvent);
 
-        return $this->subject('DLRG DIENSTE📟: Dienst zugewiesen')->view('email.position')->with([
+        return $this->subject('Dienstplan📟: Dienst zugewiesen')->view('email.position')->with([
             'position' => $this->position,
             'servicepositions' => $this->servicepositions,
             'authorizedby' => $this->authorizedby,

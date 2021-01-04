@@ -36,7 +36,7 @@ class OrderDone extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->subject('DLRG Dienstplan🚨: Bestell Bestätigung')->view('email.order_confirmation', ['user' => $this->user, 'client' => $this->client, 'order' => $this->order])
+        return $this->subject('Dienstplan🚨: Bestell Bestätigung')->view('email.order_confirmation', ['user' => $this->user, 'client' => $this->client, 'order' => $this->order])
            ->from(env('MAIL_FROM_ADDRESS'), env("MAIL_FROM_NAME"));
     }
 }

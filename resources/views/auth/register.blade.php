@@ -14,8 +14,8 @@
     <div class="login-page">
         <div class="login-box">
             <div class="logo card-header">
-                <a href="javascript:void(0);"><b>DLRG</b></a>
-                <small>Online Dienstplan</small>
+                <a href="javascript:void(0);"><b>Dienstplan</b></a>
+                <small>Online</small>
             </div>
             <div class="card">
                 <div class="body">
@@ -134,7 +134,7 @@
                         <input type="text" name="zip" style="display: none;" value="spamprevention">
                         <input type="text" name="street" style="display: none;" value="">
 
-                        <button class="btn btn-block btn-dlrg btn-lg waves-effect" type="submit">Registrieren</button>
+                        <button class="btn btn-block btn-nicered btn-lg waves-effect" type="submit">Registrieren</button>
 
                         <div class="m-t-25 m-b--5 align-center">
                             <a href="{{ route('login') }}"><button type="button" class="btn btn-default waves-effect">Ich habe bereits einen Benutzeraccount!</button></a>

@@ -94,7 +94,7 @@ class OrderController extends Controller
             'isMailinglistCommunication' => false,
             'weeklyServiceviewEmail' => true,
             'mailinglistAddress' => null,
-            'mailSenderName' => "DLRG Dienstplan",
+            'mailSenderName' => "Dienstplan",
             'mailReplyAddress' => $request->get('email'),
             'module_training' => $request->has('module_training') ? true : false,
             'module_training_credit' => $request->has('module_training') ? true : false

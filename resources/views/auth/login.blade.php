@@ -74,8 +74,8 @@
     <div class="login-page">
         <div class="login-box">
             <div class="logo card-header">
-                <a href="javascript:void(0);"><b>DLRG</b></a>
-                <small>Online Dienstplan</small>
+                <a href="javascript:void(0);"><b>Dienstplan</b></a>
+                <small>Online</small>
             </div>
             <div class="card">
                 <div class="body">
@@ -83,7 +83,7 @@
                         <div class="msg">Anmelden um loszulegen</div>
 
                         @if(env("IS_DEMO", false))
-                        <h4 class="text-center btn-dlrg">!! Demo Portal !!</h4>
+                        <h4 class="text-center btn-nicered">!! Demo Portal !!</h4>
                         <div class="msg">Admin: admin.demodienstplan@philhil.de <br> Passwort: admin</div>
                         <div class="msg">User: user.demodienstplan@philhil.de <br> Passwort: user</div>
                         @endif
@@ -130,7 +130,7 @@
                                 <label for="remember">Angemeldet bleiben</label>
                             </div>
                             <div class="col-xs-4">
-                                <button class="btn btn-block btn-dlrg waves-effect" type="submit">Anmelden</button>
+                                <button class="btn btn-block btn-nicered waves-effect" type="submit">Anmelden</button>
                             </div>
                         </div>
 
@@ -167,7 +167,7 @@
             <div class="row">
                 <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
                     <a href="{{ action('OrderController@index') }}">
-                        <button type="button" class="btn btn-dlrg waves-effect">
+                        <button type="button" class="btn btn-nicered waves-effect">
                             <i class="material-icons">flight_takeoff</i>
                             <span>Hol dir den Dienstplan für deine Gliederung!</span>
                         </button>

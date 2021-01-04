@@ -210,7 +210,7 @@
 
                             <input type="text" name="zip" style="display: none;" value="spamprevention">
                             <input type="text" name="street" style="display: none;" value="">
-                            <button class="btn btn-block btn-dlrg waves-effect" type="submit">Kostenpflichtig bestellen</button>
+                            <button class="btn btn-block btn-nicered waves-effect" type="submit">Kostenpflichtig bestellen</button>
                         </form>
                     </div>
                 </div>
@@ -223,7 +223,7 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 mb-4 mb-md-0">
                     <a href="mailto:{{env("impressum.mail")}}?subject=Dienstplan%20Anfrage&amp;body=Hallo%20{{env("impressum.name")}},">
-                        <button type="button" class="btn btn-dlrg waves-effect">
+                        <button type="button" class="btn btn-nicered waves-effect">
                             <i class="material-icons">contact_mail</i>
                             <span>Fragen?</span>
                         </button>
