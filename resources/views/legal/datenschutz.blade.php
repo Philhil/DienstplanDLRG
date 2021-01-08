@@ -21,7 +21,8 @@
                 <h2>Erfassung allgemeiner Informationen</h2>
                 <p>Für  administrative Zwecke kann eine Erstellung von Logfiles notwendig  werden. Die Logfiles werden für maximal eine Woche gespeichert. Die Logfiles  sind von allgemeiner Natur und erlauben keine Rückschlüsse auf Ihre Person.</p>
                 <p>Sofern Logfiles erstellt werden, können unter anderem folgende Datenarten  erfasst werden: IP-Adresse und Datum.</p>
-
+                <h2>Session Cookies</h2>
+                <p>Wir verwenden auf unserer Webseite sogenannte Session-Cookies. Diese notwendige Cookies helfen dabei, die Webseite nutzbar zu machen, indem sie Grundfunktionen wie Zugriff auf sichere Bereiche der Webseite ermöglichen. Die Webseite kann ohne diese Cookies nicht richtig funktionieren. Die von uns eingesetzten Session-Cookies dienen ausschließlich dazu, Sie zu identifizieren, solange Sie auf unserer Webseite eingeloggt sind.</p>
             </div>
         </div>
         <div class="pull-right top-buffer">
