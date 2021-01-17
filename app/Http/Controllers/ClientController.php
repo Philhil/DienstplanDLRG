@@ -296,7 +296,7 @@ class ClientController extends Controller
             abort(402, "Nope.");
         }
 
-        $client = Client::findorfail($request->has('client_id'));
+        $client = Client::findorfail($request->get('client_id'));
 
         switch ($request->get('module')){
             case "module_training":
