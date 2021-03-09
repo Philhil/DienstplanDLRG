@@ -83,22 +83,33 @@ class UserController extends Controller
         $saison = Auth::user()->currentclient()->Season();
 
         //get all qualifications of user with sum of credit points
-
-        $qualfication_credits = Qualification::selectRaw('sum(credits.points) as sum_points, qualifications.name')
+        $qualfication_credits = Qualification::selectRaw('sum(credits.points) as sum_points, qualifications.id')
             ->join('qualification_users', 'qualification_users.qualification_id', '=', 'qualifications.id')
             ->join('positions', 'positions.qualification_id', '=', 'qualifications.id')
             ->join('training_users', 'training_users.position_id', '=', 'positions.id')
             ->join('credits', 'credits.position_id', '=', 'positions.id')
             ->join('trainings', 'trainings.id', '=', 'training_users.training_id')
+            //user have to participate to get credits
             ->where(['qualification_users.user_id' => $user->id, 'training_users.user_id' => $user->id, 'trainings.client_id' => Auth::user()->currentclient_id])
-            ->whereNull('positions.service_id')
+            ->whereNull('positions.service_id') //is a training and not a service
             ->whereBetween('trainings.date', [$saison["from"], DB::raw('CURDATE()')])
-            ->groupBy('qualifications.name')
-            ->pluck('sum_points', 'name')->toArray();
+            ->groupBy('qualifications.id')
+            ->pluck('sum_points', 'id')->toArray();
 
-        $qualifications = $user->qualifications()->get();
+        //get all qualification types where Trainings exsist and user has qualification
+        $all_qualfications_where_trainings_exsist_and_user_has = Qualification::select('qualifications.id', 'qualifications.name')
+            ->join('qualification_users', 'qualification_users.qualification_id', '=', 'qualifications.id')
+            ->join('positions', 'positions.qualification_id', '=', 'qualifications.id')
+            ->join('trainings', 'trainings.id', '=', 'positions.training_id')
+            //not relevant if user participate
+            ->where(['qualification_users.user_id' => $user->id, 'trainings.client_id' => Auth::user()->currentclient_id])
+            ->whereNull('positions.service_id') //is a training and not a service
+            ->whereBetween('trainings.date', [$saison["from"], DB::raw('CURDATE()')])
+            ->groupBy('qualifications.id', 'qualifications.name')
+            ->orderBy('qualifications.name')
+            ->pluck('name', 'qualifications.id')->toArray();
 
-        return view('user.profile', compact('qualfication_credits', 'qualifications'))->with('user', $user);
+        return view('user.profile', compact('qualfication_credits', 'all_qualfications_where_trainings_exsist_and_user_has'))->with('user', $user);
     }
 
     /**

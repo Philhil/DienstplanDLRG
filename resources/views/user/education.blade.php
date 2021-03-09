@@ -1,14 +1,18 @@
 @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_training_credit)
-    @foreach($qualifications as $qualification)
+    <h3>Fortbildungspunkte</h3>
+
+    @foreach($all_qualfications_where_trainings_exsist_and_user_has as $quali_id => $quali_name)
         <div class="col-sm-12">
-            <b>{{$qualification->name}}: <span class="badge bg-orange">
-                @if(array_key_exists($qualification->name, $qualfication_credits))
-                    {{$qualfication_credits[$qualification->name]}}
-                @else
-                    0
-                @endif
+            <b>{{$quali_name}}:
+                <span class="badge bg-orange">
+                @if(array_key_exists($quali_id, $qualfication_credits))
+                        {{$qualfication_credits[$quali_id]}}
+                    @else
+                        0
+                    @endif
                 </span>
             </b>
         </div>
     @endforeach
+
 @endif
