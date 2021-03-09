@@ -10,6 +10,7 @@
                 </div>
                 <div class="body">
                     {{ Form::model($qualification, ['action' => ['QualificationController@store', $qualification->id]]) }}
+                    {{Form::hidden('id', $qualification->id)}}
                     <div class="row clearfix">
                         <div class="col-sm-4">
                             <div class="form-group {{ $errors->has('name') ? 'has-error' : ''}}">
