@@ -55,6 +55,12 @@ class QualificationController extends Controller
     {
         if($request->has('id')) {
             $quali = Qualification::findOrFail($request->only('id'))->first();
+
+            //check if quali is of own client
+            if($quali['client_id'] != Auth::user()->currentclient_id) {
+                abort(402, "Nope.");
+            }
+
             $quali->fill($request->except(['id']));
             $quali['client_id'] = Auth::user()->currentclient_id;
             $quali->save();
@@ -111,7 +117,14 @@ class QualificationController extends Controller
      */
     public function destroy($id)
     {
-        Qualification::findOrFail($id)->delete();
+        $quali = Qualification::findOrFail($id)->first();
+
+        //check if quali is of own client
+        if($quali['client_id'] != Auth::user()->currentclient_id) {
+            abort(402, "Nope.");
+        }
+
+        $quali->delete();
         return redirect(action('QualificationController@index'));
     }
 
