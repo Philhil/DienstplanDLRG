@@ -39,6 +39,6 @@ class QualificationAssignedMail extends Mailable
             'user' => $this->qualification_user->user()->first(),
             'qualification' => $this->qualification_user->qualification()->first(),
             'authorizedby' => $this->authorizedby,
-        ])->from($this->client->mailReplyAddress, $this->client->mailSenderName);
+        ])->replyTo($this->client->mailReplyAddress, $this->client->mailSenderName);
     }
 }

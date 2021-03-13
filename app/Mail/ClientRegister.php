@@ -37,6 +37,6 @@ class ClientRegister extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->subject('DIENSTPLAN🚨: New Client ordered!')->view('email.new_client_register', ['user' => $this->user, 'client' => $this->client, 'order' => $this->order])
-            ->from(env('MAIL_FROM_ADDRESS'), env("MAIL_FROM_NAME"));
+            ->replyTo(env('MAIL_FROM_ADDRESS'), env("MAIL_FROM_NAME"));
     }
 }

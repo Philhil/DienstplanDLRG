@@ -45,6 +45,6 @@ class PositionCandidatureMail extends Mailable implements ShouldQueue
                 'position' => $this->position,
                 'positionCandidature' => $this->positionCandidature,
                 'user' => $this->user,
-            ])->from($this->client->mailReplyAddress, $this->client->mailSenderName);
+            ])->replyTo($this->client->mailReplyAddress, $this->client->mailSenderName);
     }
 }

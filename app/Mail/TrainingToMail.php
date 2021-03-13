@@ -32,6 +32,6 @@ class TrainingToMail extends Mailable
     public function build()
     {
         return $this->subject($this->training->title)->view('email.training', ['training' => $this->training])
-            ->from($this->training->client->mailReplyAddress, $this->training->client->mailSenderName);
+            ->replyTo($this->training->client->mailReplyAddress, $this->training->client->mailSenderName);
     }
 }

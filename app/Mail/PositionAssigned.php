@@ -57,7 +57,7 @@ class PositionAssigned extends Mailable implements ShouldQueue
             'position' => $this->position,
             'servicepositions' => $this->servicepositions,
             'authorizedby' => $this->authorizedby,
-        ])->from($client->mailReplyAddress, $client->mailSenderName)
+        ])->replyTo($client->mailReplyAddress, $client->mailSenderName)
         ->attachData($vCalendar->render(), 'dienst'.$service->date->toDateString().'.ics', [
             'mime' => 'text/calendar;charset=UTF-8;method=REQUEST',
         ]);

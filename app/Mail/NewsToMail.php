@@ -33,6 +33,6 @@ class NewsToMail extends Mailable
         $client = $this->news->client()->first();
         return $this->subject('Dienstplan👂: '. $this->news->title)->view('email.news')->with([
             'news' => $this->news,
-        ])->from($client->mailReplyAddress, $client->mailSenderName);
+        ])->replyTo($client->mailReplyAddress, $client->mailSenderName);
     }
 }
