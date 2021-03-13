@@ -104,7 +104,7 @@ class UserController extends Controller
             //not relevant if user participate
             ->where(['qualification_users.user_id' => $user->id, 'trainings.client_id' => Auth::user()->currentclient_id])
             ->whereNull('positions.service_id') //is a training and not a service
-            ->whereBetween('trainings.date', [$saison["from"], DB::raw('CURDATE()')])
+            ->whereBetween('trainings.date', [$saison["from"], $saison["to"]])
             ->groupBy('qualifications.id', 'qualifications.name')
             ->orderBy('qualifications.name')
             ->pluck('name', 'qualifications.id')->toArray();
