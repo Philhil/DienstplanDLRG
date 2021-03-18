@@ -156,13 +156,15 @@
 
     <script>
         $( document ).ready(function() {
+            var today = new Date();
+            today.setHours(0,0,0,0);
 
             $('#date-end').bootstrapMaterialDatePicker({
                 format: 'DD MM YYYY HH:mm',
                 clearButton: true,
                 weekStart: 1,
                 lang : 'de',
-                minDate : new Date()
+                minDate : today
             });
 
             $('#date-start').bootstrapMaterialDatePicker({
@@ -170,19 +172,26 @@
                 clearButton: true,
                 weekStart: 1,
                 lang : 'de',
-                minDate : new Date()
+                minDate : today
             }).on('change', function(e, date)
             {
                 <!-- date holds the old value :( -->
                 date = $('#date-start').bootstrapMaterialDatePicker().val();
-                date = moment(date, 'DD MM YYYY hh:mm');
 
-                $('#date-end').bootstrapMaterialDatePicker('setMinDate', date);
+                var dateStart = moment(date, 'DD MM YYYY hh:mm');
                 {{-- Take diff of defaultStart and defaultEnd as default time gap --}}
-                $('#date-end').bootstrapMaterialDatePicker('setDate', date.add({{\Carbon\Carbon::parse(\Illuminate\Support\Facades\Auth::user()->currentclient()->defaultServiceStart)->diffInHours(\Illuminate\Support\Facades\Auth::user()->currentclient()->defaultServiceEnd)}}, 'hours'));
+                var dateEnd = dateStart.clone();
+                dateEnd.add({{\Carbon\Carbon::parse(\Illuminate\Support\Facades\Auth::user()->currentclient()->defaultServiceStart)->diffInHours(\Illuminate\Support\Facades\Auth::user()->currentclient()->defaultServiceEnd)}}, 'hours');
+
+                $('#date-end').bootstrapMaterialDatePicker('setMinDate', dateStart);
+                $('#date-end').val(dateEnd.format('DD MM YYYY HH:mm'));
             });
+
             @if(\Illuminate\Support\Facades\Route::current()->getName() != 'service.edit')
             $('#date-start').val("{{\Carbon\Carbon::today()->setDateTimeFrom(\Illuminate\Support\Facades\Auth::user()->currentclient()->defaultServiceStart)->format('d m Y H:i')}}");
+                @if(!empty(\Illuminate\Support\Facades\Auth::user()->currentclient()->defaultServiceEnd))
+                    $('#date-end').val("{{\Carbon\Carbon::today()->setDateTimeFrom(\Illuminate\Support\Facades\Auth::user()->currentclient()->defaultServiceEnd)->format('d m Y H:i')}}");
+                @endif
             @endif
 
             $('#add_qualification').on("click", function () {

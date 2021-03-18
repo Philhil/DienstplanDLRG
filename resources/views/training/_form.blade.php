@@ -179,10 +179,10 @@
             }).on('change', function(e, date)
             {
                 $('#date-end').bootstrapMaterialDatePicker('setMinDate', date);
-                $('#date-end').bootstrapMaterialDatePicker('setDate', moment(date).add(3, 'hours'));
+                $('#date-end').bootstrapMaterialDatePicker('setDate', moment(date).clone().add(3, 'hours'));
 
                 $('#sendbydatetime').bootstrapMaterialDatePicker('setMaxDate', date);
-                $('#sendbydatetime').bootstrapMaterialDatePicker('setDate', moment(date).subtract(7, 'day').set({hour:8,minute:0,second:0}));
+                $('#sendbydatetime').bootstrapMaterialDatePicker('setDate', moment(date).clone().subtract(7, 'day').set({hour:8,minute:0,second:0}));
             });
 
             //TinyMCE
