@@ -54,7 +54,7 @@ class QualificationController extends Controller
     public function store(StoreQualification $request)
     {
         if($request->has('id') &&  $request->get('id')) {
-            $quali = Qualification::findOrFail($request->only('id'))->first();
+            $quali = Qualification::findOrFail($request->get('id'));
 
             //check if quali is of own client
             if($quali['client_id'] != Auth::user()->currentclient_id) {
@@ -117,7 +117,7 @@ class QualificationController extends Controller
      */
     public function destroy($id)
     {
-        $quali = Qualification::findOrFail($id)->first();
+        $quali = Qualification::findOrFail($id);
 
         //check if quali is of own client
         if($quali['client_id'] != Auth::user()->currentclient_id) {
