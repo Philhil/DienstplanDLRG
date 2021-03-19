@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\PositionAuthorized;
+use App\Http\Requests\StoreService;
 use App\Position;
 use App\PositionCandidature;
 use App\Qualification;
@@ -76,12 +77,69 @@ class ServiceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreService $request)
     {
         if(!Auth::user()->isAdmin()) {
             abort(402, "Nope.");
         }
 
+        //multi calendar_dates
+        if ($request->has('calendar_dates') && $request->get('calendar_dates')) {
+            $repeatdates = $request->get('calendar_dates');
+        }
+
+        $error = false;
+        $count = 0;
+        DB::beginTransaction();
+
+        if($this->store_create($request)) {$count++;} else { $error = true;}
+
+        //create repeated service
+        if (!empty($repeatdates)){
+            for ($i = 0; $i < count($repeatdates); $i++ ) {
+
+                $repeatdate = Carbon::createFromFormat('Y-m-d', $repeatdates[$i]);
+                if ($repeatdate->greaterThan(Carbon::now()->startOfDay())) {
+
+                    $repeaterequest = $request->duplicate();
+                    $date = Carbon::createFromFormat('d m Y H:i', $repeaterequest->get('date'));
+                    $dateEnd = Carbon::createFromFormat('d m Y H:i', $repeaterequest->get('dateEnd'));
+                    //diff from start to end in days: newDateEnd = newDateStart + diff days
+                    $diffdays =  $date->diffInDays($dateEnd);
+                    //diffInDays only diff when 24h ist diff. Add one if there is a timegab lt 24h
+                    if ($date->hour > $dateEnd->hour) {$diffdays++;}
+
+                    $repeaterequest->merge(['date' => $date->setDate($repeatdate->year, $repeatdate->month, $repeatdate->day)->format("d m Y H:i")]);
+                    if($repeaterequest->has('dateEnd') && $repeaterequest->get('dateEnd')) {
+                        $repeaterequest->merge(['dateEnd' => $dateEnd->setDate($repeatdate->year, $repeatdate->month, $repeatdate->day)->addDays($diffdays)->format("d m Y H:i")]);
+                    }
+
+                    if($this->store_create($repeaterequest)) {$count++;} else { $error = true;}
+                }
+            }
+        }
+
+        if ($error) {
+            DB::rollBack();
+            Session::flash('alert-danger', $count . 'Fehler bei der Anlage der neuen Dienste. Vorgang abgebrochen.');
+        }
+        else
+        {
+            DB::commit();
+            $count > 1 ? Session::flash('successmessage', $count . ' neue Dienste erfolgreich angelegt'):
+                         Session::flash('successmessage', 'Neuen Dienst erfolgreich angelegt');
+        }
+
+        return redirect(action('ServiceController@create'));
+    }
+
+    /**
+     * Store a newly created resource in storage. Helper function of store()
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    private function store_create(Request $request) {
         $service = new Service();
         $service->date = Carbon::createFromFormat('d m Y H:i', $request->get('date'));
         $dateEnd =  empty($request->get('dateEnd')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('dateEnd'));
@@ -120,10 +178,9 @@ class ServiceController extends Controller
                 }
             }
 
-            Session::flash('successmessage', ' Neuen Dienst erfolgreich angelegt');
+            return true;
         }
-
-        return redirect(action('ServiceController@create'));
+        return false;
     }
 
     /**

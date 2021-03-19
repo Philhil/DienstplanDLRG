@@ -24,7 +24,7 @@
                 <div class="form-line">
                     {{ Form::label('dateEnd', 'Datum Ende:') }}
                     {{ Form::text('dateEnd', old('dateEnd', !empty($service->dateEnd) ? $service->dateEnd->format('d m Y H:i') : ''), ['id' => 'date-end', 'class' => 'datepicker form-control', 'placeholder'=>'Datum auswählen...']) }}
-                    {!! $errors->first('date', '<p class="help-block">:message</p>') !!}
+                    {!! $errors->first('dateEnd', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
         </div>
@@ -52,21 +52,33 @@
             </div>
         </div>
     </div>
-
-    <div class="row clearfix">
-        <div class="col-sm-10">
-            <div class="form-group {{ $errors->has('comment') ? 'has-error' : ''}}">
-                <div class="form-line">
-                    {{ Form::label('comment', 'Bemerkung:') }}
-                    {{ Form::textarea('comment', old('comment'), ['placeholder' => "Bemerkung...", 'rows' => 2, 'class' => 'form-control no-resize']) }}
-                    {!! $errors->first('comment', '<p class="help-block">:message</p>') !!}
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+    @if(\Illuminate\Support\Facades\Route::current()->getName() != 'service.edit')
+    <div class="row clearfix">
+        <div class="col-xs-12 ol-sm-12 col-md-12 col-lg-12">
+            <div class="panel-group full-body" id="accordion_19" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-col-grey">
+                    <div class="panel-heading" role="tab" id="heading_repeat">
+                        <h6 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapseTwo_19" aria-expanded="false" aria-controls="collapseTwo_19">
+                                <i class="material-icons">repeat</i> Wiederholender Dienst
+                            </a>
+                        </h6>
+                    </div>
+                    <div id="collapseTwo_19" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo_19" aria-expanded="false" style="height: 0px;">
+                        <div class="panel-body">
+                            <div id="calendar"></div>
+                            <ol id="calendar_list" style="display:none;"></ol>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @endif
 
     <div class="row clearfix">
         <div class="col-sm-12 text-center">
@@ -132,6 +144,7 @@
 
 </div>
 
+
 <div class="row clearfix">
     <div class="col-sm-1 pull-right">
         <div class="form-line">
@@ -153,6 +166,8 @@
 
     <!-- Select Plugin Js -->
     <script src="/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+
+    <script src="/plugins/js-year-calendar/js-year-calendar.min.js"></script>
 
     <script>
         $( document ).ready(function() {
@@ -220,6 +235,50 @@
                 $('#delete_position').append('<input type="hidden" name="delete_position[]" value="'+$(this).closest('tr').attr('pos_id')+'" />')
                 $(this).closest('tr').remove();
             });
+
+            @if(\Illuminate\Support\Facades\Route::current()->getName() != 'service.edit')
+            const calendar = new Calendar('#calendar', {
+                dataSource: [],
+                minDate: new Date(),
+                clickDay: function(e) {
+                    toggleEvent(e);
+                }
+            });
+
+            function toggleEvent(e) {
+                var dataSource = calendar.getDataSource();
+                var exsist = false;
+                var id = 0;
+
+                for(var i in dataSource) {
+                    id = i;
+                    if(dataSource[i].startDate == e.date.toString()) {
+                        exsist = true;
+                        break;
+                    }
+                }
+
+                if (!exsist) {
+                    var event = {
+                        id: id,
+                        startDate: e.date,
+                        endDate: e.date,
+                        color: "black"
+                    };
+                    dataSource.push(event);
+
+                    $("#calendar_list").append('<input class="form-control" id="calendar_dates_'+ id +'" type="date" value="'+ moment(e.date).format("YYYY-MM-DD")+'" name="calendar_dates[]" >');
+                }
+                else
+                {
+                    dataSource.splice(id,1);
+                    input_id = "#calendar_dates_" + id;
+                    $(input_id).remove();
+                }
+
+                calendar.setDataSource(dataSource);
+            }
+            @endif
         });
     </script>
 @endsection

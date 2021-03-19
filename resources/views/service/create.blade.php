@@ -6,6 +6,8 @@
 
     <!-- Bootstrap Material Datetime Picker Css -->
     <link href="/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+
+    <link href="/plugins/js-year-calendar/js-year-calendar.min.css" rel="stylesheet" />
 @endsection
 
 @section('content')
