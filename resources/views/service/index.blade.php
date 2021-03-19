@@ -15,14 +15,15 @@
                             <span class="glyphicon glyphicon-collapse-up float-left"></span>
                         @else
                             <span class="glyphicon glyphicon-collapse-down float-left"></span>
-                            @if($service->openpositions_required->count() > 0)<span class="badge bg-red">{{$service->openpositions_required->count()}}</span>@endif
+                            @if($service->openpositions_required_count > 0)<span class="badge bg-red">{{$service->openpositions_required->count()}}</span>@endif
                         @endif
+
                         {{$service->date->isoFormat('ddd  DD.MM.YY H:mm')}} Uhr @if(!empty($service->dateEnd)) - {{$service->dateEnd->isoFormat('DD.MM.YY H:mm')}} Uhr @endif
                         <small>{{$service->comment}}</small>
                         @if(!empty($service->location)) <small>{{$service->location}}</small> @endif
                     </h2>
 
-                    @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
+                    @if($isAdmin)
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -53,7 +54,7 @@
                                         <td>
                                             {{-- show candidates if nobody is approved --}}
                                             @if(!isset($position->user))
-                                                @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
+                                                @if($isAdmin)
                                                     @foreach($position->candidatures as $candidate)
                                                         <row>
                                                             <div class="col-md-12">
@@ -69,16 +70,16 @@
                                                 @endif
                                             @endif
                                             @if(isset($position->user))
-                                                <span class="badge @if($position->user->id == \Illuminate\Support\Facades\Auth::user()->id) bg-light-green @else bg-green @endif">
+                                                <span class="badge @if($position->user->id == $user->id) bg-light-green @else bg-green @endif">
                                                     {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
                                                 </span>
                                                 {{-- user has a Candidature for that pos --}}
-                                            @elseif($position->candidatures->contains('user', \Illuminate\Support\Facades\Auth::user()))
+                                            @elseif($position->candidatures->contains('user', $user))
                                                 <button type="button" class="btn bg-orange waves-effect btn-unsubscribe" positionid="{{$position->id}}"><i class="material-icons">check_circle</i>
                                                     Meldung zurückziehen
                                                 </button>
                                                 {{-- Has user this qualification? and Has user NOT already a Position at this service --}}
-                                            @elseif($user->qualifications->contains('id', $position->qualification->id) && !$service->positions->contains('user', \Illuminate\Support\Facades\Auth::user()))
+                                            @elseif($user->qualifications->contains('id', $position->qualification->id) && !$service->positions->contains('user', $user))
                                                 <button type="button" class="btn bg-deep-orange waves-effect btn-subscribe" positionid="{{$position->id}}"><i class="material-icons">touch_app</i>
                                                     @if($service->hastoauthorize) Melden
                                                     @else Eintragen
@@ -114,7 +115,7 @@
 
                                             {{-- show candidates if nobody is approved --}}
                                             @if(!isset($position->user))
-                                                @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
+                                                @if($isAdmin)
                                                     @foreach($position->candidatures as $candidate)
                                                         <row>
                                                             <div class="col-md-12">
@@ -130,16 +131,16 @@
                                                 @endif
                                             @endif
                                             @if(isset($position->user))
-                                                <span class="badge @if($position->user->id == \Illuminate\Support\Facades\Auth::user()->id) bg-light-green @else bg-green @endif">
+                                                <span class="badge @if($position->user->id == $user->id) bg-light-green @else bg-green @endif">
                                                     {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
                                                 </span>
                                                 {{-- user has a Candidature for that pos --}}
-                                            @elseif($position->candidatures->contains('user', \Illuminate\Support\Facades\Auth::user()))
+                                            @elseif($position->candidatures->contains('user', $user))
                                                 <button type="button" class="btn bg-orange waves-effect btn-unsubscribe" positionid="{{$position->id}}"><i class="material-icons">check_circle</i>
                                                     Meldung zurückziehen
                                                 </button>
                                                 {{-- Has user this qualification? and Has user NOT already a Position at this service --}}
-                                            @elseif($user->qualifications->contains('id', $position->qualification->id) && !$service->positions->contains('user', \Illuminate\Support\Facades\Auth::user()))
+                                            @elseif($user->qualifications->contains('id', $position->qualification->id) && !$service->positions->contains('user', $user))
                                                 <button type="button" class="btn bg-deep-orange waves-effect btn-subscribe" positionid="{{$position->id}}"><i class="material-icons">touch_app</i>
                                                     @if($service->hastoauthorize) Melden
                                                     @else Eintragen
@@ -223,7 +224,7 @@
                 });
             });
 
-            @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
+            @if($isAdmin)
             $('.btn-authorize').on('click', function () {
                 $(this).parent().attr("positionid", $(this).attr('positionid'));
                 $(this).remove();
