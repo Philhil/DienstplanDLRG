@@ -53,7 +53,7 @@ class QualificationController extends Controller
      */
     public function store(StoreQualification $request)
     {
-        if($request->has('id')) {
+        if($request->has('id') &&  $request->get('id')) {
             $quali = Qualification::findOrFail($request->only('id'))->first();
 
             //check if quali is of own client
