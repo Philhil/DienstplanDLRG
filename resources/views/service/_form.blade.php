@@ -43,6 +43,18 @@
 
     <div class="row clearfix">
         <div class="col-sm-10">
+            <div class="form-group {{ $errors->has('comment') ? 'has-error' : ''}}">
+                <div class="form-line">
+                    {{ Form::label('comment', 'Bemerkung:') }}
+                    {{ Form::textarea('comment', old('comment'), ['placeholder' => "Bemerkung...", 'rows' => 2, 'class' => 'form-control no-resize']) }}
+                    {!! $errors->first('comment', '<p class="help-block">:message</p>') !!}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-sm-10">
             <div class="form-group {{ $errors->has('location') ? 'has-error' : ''}}">
                 <div class="form-line">
                     {{ Form::label('location', 'Ort (Mit Koordinaten darstellbar auf Karte):') }}
