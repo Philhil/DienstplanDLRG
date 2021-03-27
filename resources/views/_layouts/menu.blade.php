@@ -49,6 +49,12 @@
                     <span>Nachrichten</span>
                 </a>
             </li>
+            <li class="{{active('holiday.index')}} {{active('holiday.edit')}}">
+                <a href="{{ action('HolidayController@index') }}">
+                    <i class="material-icons">beach_access</i>
+                    <span>Abwesenheit</span>
+                </a>
+            </li>
             <li class="">
                 <a href="{{ action('HomeController@getUserGuide') }}">
                     <i class="material-icons">help</i>
