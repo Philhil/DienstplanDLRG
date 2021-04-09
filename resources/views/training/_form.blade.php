@@ -11,7 +11,7 @@
             <div class="form-group {{ $errors->has('date') ? 'has-error' : ''}}">
                 <div class="form-line">
                     {{ Form::label('date', 'Von:') }}
-                    {{ Form::text('date', old('date', !empty($training->date) ? $training->date->format('d m Y H:m') : ''), ['id' => 'date-start', 'class' => 'date-start form-control', 'placeholder'=>'Datum auswählen...', 'required'=>"true"]) }}
+                    {{ Form::text('date', old('date', !empty($training->date) ? $training->date->format('d m Y H:i') : ''), ['id' => 'date-start', 'class' => 'date-start form-control', 'placeholder'=>'Datum auswählen...', 'required'=>"true"]) }}
                     {!! $errors->first('date', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -22,7 +22,7 @@
             <div class="form-group {{ $errors->has('dateEnd') ? 'has-error' : ''}}">
                 <div class="form-line">
                     {{ Form::label('dateEnd', 'Bis:') }}
-                    {{ Form::text('dateEnd', old('dateEnd', !empty($training->dateEnd) ? $training->dateEnd->format('d m Y H:m') : ''), ['id' => 'date-end', 'class' => 'date-end form-control', 'placeholder'=>'Datum auswählen...']) }}
+                    {{ Form::text('dateEnd', old('dateEnd', !empty($training->dateEnd) ? $training->dateEnd->format('d m Y H:i') : ''), ['id' => 'date-end', 'class' => 'date-end form-control', 'placeholder'=>'Datum auswählen...']) }}
                     {!! $errors->first('dateEnd', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -69,7 +69,7 @@
             <div class="form-group {{ $errors->has('sendbydatetime') ? 'has-error' : ''}}">
                 <div class="form-line">
                     {{ Form::label('sendbydatetime', 'Automatisch E-Mail versenden am (Leer = deaktiviert):') }}
-                    {{ Form::text('sendbydatetime', old('sendbydatetime', !empty($training->sendbydatetime) ? $training->sendbydatetime->format('d m Y H:m') : ''), ['id' => 'sendbydatetime', 'class' => 'sendbydatetime form-control', 'placeholder'=>'Datum auswählen...']) }}
+                    {{ Form::text('sendbydatetime', old('sendbydatetime', !empty($training->sendbydatetime) ? $training->sendbydatetime->format('d m Y H:i') : ''), ['id' => 'sendbydatetime', 'class' => 'sendbydatetime form-control', 'placeholder'=>'Datum auswählen...']) }}
                     {!! $errors->first('sendbydatetime', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
