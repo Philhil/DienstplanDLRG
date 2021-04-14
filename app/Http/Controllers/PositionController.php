@@ -171,7 +171,7 @@ class PositionController extends Controller
             if (!empty($position->training_id)) {
                 $training_user = Training_user::where(['position_id'=> $position->id, 'user_id' => $user_id])->select('id')->first();
                 if (!empty($training_user)) {
-                    return redirect()->action('TrainingController@delete_training_user', ['id' => $training_user->id])->with('redirect', 'positionController@unsubscribe');
+                    return redirect()->action('TrainingController@delete_training_user', ['training_userid' => $training_user->id])->with('redirect', 'positionController@unsubscribe');
                 }
 
                 return "false";

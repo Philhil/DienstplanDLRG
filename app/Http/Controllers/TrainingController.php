@@ -290,12 +290,12 @@ class TrainingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete_training_user($id)
+    public function delete_training_user($training_userid)
     {
-        $training_user = Training_user::findOrFail($id);
+        $training_user = Training_user::findOrFail($training_userid);
 
         if(Auth::user()->isAdminOfClient($training_user->training->client_id) || Auth::user()->isTrainingEditorOfClient($training_user->training->client_id) ||
-            (Training_user::where(['id' => $id, 'user_id' => Auth::user()->id])->count() > 0 && !(Training_user::findOrFail($id)->training->date)->isToday())) {
+            (Training_user::where(['id' => $training_userid, 'user_id' => Auth::user()->id])->count() > 0 && !(Training_user::findOrFail($training_userid)->training->date)->isToday())) {
 
             $posid = $training_user->position_id;
             $userid = $training_user->user_id;
