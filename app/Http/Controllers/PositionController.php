@@ -263,7 +263,7 @@ class PositionController extends Controller
         }
 
         $comment = !empty($position->training) ? $position->training->title : $position->service->comment;
-        $users = Client::FindOrFail($position->getClientId())->user_all()->with('qualifications')->get();
+        $users = Client::FindOrFail($position->getClientId())->user()->with('qualifications')->get();
 
         //All users already assigned to the position
         $selected_users = collect();
