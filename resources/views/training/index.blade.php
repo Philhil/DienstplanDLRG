@@ -78,10 +78,10 @@
                                             @foreach($training->training_users as $training_users)
                                                 @if($training_users->position_id == $position->id)
                                                     <br>
-                                                    <span class="badge @if($training_users->user->id == \Illuminate\Support\Facades\Auth::user()->id) bg-light-green @else bg-green @endif m-t-5">
+                                                    <span class="badge @if($training_users->user->id == $user->id) bg-light-green @else bg-green @endif m-t-5">
                                                         {{substr ($training_users->user->first_name, 0, 1)}}. {{$training_users->user->name}}
                                                         {{-- if is user -> possibility to remove him self --}}
-                                                        @if(($training_users->user->id == \Illuminate\Support\Facades\Auth::user()->id && !($training_users->training->date)->isToday()) || $isAdmin || $isTrainingEditor)
+                                                        @if(($training_users->user->id == $user->id && !($training_users->training->date)->isToday()) || $isAdmin || $isTrainingEditor)
                                                             {{ Form::open(['url' => '/training/training_user/'. $training_users->id .'/delete/', 'method' => 'delete', 'style'=>'display:inline-block']) }}
                                                             <button type="submit" class="btn btn-xs btn-warning waves-effect btn-delete">
                                                                 <i class="material-icons">delete</i>
@@ -138,8 +138,16 @@
                                             @foreach($training->training_users as $training_users)
                                                 @if($training_users->position_id == $position->id)
                                                     <br>
-                                                    <span class="badge @if($training_users->user->id == \Illuminate\Support\Facades\Auth::user()->id) bg-light-green @else bg-green @endif m-t-5">
+                                                    <span class="badge @if($training_users->user->id == $user->id) bg-light-green @else bg-green @endif m-t-5">
                                                         {{substr ($training_users->user->first_name, 0, 1)}}. {{$training_users->user->name}}
+                                                        {{-- if is user -> possibility to remove him self --}}
+                                                        @if(($training_users->user->id == $user->id && !($training_users->training->date)->isToday()) || $isAdmin || $isTrainingEditor)
+                                                            {{ Form::open(['url' => '/training/training_user/'. $training_users->id .'/delete/', 'method' => 'delete', 'style'=>'display:inline-block']) }}
+                                                            <button type="submit" class="btn btn-xs btn-warning waves-effect btn-delete">
+                                                                <i class="material-icons">delete</i>
+                                                            </button>
+                                                            {{ Form::close() }}
+                                                        @endif
                                                     </span>
                                                 @endif
                                             @endforeach
