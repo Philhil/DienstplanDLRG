@@ -46,7 +46,7 @@
                             <div class="form-group {{ $errors->has('defaultcount') ? 'has-error' : ''}}">
                                 <div class="form-line">
                                     {{ Form::label('defaultcount', 'Wie viele Positionen dieser Qualifikation sollen automatisch angelegt werden?:') }}
-                                    {{ Form::number('defaultcount', 1, ['class' => 'form-control']) }}
+                                    {{ Form::number('defaultcount', empty(old('defaultcount')) ? $qualification->defaultcount : old('defaultcount'), ['class' => 'form-control']) }}
                                     {!! $errors->first('defaultcount', '<p class="help-block">:message</p>') !!}
                                 </div>
                             </div>
