@@ -32,14 +32,17 @@ class UserController extends Controller
 
         if (Auth::user()->isSuperAdmin() && Route::current()->getPrefix() == '/superadmin')
         {
-            $users = User::orderBy('name')->get();
+            $users = User::orderBy('name')->with('clients', 'client_user', 'qualifications')->get();
         }
         else
         {
-            $users = Client::findorfail(Auth::user()->currentclient_id)->user_all()->get();
+            $users = Client::findorfail(Auth::user()->currentclient_id)->user_all()->with('clients', 'client_user', 'qualifications')->get();
         }
 
-        return view('user.index')->with('users', $users);
+        $qualifications = Auth::user()->currentclient()->Qualifications()->get();
+        $authuser = Auth::user();
+
+        return view('user.index', compact('users', 'authuser', 'qualifications'));
 
     }
 

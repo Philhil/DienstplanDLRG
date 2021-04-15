@@ -114,6 +114,11 @@ class User extends Authenticatable
         return $this->authorizedpositions()->where('services.date','>=', DB::raw('CURDATE()'));
     }
 
+    public function client_user()
+    {
+        return $this->hasMany(Client_user::class);
+    }
+
     public function clients()
     {
         return $this->hasManyThrough(

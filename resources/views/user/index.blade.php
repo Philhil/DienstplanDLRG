@@ -1,6 +1,7 @@
 @extends('_layouts.application')
 
 @section('head')
+    <link rel="stylesheet" href="/plugins/bootstrap-table/bootstrap-table.min.css">
 @endsection
 
 @section('content')
@@ -12,13 +13,25 @@
                 </h2>
             </div>
             <div class="body table-responsive">
-                <table class="table table-striped">
+                <table data-toggle="table" class="table table-striped table-hover" data-show-toggle="true"
+                       data-show-columns="true"
+                       data-search="true" data-search-highlight="true" data-show-search-clear-button="true"
+                       data-cookie="true" data-cookie-id-table="userView"
+                       data-filter-control="true"
+                       data-show-export="true"
+                       @if(!Browser::isDesktop())
+                       data-card-view="true"
+                       @endif
+                >
                     <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Vorname</th>
-                        <th>E-Mail</th>
-                        <th>Aktion</th>
+                        <th data-sortable="true" data-field="Name" data-filter-control="input">Name</th>
+                        <th data-sortable="true" data-field="Vorname" data-filter-control="input">Vorname</th>
+                        <th data-field="mail">E-Mail</th>
+                        @foreach($qualifications as $qualification)
+                            <th data-field="quali_{{$qualification->short}}" data-filter-control="select" data-visible="false">{{$qualification->short}}</th>
+                        @endforeach
+                        <th data-field="action" data-force-hide="true">Aktion</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -28,6 +41,15 @@
                             <td>{{$user->name}}</td>
                             <td>{{$user->first_name}}</td>
                             <td>{{$user->email}}</td>
+                            @foreach($qualifications as $qualification)
+                                <td>
+                                    @if($user->qualifications->contains('id', $qualification->id))
+                                        ✓
+                                    @else
+                                        ✗
+                                    @endif
+                                </td>
+                            @endforeach
                             <td>
                                 <a href="/user/{{$user->id}}/edit">
                                     <button type="button" class="btn btn-warning waves-effect">
@@ -43,8 +65,14 @@
                                     {{ Form::close() }}
                                 @endif
 
-                                @if(!empty(\App\Client_user::where(['user_id' => $user->id, 'client_id' => Auth::user()->currentclient_id])->first()) && !\App\Client_user::where(['user_id' => $user->id, 'client_id' => Auth::user()->currentclient_id])->first()->approved)
-                                    <a href="{{action('UserController@approve_user', $user->id)}}">
+                                @if($user->clients->contains('id', Auth::user()->currentclient_id) && $user->client_user->contains(
+                                function($value, $key) use ($authuser) {
+                                        return (
+                                                   $value->client_id == $authuser->currentclient_id &&
+                                                   $value->approved == false
+                                               );
+                                }))
+                                     <a href="{{action('UserController@approve_user', $user->id)}}">
                                         <button type="button" class="btn btn-success waves-effect">
                                             <i class="material-icons">check</i>
                                         </button>
@@ -68,8 +96,16 @@
 @endsection
 
 @section('post_body')
+    <script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/plugins/bootstrap-table/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+    <script src="/plugins/bootstrap-table/extensions/cookie/bootstrap-table-cookie.min.js"></script>
+
+    <script src="/plugins/jquery-tableexport/tableExport.min.js"></script>
+    <script src="/plugins/bootstrap-table/extensions/export/bootstrap-table-export.js"></script>
+
     <script>
         $( document ).ready(function() {
+            $('.table').bootstrapTable({});
         });
     </script>
 @endsection
