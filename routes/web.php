@@ -64,6 +64,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('news/{news}/delete', 'NewsController@delete')->name('news.delete');
 
     Route::resource('holiday', 'HolidayController');
+    Route::get('holiday/storeservice/{service}', 'HolidayController@storeService')->name('holiday.storeservice');
+    Route::get('holiday/storetraining/{training}', 'HolidayController@storeTraining')->name('holiday.storetraining');
 
     Route::post('qualification_user/create', 'QualificationController@createQualification_User');
     Route::match(['get', 'post'], 'qualification_user/delete/{user_id}/{qualification_id}', 'QualificationController@deleteQualification_User');

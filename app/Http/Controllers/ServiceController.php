@@ -28,21 +28,31 @@ class ServiceController extends Controller
         if(Auth::user()->isAdmin())
         {
             $services = Service::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
-                ->orderBy('date')->with('openpositions')->withCount('openpositions_required')->with('positions.qualification')->with('positions.user')
-                ->with('positions.candidatures')->with('positions.candidatures.user')->get();
+                ->orderBy('date')->with('openpositions')->withCount('openpositions_required')
+                ->with('positions.qualification')
+                ->with('positions.user')
+                ->with('positions.candidatures')
+                ->with('positions.candidatures.user')
+                ->get();
         } else
         {
             $services = Service::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
-                ->orderBy('date')->with('openpositions')->withCount('openpositions_required')->with('positions.qualification')->with('positions.user')
-                ->with('positions.candidatures')->with(['positions.candidatures.user'=> function ($query) {
-                $query->where('id', '=', Auth::user()->id);
-            }])->get();
+                ->orderBy('date')->with('openpositions')
+                ->withCount('openpositions_required')
+                ->with('positions.qualification')
+                ->with('positions.user')
+                ->with('positions.candidatures')
+                ->with(['positions.candidatures.user'=> function ($query) {
+                    $query->where('id', '=', Auth::user()->id);
+                }])
+                ->get();
         }
 
         $user = User::where(['id' => Auth::user()->id])->with('qualifications')->first();
         $isAdmin = $user->isAdmin();
+        $servicesHoliday = $user->services_inHolidayList();
 
-        return view('service.index', compact('services', 'user', 'isAdmin'));
+        return view('service.index', compact('services', 'user', 'servicesHoliday', 'isAdmin'));
     }
 
     /**

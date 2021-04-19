@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Holiday;
 use App\Http\Requests\StoreHolidayRequest;
+use App\Service;
+use App\Training;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +47,44 @@ class HolidayController extends Controller
         $holiday->save();
 
         return redirect(action('HolidayController@index'));
+    }
+
+    /**
+     * Store a newly created resource in relation to a Service in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeService($service_id)
+    {
+        $service = Service::findOrFail($service_id);
+
+        $holiday = new Holiday();
+        $holiday['from'] = $service->date;
+        $holiday['to'] = empty($service->dateEnd) ? $service->date->endOfDay() : $service->dateEnd;
+        $holiday['user_id'] = Auth::user()->id;
+        $holiday->save();
+
+        return redirect(action('ServiceController@index'));
+    }
+
+    /**
+     * Store a newly created resource in relation to a Training storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeTraining($training_id)
+    {
+        $training = Training::findOrFail($training_id);
+
+        $holiday = new Holiday();
+        $holiday['from'] = $training->date;
+        $holiday['to'] = empty($training->dateEnd) ? $training->date->endOfDay() : $training->dateEnd;
+        $holiday['user_id'] = Auth::user()->id;
+        $holiday->save();
+
+        return redirect(action('TrainingController@index'));
     }
 
     /**

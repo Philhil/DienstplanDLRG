@@ -52,8 +52,9 @@ class TrainingController extends Controller
         }
 
         $user = User::where(['id' => Auth::user()->id])->with('qualifications')->first();
+        $trainingsHoliday = $user->trainings_inHolidayList();
 
-        return view('training.index', compact('trainings', 'user', 'isAdmin', 'isTrainingEditor'));
+        return view('training.index', compact('trainings', 'user', 'isAdmin', 'isTrainingEditor', 'trainingsHoliday'));
     }
 
     /**

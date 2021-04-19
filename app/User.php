@@ -147,4 +147,53 @@ class User extends Authenticatable
             'client_id' // Local key on Client_user table...
         )->where(['client_user.approved' => false]);
     }
+
+    public function holidaysInFuture()
+    {
+        return $this->hasMany(Holiday::class)->where('to','>=', DB::raw('CURDATE()'));
+    }
+
+    public function services_inHolidayList()
+    {
+        $servicesList = [];
+        foreach ($this->holidaysInFuture()->get() as $holiday)
+        {
+            $from = $holiday->from;
+            $to = $holiday->to;
+            $services = Service::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+                ->with(['positions.candidatures.user'=> function ($query) {
+                    $query->where('id', '=', Auth::user()->id);
+                }])
+                ->where(function($query) use ($from, $to) {
+                    $query->whereBetween('date', [$from,$to])
+                        ->orWhereBetween('dateEnd', [$from,$to]);
+                })
+                ->pluck('id')->toArray();
+            $servicesList = array_merge($servicesList, $services);
+        }
+
+        return $servicesList;
+    }
+
+    public function trainings_inHolidayList()
+    {
+        $trainingsList = [];
+        foreach ($this->holidaysInFuture()->get() as $holiday)
+        {
+            $from = $holiday->from;
+            $to = $holiday->to;
+            $trainings = Training::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+                ->with(['positions.candidatures.user'=> function ($query) {
+                    $query->where('id', '=', Auth::user()->id);
+                }])
+                ->where(function($query) use ($from, $to) {
+                    $query->whereBetween('date', [$from,$to])
+                        ->orWhereBetween('dateEnd', [$from,$to]);
+                })
+                ->pluck('id')->toArray();
+            $trainingsList = array_merge($trainingsList, $trainings);
+        }
+
+        return $trainingsList;
+    }
 }

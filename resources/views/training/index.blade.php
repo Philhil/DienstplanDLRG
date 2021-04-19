@@ -10,28 +10,36 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <span class="anchor" id="training{{$training->id}}"></span>
             <div class="card">
-                <div class="header bg-blue-grey">
+                <div class="header @if(in_array($training->id, $trainingsHoliday)) bg-grey @else bg-blue-grey @endif ">
                     <h2 data-toggle="collapse" data-target="#card_{{$training->id}}">
                         <span class="glyphicon glyphicon-collapse-up float-left"></span>
                         {{$training->date->isoFormat('ddd  DD.MM.YY H:mm')}} Uhr <small>{{$training->title}}</small>
                     </h2>
 
-                    @if($isAdmin || $isTrainingEditor)
-                        <ul class="header-dropdown m-r--5">
-                            <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                    <i class="material-icons">more_vert</i>
-                                </a>
-                                <ul class="dropdown-menu pull-right">
-                                    <li><a href="{{action('TrainingController@edit', $training->id) }}" class="btn-warning waves-effect"><i class="material-icons">mode_edit</i>Bearbeiten</a></li>
-                                    <li><a href="{{action('TrainingController@destroy', $training->id) }}" class="btn-danger waves-effect"><i class="material-icons">delete</i> Löschen</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    @endif
+                    <ul class="header-dropdown m-r--5">
+                        @if(in_array($training->id, $trainingsHoliday))
+                            <li><i class="material-icons">beach_access</i></li>
+                        @endif
+                        @if($isAdmin || $isTrainingEditor || !in_array($training->id, $trainingsHoliday))
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                @if(!in_array($training->id, $trainingsHoliday))
+                                    <li><a href="{{action('HolidayController@storeTraining', [$training->id])}}" class="bg-grey waves-effect waves-block"><i class="material-icons">beach_access</i>Keine Zeit</a></li>
+                                @endif
+                                @if($isAdmin || $isTrainingEditor)
+                                <li><a href="{{action('TrainingController@edit', $training->id) }}" class="btn-warning waves-effect"><i class="material-icons">mode_edit</i>Bearbeiten</a></li>
+                                <li><a href="{{action('TrainingController@destroy', $training->id) }}" class="btn-danger waves-effect"><i class="material-icons">delete</i> Löschen</a></li>
+                                @endif
+                            </ul>
+                        </li>
+                        @endif
+                    </ul>
 
                 </div>
-                <div class="body collapse @if(Browser::isDesktop()) in @endif" id="card_{{$training->id}}">
+                <div class="body collapse @if(Browser::isDesktop() && !in_array($training->id, $trainingsHoliday)) in @endif" id="card_{{$training->id}}">
 
                     @if(Browser::isDesktop())
 {{-- Start Desktop --}}

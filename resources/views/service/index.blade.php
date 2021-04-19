@@ -9,9 +9,9 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <span class="anchor" id="service{{$service->id}}"></span>
             <div class="card">
-                <div class="header">
+                <div class="header @if(in_array($service->id, $servicesHoliday)) bg-grey @endif ">
                     <h2 data-toggle="collapse" data-target="#card_{{$service->id}}">
-                        @if(Browser::isDesktop())
+                        @if(Browser::isDesktop() && !in_array($service->id, $servicesHoliday))
                             <span class="glyphicon glyphicon-collapse-up float-left"></span>
                         @else
                             <span class="glyphicon glyphicon-collapse-down float-left"></span>
@@ -23,21 +23,30 @@
                         @if(!empty($service->location)) <small>{{$service->location}}</small> @endif
                     </h2>
 
-                    @if($isAdmin)
-                        <ul class="header-dropdown m-r--5">
-                            <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                    <i class="material-icons">more_vert</i>
-                                </a>
-                                <ul class="dropdown-menu pull-right">
-                                    <li><a href="{{action('ServiceController@edit', $service->id) }}" class=" waves-effect waves-block"><i class="material-icons">mode_edit</i>Bearbeiten</a></li>
-                                    <li><a href="{{action('ServiceController@delete', $service->id) }}" class=" waves-effect waves-block"><i class="material-icons">delete</i> Löschen</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    @endif
+                    <ul class="header-dropdown m-r--5">
+                        @if(in_array($service->id, $servicesHoliday))
+                        <li><i class="material-icons">beach_access</i></li>
+                        @endif
+                        @if($isAdmin || !in_array($service->id, $servicesHoliday))
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                @if(!in_array($service->id, $servicesHoliday))
+                                    <li><a href="{{action('HolidayController@storeService', [$service->id])}}" class="bg-grey waves-effect waves-block"><i class="material-icons">beach_access</i>Keine Zeit</a></li>
+                                @endif
+                                @if($isAdmin)
+                                <li><a href="{{action('ServiceController@edit', $service->id) }}" class=" waves-effect waves-block"><i class="material-icons">mode_edit</i>Bearbeiten</a></li>
+                                <li><a href="{{action('ServiceController@delete', $service->id) }}" class=" waves-effect waves-block"><i class="material-icons">delete</i> Löschen</a></li>
+                                @endif
+                            </ul>
+                        </li>
+                        @endif
+                    </ul>
+
                 </div>
-                <div class="body collapse @if(Browser::isDesktop()) in @endif" id="card_{{$service->id}}">
+                <div class="body collapse @if(Browser::isDesktop() && !in_array($service->id, $servicesHoliday)) in @endif" id="card_{{$service->id}}">
 
                     @if(Browser::isDesktop())
 {{-- Start Desktop --}}
