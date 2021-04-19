@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Client;
 use App\Client_user;
 use App\Credit;
+use App\Holiday;
 use App\News;
 use App\Position;
 use App\Qualification;
@@ -262,6 +263,13 @@ class GenerateDemoClient extends Command
             $news->user_id = $admin->id;
             $news->client_id = $client->id;
             $news->save();
+
+            //create holiday
+            $holiday = new Holiday();
+            $holiday->from = Carbon::tomorrow()->startOfDay();
+            $holiday->to = Carbon::tomorrow()->endOfDay();
+            $holiday->user_id = $user->id;
+            $holiday->save();
         }
         else
         {
