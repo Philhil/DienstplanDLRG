@@ -128,7 +128,15 @@
                             <select class="btn-group bootstrap-select form-control show-tick" data-live-search="true" name="user[]" data-size="5">
                                 <option value="null">-- Bitte wählen --</option>
                                 @foreach($users as $key => $user)
-                                    <option @if($user->qualifications->contains('id', $position->qualification_id))class="bg-green" @endif  value="{{$user->id}}" @if($position->user_id == $user->id) selected @endif>{{substr ($user->first_name, 0, 1)}}. {{$user->name}}</option>
+                                    <option
+                                            {{-- inefficent n+1 querry - but site is not called a lot of times --}}
+                                            @if(in_array($service->id, $user->services_inHolidayList()))
+                                            data-icon="glyphicon glyphicon-remove"
+                                            data-subtext="Abwesend"
+                                            @endif
+                                            @if($user->qualifications->contains('id', $position->qualification_id))class="bg-green" @endif value="{{$user->id}}" @if($position->user_id == $user->id) selected @endif>
+                                        {{substr ($user->first_name, 0, 1)}}. {{$user->name}}
+                                    </option>
                                 @endforeach
                             </select>
                         </td>
@@ -228,7 +236,7 @@
                 prot += '@foreach($qualifications as $qualification)<option value="{{$qualification->id}}">{{$qualification->name}}</option>@endforeach';
                 prot += ' </select> </td>';
                 prot += ' <td> <select class="bootstrap-select show-tick" data-live-search="true" name="user[]">';
-                prot += '<option value="null">-- Bitte wählen --</option> @foreach($users as $user) <option value="{{$user->id}}">{{$user->name}}</option> @endforeach';
+                prot += '<option value="null">-- Bitte wählen --</option> @foreach($users as $user) <option @if(in_array($service->id, $user->services_inHolidayList())) data-icon="glyphicon glyphicon-remove" data-subtext="Abwesend" @endif value="{{$user->id}}">{{substr ($user->first_name, 0, 1)}}. {{$user->name}}</option> @endforeach';
                 prot += '</select> </td>';
                 prot += ' <td> <input class="form-control" placeholder="Kommentar..." type="text" value="" name="position_comment[]" > </td>';
                 prot += '<td> <select class="bootstrap-select show-tick" name="position_required[]">\n' +

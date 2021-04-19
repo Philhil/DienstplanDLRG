@@ -270,6 +270,9 @@ class PositionController extends Controller
         if (!empty($position->user_id)) $selected_users->push($position->user_id);
         if (!empty($position->training)) $selected_users = $selected_users->merge(Training_user::where(["position_id" => $position->id])->pluck('user_id'));
 
-        return view('position.position_user', compact('position', 'users', 'comment', 'selected_users'));
+        //HOLIDAY //Service or Training
+        $parent = empty($position->training) ? $position->service : $position->training;
+
+        return view('position.position_user', compact('position', 'users', 'comment', 'selected_users', 'parent'));
     }
 }

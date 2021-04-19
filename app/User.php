@@ -196,4 +196,15 @@ class User extends Authenticatable
 
         return $trainingsList;
     }
+
+    public function position_inHolidayList(Position $position)
+    {
+        //Service
+        if(empty($position->training)) {
+            return $this->services_inHolidayList();
+        }
+
+        //Training
+        return $this->trainings_inHolidayList();
+    }
 }

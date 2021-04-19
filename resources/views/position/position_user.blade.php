@@ -17,8 +17,8 @@
                     </h2>
                     <ul class="pull-right header-dropdown m-r--5">
                         {{ Form::open(['url' => action('TrainingController@index'), 'method' => 'get', 'style'=>'display:inline-block']) }}
-                        <button type="submit" class="btn btn-default waves-effect">
-                            <i class="material-icons">library_books</i>
+                        <button type="submit" class="btn btn-subscribe bg-green waves-effect">
+                            <i class="material-icons">save</i>
                         </button>
                         {{ Form::close() }}
                     </ul>
@@ -38,7 +38,10 @@
                             <tr @if($selected_users->contains($user->id)) class="bg-cyan"@endif>
                                 <th scope="row">
                                     <input type="checkbox" user_id="{{$user->id}}" class="filled-in chk-col-cyan" @if($selected_users->contains($user->id)) checked=""@endif>
-                                    <label for="md_checkbox_{{$user->id}}"></label>
+                                    <label for="md_checkbox_{{$user->id}}">
+                                        {{-- inefficent n+1 querry - but site is not called a lot of times --}}
+                                        @if(in_array($parent->id, $user->position_inHolidayList($position)))<i class="material-icons">beach_access</i> Keine Zeit @endif
+                                    </label>
                                 </th>
                                 <td>{{$user->name}}</td>
                                 <td>{{$user->first_name}}</td>
