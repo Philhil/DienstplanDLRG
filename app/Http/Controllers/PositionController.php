@@ -22,6 +22,10 @@ class PositionController extends Controller
      */
     public function index_notAuthorized()
     {
+        if(!Auth::user()->isAdmin()) {
+            abort(402, "Nope.");
+        }
+
         $positions = Position::has('candidatures')->join('services', 'services.id', '=', 'service_id')
             ->where('services.date','>=', DB::raw('CURDATE()'))
             ->where(['user_id' =>  null, 'services.client_id' => Auth::user()->currentclient_id])
