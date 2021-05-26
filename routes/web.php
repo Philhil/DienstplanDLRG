@@ -27,8 +27,7 @@ Route::get('/order', 'OrderController@index');
 Route::get('/order/create/{package}', 'OrderController@create');
 Route::post('/order/{package}', 'OrderController@store');
 
-
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web']], function () {
 
     Route::redirect('/', '/service');
     Route::get('/home', 'HomeController@index')->name('home');
