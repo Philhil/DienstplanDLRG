@@ -38,13 +38,13 @@ class PositionAssigned extends Mailable implements ShouldQueue
         $client = $this->position->service()->first()->client()->first();
         $service = $this->position->service()->first();
 
-        $dateEnd = !empty($service->dateEnd) ? $service->dateEnd->toDateString() : $service->date->toDateString();
+        $dateEnd = !empty($service->dateEnd) ? $service->dateEnd->toDateTimeString() : $service->date->toDateString();
         $setTime = !empty($service->dateEnd) ? false : true;
 
         $vCalendar = new \Eluceo\iCal\Component\Calendar('dlrgdienstplan.de');
         $vEvent = new \Eluceo\iCal\Component\Event();
         $vEvent
-            ->setDtStart(new \DateTime($service->date->toDateString()))
+            ->setDtStart(new \DateTime($service->date->toDateTimeString()))
             ->setDtEnd(new \DateTime($dateEnd))
             ->setNoTime($setTime)
             ->setSummary('Wachdienst')
