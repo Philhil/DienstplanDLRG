@@ -67,8 +67,9 @@ class HomeController extends Controller
     public function mailtest(){
         $tableheader = \App\Qualification::where(['isservicedefault' => true, 'client_id' => Auth::user()->currentclient_id])->get();
         $services = Service::where([['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)], 'services.client_id' => Auth::user()->currentclient_id])->orderBy('date')->with('positions.qualification')->get();
+        $client = Auth::user()->currentclient();
 
-        return view('email.serviceslist', compact('tableheader', 'services'));
+        return view('email.serviceslist', compact('tableheader', 'services', 'client'));
     }
 
     public function generatePDF()
