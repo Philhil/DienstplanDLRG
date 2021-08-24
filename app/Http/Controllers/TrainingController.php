@@ -9,6 +9,7 @@ use App\Training;
 use App\Training_user;
 use App\User;
 use Carbon\Carbon;
+use App\Http\Requests\StoreTrainingRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -83,7 +84,7 @@ class TrainingController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTrainingRequest $request)
     {
 
         if(Auth::user()->isAdmin()  || Auth::user()->isTrainingEditor()) {
