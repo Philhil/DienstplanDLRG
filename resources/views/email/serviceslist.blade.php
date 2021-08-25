@@ -8,11 +8,21 @@
         height: 29.7cm;
     }
     .nopos{
-        background-color: #353535;
+        background-color: rgba(129, 127, 127, 0.5);
     }
     .notassigned {
         background-color: #c7bb00;
     }
+    .assigned {
+        background-color: #ffff00;
+    }
+    .open_required {
+        background-color: #ff0000;
+    }
+    .open_optional {
+        background-color: rgba(255, 0, 0, 0.7);
+    }
+
     table, th, td {
         border: 1px solid black;
         border-collapse: collapse;
@@ -33,7 +43,7 @@ foreach ($services as $service)
     }
 ?>
 <body>
-Stand: {{Carbon\Carbon::now()->isoFormat('ddd  DD.MM.YY H:mm')}} Uhr
+{{$client->name}} - Stand: {{Carbon\Carbon::now()->isoFormat('ddd  DD.MM.YY H:mm')}} Uhr
 <table style="width:100%">
         <tr>
             <th>Datum</th>
@@ -51,11 +61,19 @@ Stand: {{Carbon\Carbon::now()->isoFormat('ddd  DD.MM.YY H:mm')}} Uhr
 
                     <td class="{{$positionswithqualification->isEmpty() ? "nopos" : ""}}">
                         @foreach($positionswithqualification as $position)
-                            <div class="{{is_null($position->user_id) ? "notassigned" : ""}}">
+                            {{-- for different colors required/optional position
+                             <div class="{{is_null($position->user_id) ? ($position->requiredposition == 1 ? "open_required" : "open_optional") : ""}}">
+                             --}}
+                            <div class="{{is_null($position->user_id) ? "open_required" : ""}}">
                             @if(is_null($position->user_id))
-                                    -
+                                    ➤ frei
                             @else
-                                {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
+                                    @if($client->isMailinglistCommunication == 0)
+                                        {{-- if this is send directly, names can be shown. via a open mailinglist -> hide names because of privacy reasons --}}
+                                        {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
+                                    @else
+                                        ✖ belegt
+                                    @endif
                             @endif
                             @if(!empty($position->comment))
                                 <small>({{$position->comment}})</small>
