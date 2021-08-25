@@ -21,7 +21,8 @@ class Client extends Model
         'defaultServiceStart',
         'defaultServiceEnd',
         'module_training',
-        'module_training_credit'
+        'module_training_credit',
+        'module_statistic'
     ];
 
     protected $dates = [
@@ -78,9 +79,19 @@ class Client extends Model
         return $this->hasMany( Qualification::class);
     }
 
+    public function News()
+    {
+        return $this->hasMany( News::class);
+    }
+
     public function Services()
     {
         return $this->hasMany( Service::class);
+    }
+
+    public function Trainings()
+    {
+        return $this->hasMany( Training::class);
     }
 
     public function Season()

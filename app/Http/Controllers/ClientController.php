@@ -305,6 +305,9 @@ class ClientController extends Controller
             case "module_training_credit":
                 $client->module_training_credit = $request->get('state') == "true" ? 1 : 0;
                 break;
+            case "module_statistic":
+                $client->module_statistic = $request->get('state') == "true" ? 1 : 0;
+                break;
         }
         $client->save();
 
