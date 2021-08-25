@@ -8,3 +8,7 @@ php artisan clear-compiled
 php artisan config:cache
 php artisan route:cache
 php artisan optimize
+
+php artisan queue:restart
+#config again to load env Variables
+php artisan config:clear
