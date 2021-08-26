@@ -81,5 +81,5 @@ Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web']], function
     Route::match(['get', 'post'], 'position/list_notAuthorized', 'PositionController@index_notAuthorized')->name('position.list_notAuthorized');
     Route::match(['get', 'post'], 'position/{id}/position_user', 'PositionController@position_user');
 
-    Route::get('/statistic', 'StatisticController@index')->name('statistic');
+    Route::match(['get', 'post'], 'statistic', 'StatisticController@index')->name('statistic');
 });
