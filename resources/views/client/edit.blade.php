@@ -117,6 +117,17 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr class="strikeout">
+                                <td>Erweiterte Statistik</td>
+                                <td>
+                                    <p>Aktiviert das Modul Statistik welches die Möglichkeit der Auswertung von Zeiträumen sowie Reports ermöglicht.</p>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label><input type="checkbox" id="module_statistic" @if($client->module_statistic)checked=""@endif @if(!\Illuminate\Support\Facades\Auth::user()->isSuperAdmin())disabled=""@endif><span class="lever"></span></label>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

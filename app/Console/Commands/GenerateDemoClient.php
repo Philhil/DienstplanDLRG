@@ -71,7 +71,8 @@ class GenerateDemoClient extends Command
                 'mailSenderName' => env("MAIL_FROM_NAME","Dienstplan"),
                 'mailReplyAddress' => env("MAIL_FROM_ADDRESS","demodienstplan@philhil.de"),
                 'module_training' => true,
-                'module_training_credit' => true
+                'module_training_credit' => true,
+                'module_statistic' => true
             ]);
 
             //create Users

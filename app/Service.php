@@ -40,6 +40,11 @@ class Service extends Model
             ->where('requiredposition', '=', 1);
     }
 
+    public function assignpositions()
+    {
+        return $this->hasMany(Position::class)->whereNotNull('user_id');
+    }
+
     public function positionwithQualification($qualifiaction_id)
     {
         return $this->positions()->where('qualification_id', $qualifiaction_id);
