@@ -42,6 +42,7 @@ class QualificationController extends Controller
     public function create()
     {
         $qualification = new Qualification();
+        $qualification->defaultcount = 0;
         return view('qualification.create', compact('qualification'));
     }
 
