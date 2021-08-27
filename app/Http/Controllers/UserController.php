@@ -11,6 +11,7 @@ use App\Qualification_user;
 use App\Service;
 use App\Training;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -84,20 +85,9 @@ class UserController extends Controller
         }
 
         $saison = Auth::user()->currentclient()->Season();
+        $fromYear = $saison["from"]->copy()->subYear(2)->year;
+        $toYear = $saison["from"]->copy()->year;
 
-        //get all qualifications of user with sum of credit points
-        $qualfication_credits = Qualification::selectRaw('sum(credits.points) as sum_points, qualifications.id')
-            ->join('qualification_users', 'qualification_users.qualification_id', '=', 'qualifications.id')
-            ->join('positions', 'positions.qualification_id', '=', 'qualifications.id')
-            ->join('training_users', 'training_users.position_id', '=', 'positions.id')
-            ->join('credits', 'credits.position_id', '=', 'positions.id')
-            ->join('trainings', 'trainings.id', '=', 'training_users.training_id')
-            //user have to participate to get credits
-            ->where(['qualification_users.user_id' => $user->id, 'training_users.user_id' => $user->id, 'trainings.client_id' => Auth::user()->currentclient_id])
-            ->whereNull('positions.service_id') //is a training and not a service
-            ->whereBetween('trainings.date', [$saison["from"], DB::raw('CURDATE()')])
-            ->groupBy('qualifications.id')
-            ->pluck('sum_points', 'id')->toArray();
 
         //get all qualification types where Trainings exsist and user has qualification
         $all_qualfications_where_trainings_exsist_and_user_has = Qualification::select('qualifications.id', 'qualifications.name')
@@ -107,12 +97,36 @@ class UserController extends Controller
             //not relevant if user participate
             ->where(['qualification_users.user_id' => $user->id, 'trainings.client_id' => Auth::user()->currentclient_id])
             ->whereNull('positions.service_id') //is a training and not a service
-            ->whereBetween('trainings.date', [$saison["from"], $saison["to"]])
+            ->whereBetween('trainings.date', [$saison["from"]->copy()->year($fromYear), $saison["to"]])
             ->groupBy('qualifications.id', 'qualifications.name')
             ->orderBy('qualifications.name')
             ->pluck('name', 'qualifications.id')->toArray();
 
-        return view('user.profile', compact('qualfication_credits', 'all_qualfications_where_trainings_exsist_and_user_has'))->with('user', $user);
+        $years = range($fromYear,$toYear);
+        $qualfication_credits = array();
+
+        $debug = array();
+        foreach ($years as $year) {
+            $from = $saison["from"]->copy()->year($year);
+            $year == $toYear ?  $to = Carbon::now() : $to = $saison["to"]->copy()->year($year+1);
+
+            //get all qualifications of user with sum of credit points
+            $qualfication_credits[$year] = Qualification::selectRaw('sum(credits.points) as sum_points, qualifications.id')
+                ->join('qualification_users', 'qualification_users.qualification_id', '=', 'qualifications.id')
+                ->join('positions', 'positions.qualification_id', '=', 'qualifications.id')
+                ->join('training_users', 'training_users.position_id', '=', 'positions.id')
+                ->join('credits', 'credits.position_id', '=', 'positions.id')
+                ->join('trainings', 'trainings.id', '=', 'training_users.training_id')
+                //user have to participate to get credits
+                ->where(['qualification_users.user_id' => $user->id, 'training_users.user_id' => $user->id, 'trainings.client_id' => Auth::user()->currentclient_id])
+                ->whereNull('positions.service_id') //is a training and not a service
+                ->whereBetween('trainings.date', [$from, $to])
+                ->groupBy('qualifications.id')
+                ->pluck('sum_points', 'id')->toArray();
+            $debug[$year] = [$from, $to, [$qualfication_credits[$year] ]];
+        }
+
+        return view('user.profile', compact('qualfication_credits', 'all_qualfications_where_trainings_exsist_and_user_has', 'years'))->with('user', $user);
     }
 
     /**
