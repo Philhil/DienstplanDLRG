@@ -75,20 +75,16 @@ class PositionController extends Controller
     {
         $user = User::FindOrFail($user_id);
 
-        //is user at same client lice position?
+        //is user at same client like position?
         if ($user->clients()->pluck('client_id')->contains($position->getClientId())) {
             //Training
             if (!empty($position->training_id)) {
                 $training = $position->training()->first();
 
-                //user have to have the qualification or Subscribe request is from a trainingeditor || admin
-                if ($user->hasqualification($position->qualification()->first()->id) || Auth::user()->can('trainingeditor') || Auth::user()->can('administration')) {
-
-                    //has user already approved position in this Training?
-                    if(!$position->training->hasUserPositions($user_id)) {
-                        Training_user::create(['training_id' => $training->id, 'user_id' => $user_id , 'position_id' => $position->id]);
-                        return $position;
-                    }
+                //(user have to have the qualification and not a already assigned position) or Subscribe request is from a trainingeditor || admin
+                if (($user->hasqualification($position->qualification()->first()->id) && !$position->training->hasUserPositions($user_id)) || Auth::user()->can('trainingeditor') || Auth::user()->can('administration')) {
+                    Training_user::create(['training_id' => $training->id, 'user_id' => $user_id , 'position_id' => $position->id]);
+                    return $position;
                 }
             }
 
@@ -96,19 +92,12 @@ class PositionController extends Controller
             if (!empty($position->service_id) && $position->user_id == null)
             {
                 $service = $position->service()->first();
-                //user have to have the qualification or Subscribe request is from a admin
-                if ($user->hasqualification($position->qualification()->first()->id) || Auth::user()->can('administration')){
-
+                //(user have to have the qualification and not a already assigned position ) or Subscribe request is from a admin
+                if (($user->hasqualification($position->qualification()->first()->id) && !$position->service->hasUserPositions($user_id))|| Auth::user()->can('administration')) {
                     if ($service->hastoauthorize == false) {
-                        //has user already approved position in this service?
-                        if(!$position->service->hasUserPositions($user_id)) {
-                            $position->user_id = $user_id;
-
-                            event(new PositionAuthorized($position, null));
-                            $position->save();
-                        } else {
-                            return "false";
-                        }
+                        $position->user_id = $user_id;
+                        event(new PositionAuthorized($position, null));
+                        $position->save();
                     }
                     else {
                         //check if user is already Candidate

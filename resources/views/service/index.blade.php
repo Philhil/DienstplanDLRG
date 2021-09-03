@@ -83,12 +83,12 @@
                                                     {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
                                                 </span>
                                                 {{-- user has a Candidature for that pos --}}
-                                            @elseif($position->candidatures->contains('user', $user))
+                                            @elseif($position->candidatures->contains('user', Auth::user()))
                                                 <button type="button" class="btn bg-orange waves-effect btn-unsubscribe" positionid="{{$position->id}}"><i class="material-icons">check_circle</i>
                                                     Meldung zurückziehen
                                                 </button>
                                                 {{-- Has user this qualification? and Has user NOT already a Position at this service --}}
-                                            @elseif($user->qualifications->contains('id', $position->qualification->id) && !$service->positions->contains('user', $user))
+                                            @elseif($user->qualifications->contains('id', $position->qualification->id) && !$service->positions->contains('user', Auth::user()))
                                                 <button type="button" class="btn bg-deep-orange waves-effect btn-subscribe" positionid="{{$position->id}}"><i class="material-icons">touch_app</i>
                                                     @if($service->hastoauthorize) Melden
                                                     @else Eintragen
@@ -144,12 +144,12 @@
                                                     {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
                                                 </span>
                                                 {{-- user has a Candidature for that pos --}}
-                                            @elseif($position->candidatures->contains('user', $user))
+                                            @elseif($position->candidatures->contains('user', Auth::user()))
                                                 <button type="button" class="btn bg-orange waves-effect btn-unsubscribe" positionid="{{$position->id}}"><i class="material-icons">check_circle</i>
                                                     Meldung zurückziehen
                                                 </button>
                                                 {{-- Has user this qualification? and Has user NOT already a Position at this service --}}
-                                            @elseif($user->qualifications->contains('id', $position->qualification->id) && !$service->positions->contains('user', $user))
+                                            @elseif($user->qualifications->contains('id', $position->qualification->id) && !$service->positions->contains('user', Auth::user()))
                                                 <button type="button" class="btn bg-deep-orange waves-effect btn-subscribe" positionid="{{$position->id}}"><i class="material-icons">touch_app</i>
                                                     @if($service->hastoauthorize) Melden
                                                     @else Eintragen
