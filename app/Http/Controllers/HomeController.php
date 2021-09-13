@@ -75,12 +75,13 @@ class HomeController extends Controller
     public function generatePDF()
     {
         $tableheader = Auth::user()->currentclient()->Qualifications()->where('isservicedefault', true)->get();
-
         $services = \App\Service::where(['client_id' => Auth::user()->currentclient_id,['date','>=', DB::raw('CURDATE()')]])->orderBy('date')->with('positions.qualification')->get();
+        $client = Auth::user()->currentclient();
 
         $pdf = PDF::loadView('email.serviceslist', [
             'tableheader' => $tableheader,
             'services' => $services,
+            'client' => $client
         ])->setPaper('a3', 'landscape');
 
         return $pdf->download('Dienstplan'.Carbon::now()->format('Ymd').'.pdf');
