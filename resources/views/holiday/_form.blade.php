@@ -22,7 +22,7 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('to') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('to', 'Von:') }}
+                    {{ Form::label('to', 'Bis:') }}
                     {{ Form::date('to', old('to', !empty($holiday->to) ? $holiday->to : ''), ['placeholder' => "Bis...", 'class' => 'form-control no-resize']) }}
                     {!! $errors->first('to', '<p class="help-block">:message</p>') !!}
                 </div>
