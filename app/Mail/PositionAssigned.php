@@ -47,6 +47,7 @@ class PositionAssigned extends Mailable implements ShouldQueue
             ->setDtStart(new \DateTime($service->date->toDateTimeString()))
             ->setDtEnd(new \DateTime($dateEnd))
             ->setNoTime($setTime)
+            ->setUseTimezone(true)
             ->setSummary('Wachdienst')
             ->setDescription($service->comment)
             ->setLocation($service->location);
