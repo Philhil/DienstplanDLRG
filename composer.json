@@ -26,9 +26,9 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.4",
         "filp/whoops": "~2.9.1",
-        "fzaninotto/faker": "~1.9",
+        "fakerphp/faker": "~1.9",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~6.0"
+        "phpunit/phpunit": "~9.0"
     },
     "autoload": {
         "classmap": [
@@ -39,6 +39,10 @@
         }
     },
     "autoload-dev": {
+        "classmap": [
+            "tests",
+            "database"
+        ],
         "psr-4": {
             "Tests\\": "tests/"
         }
