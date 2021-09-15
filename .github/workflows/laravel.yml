@@ -10,29 +10,21 @@ jobs:
   laravel-tests:
 
     runs-on: ubuntu-latest
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:7.4
 
     services:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_DATABASE: db_test
-          MYSQL_USER: user
-          MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test
         ports:
-          - 3306
+          - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-    - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
-      with:
-        php-version: '7.4'
     - uses: actions/checkout@v2
-    - name: Verify MySQL connection
-      run: |
-        mysql --version
-        sudo apt-get install -y mysql-client
-        mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uuser -psecret -e "SHOW DATABASES"
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.testing', '.env');"
     - name: Install Dependencies
@@ -42,19 +34,8 @@ jobs:
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
     - name: Create Database
-      env:
-        DB_CONNECTION: mysql
-        DB_DATABASE: db_test
-        DB_PORT: 3306
-        DB_USER: user
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       run:
         php artisan migrate
     - name: Execute tests (Unit and Feature tests) via PHPUnit
-      env:
-        MYSQL_DATABASE: test_db
-        DB_USERNAME: user
-        DB_PASSWORD: secret
-        DB_PORT: ${{ job.services.mysql.ports[3306] }}
       run:
         vendor/bin/phpunit
