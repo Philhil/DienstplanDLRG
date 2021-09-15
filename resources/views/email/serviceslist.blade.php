@@ -1,35 +1,41 @@
-<style>
-    @page {
-        size: 42cm 29.7cm;
-        margin: 5mm 2mm 5mm 2mm;
-    }
-    body {
-        width: 42cm;
-        height: 29.7cm;
-    }
-    .nopos{
-        background-color: rgba(129, 127, 127, 0.5);
-    }
-    .notassigned {
-        background-color: #c7bb00;
-    }
-    .assigned {
-        background-color: #ffff00;
-    }
-    .open_required {
-        background-color: #ff0000;
-    }
-    .open_optional {
-        background-color: rgba(255, 0, 0, 0.7);
-    }
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <style>
+        @page {
+            size: 42cm 29.7cm;
+            margin: 5mm 2mm 5mm 2mm;
+        }
+        body {
+            <!-- A3 -->
+            width: 42cm;
+            height: 29.7cm;
+            font-family: Verdana, Tahoma, "DejaVu Sans", sans-serif;
+        }
+        .nopos{
+            background-color: rgba(129, 127, 127, 0.5);
+        }
+        .notassigned {
+            background-color: #c7bb00;
+        }
+        .assigned {
+            background-color: #ffff00;
+        }
+        .open_required {
+            background-color: #ff0000;
+        }
+        .open_optional {
+            background-color: rgba(255, 0, 0, 0.7);
+        }
 
-    table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;
-        padding: 15px;
-    }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 15px;
+        }
 
-</style>
+    </style>
+</head>
 <?php
 foreach ($services as $service)
     {
@@ -87,3 +93,4 @@ foreach ($services as $service)
         @endforeach
 </table>
 </body>
+</html>
