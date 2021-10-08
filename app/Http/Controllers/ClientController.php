@@ -189,7 +189,7 @@ class ClientController extends Controller
     {
         $clientuser = Client_user::where(['client_id' => $request->get('client_id'), 'user_id' => $request->get('user_id')])->first();
 
-        if ( !is_null($clientuser))
+        if (!is_null($clientuser))
         {
             //kann nur von admins oder superadmin erfolgen.
             if(!Auth::user()->isAdminOfClient($request->get('client_id')) && !Auth::user()->isSuperAdmin()) {
@@ -246,9 +246,10 @@ class ClientController extends Controller
 
     public function applyrequest($id)
     {
-        Client_user::create(['user_id' => Auth::user()->id, 'client_id' => $id]);
-
-        event(new UserRegistered(Auth::user(), Client::find($id)));
+        if (!Client_user::where(['user_id' => Auth::user()->id, 'client_id' => $id])->count() > 0) {
+            Client_user::create(['user_id' => Auth::user()->id, 'client_id' => $id]);
+            event(new UserRegistered(Auth::user(), Client::find($id)));
+        }
         return redirect()->back();
     }
 
