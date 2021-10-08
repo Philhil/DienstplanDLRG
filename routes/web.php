@@ -20,7 +20,7 @@ Route::get('/auth/success', [
 
 Route::get('/redirect', 'SocialAuthController@redirect');
 Route::get('/callback', 'SocialAuthController@callback');
-Route::view('/impressum', 'legal.impressum');
+Route::view('/impressum', 'legal.impressum')->name("legal.impressum");
 Route::view('/datenschutz', 'legal.datenschutz');
 
 Route::get('/order', 'OrderController@index');
