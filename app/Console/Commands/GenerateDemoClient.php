@@ -12,6 +12,7 @@ use App\Qualification;
 use App\Qualification_user;
 use App\Service;
 use App\Training;
+use App\Training_user;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -255,6 +256,12 @@ class GenerateDemoClient extends Command
                 'position_id' => $pos_training->id,
                 'qualification_id' => $rs->id,
                 'points' => 1
+            ]);
+
+            Training_user::create([
+                'training_id' => $training->id,
+                'user_id' => $admin->id,
+                'position_id' => $pos_training->id
             ]);
 
             //create news
