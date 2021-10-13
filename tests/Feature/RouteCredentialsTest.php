@@ -294,7 +294,7 @@ class RouteCredentialsTest extends TestCase
     public function test_AllRoutesAsUserAvailable()
     {
         //fill DB with demo data to act like a User
-        $this->artisan('demo:createDemoClient');
+        $this->seed(\DemoClientSeeder::class);
 
         //session
         Session::start();
@@ -306,10 +306,8 @@ class RouteCredentialsTest extends TestCase
         );
 
         //act as User
-        $user = User::all();
-        dd($user);
         $user = User::where('name', '=', "User")->first();
-
+        dd($user);
 
         //Login as User
         //GET|HEAD                               | login
