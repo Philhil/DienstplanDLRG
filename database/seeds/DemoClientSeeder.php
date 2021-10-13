@@ -255,7 +255,7 @@ class DemoClientSeeder extends Seeder
         }
         else
         {
-            $this->error('Not in Demo mode or more than demodata database');
+            dd('Not in Demo mode or more than demodata database');
         }
     }
 }
