@@ -43,6 +43,8 @@ class RouteCredentialsTest extends TestCase
      */
     public function test_AllRoutesNoAuthAvailable()
     {
+        //should be possible without any DB entry
+
         Session::start();
         $token = session('_token');
 
@@ -292,8 +294,7 @@ class RouteCredentialsTest extends TestCase
     public function test_AllRoutesAsUserAvailable()
     {
         //fill DB with demo data to act like a User
-        Artisan::call('demo:createDemoClient');
-        config(['IS_DEMO' => false]);
+        $this->artisan('demo:createDemoClient');
 
         //session
         Session::start();
