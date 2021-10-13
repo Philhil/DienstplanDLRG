@@ -293,7 +293,6 @@ class RouteCredentialsTest extends TestCase
     {
         //fill DB with demo data to act like a User
         Artisan::call('demo:createDemoClient');
-        config(['IS_DEMO' => false]);
 
         //session
         Session::start();
@@ -306,6 +305,7 @@ class RouteCredentialsTest extends TestCase
 
         //act as User
         $user = User::where('name', '=', "User")->first();
+        dd($user);
 
         //Login as User
         //GET|HEAD                               | login
