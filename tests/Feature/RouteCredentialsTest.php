@@ -307,6 +307,7 @@ class RouteCredentialsTest extends TestCase
         $user = User::where('name', '=', "User")->first();
         dd($user);
 
+
         //Login as User
         //GET|HEAD                               | login
         $this->get('/login')->assertStatus(200)
