@@ -10,7 +10,6 @@ use App\Training;
 use App\Training_user;
 use App\User;
 use Carbon\Carbon;
-use DemoClientSeeder;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -295,7 +294,7 @@ class RouteCredentialsTest extends TestCase
     public function test_AllRoutesAsUserAvailable()
     {
         //fill DB with demo data to act like a User
-        $this->seed(DemoClientSeeder::class);
+        $this->artisan('demo:createDemoClient');
 
         //session
         Session::start();
@@ -308,7 +307,6 @@ class RouteCredentialsTest extends TestCase
 
         //act as User
         $user = User::where('name', '=', "User")->first();
-        dd($user);
 
         //Login as User
         //GET|HEAD                               | login
