@@ -59,6 +59,9 @@ Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web']], function
     Route::get('training/{training}/delete', 'TrainingController@destroy')->name('training.delete');
     Route::any('/training/training_user/{training_userid}/delete/', 'TrainingController@delete_training_user')->name('delete_training_user');
 
+    Route::resource('calendar', 'CalendarController');
+    Route::get('calendar/{calendar}/delete', 'CalendarController@destroy')->name('calendar.delete');
+    
     Route::resource('news', 'NewsController');
     Route::get('news/{news}/delete', 'NewsController@delete')->name('news.delete');
 
