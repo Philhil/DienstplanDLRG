@@ -91,33 +91,6 @@ class CalendarController extends Controller
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        if(!Auth::user()->isAdmin() && !Auth::user()->isTrainingEditor()) {
-            abort(402, "Nope.");
-        }
-
-        $calendar = Calendar::findOrFail($id);
-
-        if(!Auth::user()->isAdminOfClient($calendar->client_id) && !Auth::user()->isTrainingEditorOfClient($calendar->client_id)) {
-            abort(402, "Nope.");
-        }
-
-        $calendar->date = Carbon::createFromFormat('d m Y H:i', $request->get('date'));
-        $calendar->dateEnd = empty($request->get('dateEnd')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('dateEnd'));
-        $calendar->title = $request->get('title');
-        $calendar->verantwortlicher = empty($request->get('verantwortlicher')) ? "" : $request->get('verantwortlicher');
-        $calendar->sendbydatetime = empty($request->get('sendbydatetime')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('sendbydatetime'));
-        $calendar->location = $request->get('location');
-        $calendar->save();
-    }
 
     /**
      * Display the specified resource.
@@ -157,7 +130,7 @@ class CalendarController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function udate(Request $request, $id)
+    public function update(Request $request, $id)
     {
         if (!Auth::user()->isAdmin() && !Auth::user()->isTrainingEditor()) {
             abort(402, "Nope.");
@@ -169,7 +142,6 @@ class CalendarController extends Controller
             abort(402, "Nope.");
         }
 
-        echo('TestTestTest');
 
         $calendar->date = Carbon::createFromFormat('d m Y H:i', $request->get('date'));
         $calendar->dateEnd = empty($request->get('dateEnd')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('dateEnd'));
@@ -204,3 +176,4 @@ class CalendarController extends Controller
         return redirect(action('CalendarController@index'));
     }
 }
+
