@@ -61,6 +61,12 @@
                     <span>Anleitung</span>
                 </a>
             </li>
+                <li class="{{active('calendar.index')}} {{active('calendar.edit')}} {{active('calendar.create')}}">
+                    <a href="{{action('CalendarController@index')}}">
+                        <i class="material-icons">calendar_today</i>
+                        <span>Ausbildungskalender</span>
+                    </a>
+            </li>
             @if(\Illuminate\Support\Facades\Gate::check('administration') || \Illuminate\Support\Facades\Gate::check('trainingeditor'))
                 <li class="header {{active('service.edit')}}">Administration</li>
                 @can('administration')
@@ -92,6 +98,12 @@
                 </li>
                 @endif
                 @can('administration')
+                    <li class="{{active('calendar.create')}}">
+                        <a href="{{action('CalendarController@create')}}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>Aus-/Fortbildung anlegen</span>
+                        </a>
+                    </li>
                     <li class="{{active('news.create')}}">
                         <a href="{{ action('NewsController@create') }}">
                             <i class="material-icons">chat</i>
@@ -157,3 +169,4 @@
     <!-- #Footer -->
 </aside>
 <!-- #END# Left Sidebar -->
+
