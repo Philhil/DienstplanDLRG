@@ -39,8 +39,6 @@
             </div>
         </div>
     </div>
-
-    <!-- TinyMCE -->
     <div class="row clearfix">
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('verantwortlicher') ? 'has-error' : ''}}">
@@ -52,8 +50,6 @@
             </div>
         </div>
     </div>
-    <!-- #END# TinyMCE -->
-
     <div class="row clearfix">
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('location') ? 'has-error' : ''}}">
@@ -65,17 +61,7 @@
             </div>
         </div>
     </div>
-    <div class="row clearfix">
-        <div class="col-sm-10">
-            <div class="form-group {{ $errors->has('sendbydatetime') ? 'has-error' : ''}}">
-                <div class="form-line">
-                    {{ Form::label('sendbydatetime', 'Automatisch E-Mail versenden am (Leer = deaktiviert):') }}
-                    {{ Form::text('sendbydatetime', old('sendbydatetime', !empty($calendar->sendbydatetime) ? $calendar->sendbydatetime->format('d m Y H:i') : ''), ['id' => 'sendbydatetime', 'class' => 'sendbydatetime form-control', 'placeholder'=>'Datum auswählen...']) }}
-                    {!! $errors->first('sendbydatetime', '<p class="help-block">:message</p>') !!}
-                </div>
-            </div>
-        </div>
-    </div>
+
 </div>
 
 <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">

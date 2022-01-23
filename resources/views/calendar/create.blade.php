@@ -16,7 +16,7 @@
             <div class="card">
                 <div class="header bg-blue-grey">
                     <h2>
-                        Aus-/Fortbildung anlegen (Kalendar)
+                        Kalendereintrag anlegen
                     </h2>
                 </div>
                 <div class="body">

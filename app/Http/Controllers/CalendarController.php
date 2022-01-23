@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Calendar;
 use App\Http\Requests\StoreCalendarRequest;
+use App\Training;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,8 +21,10 @@ class CalendarController extends Controller
 
         $calendars = Calendar::where('date','>=', DB::raw('CURDATE() -INTERVAL 1 YEAR'))->where('client_id', '=', Auth::user()->currentclient_id)
                 ->orderBy('date')->get();
+        $trainings = Training::where('date','>=', DB::raw('CURDATE() -INTERVAL 1 YEAR'))->where('client_id', '=', Auth::user()->currentclient_id)
+            ->orderBy('date')->get();
 
-        return view('calendar.index', compact('calendars', 'isAdmin', 'isTrainingEditor'));
+        return view('calendar.index', compact('calendars', 'trainings', 'isAdmin', 'isTrainingEditor'));
     }
 
     /**

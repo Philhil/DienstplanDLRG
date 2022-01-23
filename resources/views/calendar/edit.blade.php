@@ -16,7 +16,7 @@
             <div class="card">
                 <div class="header bg-blue-grey">
                     <h2>
-                        Kalendar bearbeiten
+                        Kalendereintrag bearbeiten
                     </h2>
                 </div>
                 <div class="body">
