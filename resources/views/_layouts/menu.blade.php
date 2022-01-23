@@ -101,7 +101,7 @@
                     <li class="{{active('calendar.create')}}">
                         <a href="{{action('CalendarController@create')}}">
                             <i class="material-icons">calendar_today</i>
-                            <span>Aus-/Fortbildung anlegen</span>
+                            <span>Kalendereintrag anlegen</span>
                         </a>
                     </li>
                     <li class="{{active('news.create')}}">

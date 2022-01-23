@@ -40,13 +40,21 @@
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 locale: 'de',
-                //TODO: if mobile view: set list view
+                @if(Browser::isDesktop())
                 initialView: 'dayGridMonth',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridDay,listMonth',
                 },
+                @else
+                initialView: 'listMonth',
+                headerToolbar: {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: 'listMonth',
+                },
+                @endif
                 weekNumbers: true,
                 firstDay: 1,
                 //navLinks: true, // can click day/week names to navigate views
@@ -54,7 +62,7 @@
                 //editable: true,
                 eventSources: [
                     {
-                        //calender events
+                        //calendar events
                         events: [
                             @forEach($calendars as $calendar)
                             {
@@ -69,11 +77,20 @@
                         ],
                     },
                     {
-                        //TODO: trainings
+                        //training events
                         events: [
+                            @forEach($trainings as $training)
+                            {
+                                id : {{$training->id}},
+                                title  : '{{$training->title}}',
+                                start  : '{{\Carbon\Carbon::parse($training->date)->toIso8601String()}}',
+                                @if(!empty($training->dateEnd))
+                                end: '{{\Carbon\Carbon::parse($training->dateEnd)->toIso8601String()}}',
+                                @endif
+                            },
+                            @endforeach
                             ],
                         color: '#607D8B',
-                        //textColor: 'yellow'
                     },
                     {
                         //TODO: services of user
