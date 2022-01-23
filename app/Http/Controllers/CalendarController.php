@@ -18,23 +18,16 @@ class CalendarController extends Controller
         $isAdmin = Auth::user()->isAdmin();
         $isTrainingEditor = Auth::user()->isTrainingEditor();
 
-        if($isAdmin || $isTrainingEditor) {
-            $calendars = Calendar::where('date', '>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+        $calendars = Calendar::where('date','>=', DB::raw('CURDATE() -INTERVAL 1 YEAR'))->where('client_id', '=', Auth::user()->currentclient_id)
                 ->orderBy('date')->get();
-        } else {
-            $calendars = Calendar::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
-                ->orderBy('date')->get();
-        }
 
-        $user = User::where(['id' => Auth::user()->id])->with('qualifications')->first();
-
-        return view('calendar.index', compact('calendars', 'user', 'isAdmin', 'isTrainingEditor'));
+        return view('calendar.index', compact('calendars', 'isAdmin', 'isTrainingEditor'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function create()
     {
@@ -72,25 +65,6 @@ class CalendarController extends Controller
 
         abort(402, "Nope.");
     }
-
-    /**
-     * Store a newly created resource in storage. Helper function of store()
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    private function store_create(Request $request) {
-        $calendar = new Calendar();
-        $calendar->date = Carbon::createFromFormat('d m Y H:i', $request->get('date'));
-        $dateEnd =  empty($request->get('dateEnd')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('dateEnd'));
-        $calendar->dateEnd = ($dateEnd == null || $dateEnd->lessThanOrEqualTo($calendar->date)) ? null : $dateEnd;
-        $calendar->verantwortlicher = $request->get('verantwortlicher');
-        $calendar->location = $request->get('location');
-        $calendar->client_id = Auth::user()->currentclient_id;
-        $calendar->save();
-
-    }
-
 
     /**
      * Display the specified resource.
