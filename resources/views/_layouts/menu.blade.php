@@ -43,6 +43,12 @@
                 </a>
             </li>
             @endif
+            <li class="{{active('calendar.index')}}">
+                <a href="{{action('CalendarController@index')}}">
+                    <i class="material-icons">calendar_today</i>
+                    <span>Kalender</span>
+                </a>
+            </li>
             <li class="{{active('news.index')}} {{active('news.edit')}}">
                 <a href="{{ action('NewsController@index') }}">
                     <i class="material-icons">forum</i>
@@ -60,12 +66,6 @@
                     <i class="material-icons">help</i>
                     <span>Anleitung</span>
                 </a>
-            </li>
-                <li class="{{active('calendar.index')}} {{active('calendar.edit')}} {{active('calendar.create')}}">
-                    <a href="{{action('CalendarController@index')}}">
-                        <i class="material-icons">calendar_today</i>
-                        <span>Ausbildungskalender</span>
-                    </a>
             </li>
             @if(\Illuminate\Support\Facades\Gate::check('administration') || \Illuminate\Support\Facades\Gate::check('trainingeditor'))
                 <li class="header {{active('service.edit')}}">Administration</li>

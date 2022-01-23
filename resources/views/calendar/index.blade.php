@@ -1,161 +1,96 @@
 @extends('_layouts.application')
 
-link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
 @section('head')
-
+    <link href="/plugins/fullcalendar/css/main.css" rel="stylesheet" />
+    <script src="/plugins/fullcalendar/js/main.min.js"></script>
+    <script src="/plugins/fullcalendar/locales/de.js"></script>
 @endsection
 
 @section('content')
-
-    <div class="container">
-
-        <h2>Ausbildungskalender</h2>
-        <p class="lead">
-            Hier findet ihr alles Aus-/Fortbildungen der DLRG Stuttgart
-        </p>
-
-        <hr />
-
-        <div class="table-responsive">
-            <table class="table table-condensed table-bordered">
-                <thead>
-                    <tr>
-                        <th>Datum und Uhrzeit</th>
-                        <th>Titel</th>
-                        <th>Verantwortlicher</th>
-                        @if($isAdmin || $isTrainingEditor)
-                            <th>Aktion</th>
-                        @endif
-                    </tr>
-                </thead>
-                @foreach($calendars as $calendar)
-                    <tbody>
-                        <tr>
-                            <td class="agenda-date" class="active" rowspan="1">
-                                <div class="date">{{$calendar->date->isoFormat('ddd  DD.MM.YY H:mm')}} Uhr</div>
-                            </td>
-                            <td class="agenda-events">
-                                <div class="agenda-event">
-                                    {{$calendar->title}}
-                                </div>
-                            </td>
-                            <td>
-                                {{$calendar->verantwortlicher}}
-                            </td>
-                            @if($isAdmin || $isTrainingEditor)
-                                <td>
-                                    <a href="{{action('CalendarController@edit', $calendar->id)}}" class="btn-warning waves-effect"><i class="material-icons">mode_edit</i>Bearbeiten</a>
-                                    <a href="{{action('CalendarController@destroy', $calendar->id)}}" class="btn-danger waves-effect"><i class="material-icons">delete</i>Löschen</a>
-                                </td>
-                            @endif
-                        </tr>
-                    </tbody>
-                @endforeach
-            </table>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    Kalender
+                </h2>
+                @if($isAdmin || $isTrainingEditor)
+                <ul class="header-dropdown m-r--5">
+                    <a href="{{action('CalendarController@create')}}">
+                        <button type="button" class="btn btn-success waves-effect">
+                            <i class="material-icons">playlist_add</i>
+                            <span>Hinzufügen</span>
+                        </button>
+                    </a>
+                </ul>
+                @endif
+            </div>
+            <div class="container">
+                <div id='calendar'></div>
+            </div>
+            <br>
         </div>
     </div>
+
 @endsection
 
 @section('post_body')
+
     <script>
-        $( document ).ready(function() {
-            $('.card').on('click', '.btn-subscribe', function () {
-                $.ajax({
-                    type: "POST",
-                    url: '/position/'+$(this).attr('positionid')+'/subscribe',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        $(document).ready(function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'de',
+                //TODO: if mobile view: set list view
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridDay,listMonth',
+                },
+                weekNumbers: true,
+                firstDay: 1,
+                //navLinks: true, // can click day/week names to navigate views
+                dayMaxEvents: true, // allow "more" link when too many events
+                //editable: true,
+                eventSources: [
+                    {
+                        //calender events
+                        events: [
+                            @forEach($calendars as $calendar)
+                            {
+                                id : {{$calendar->id}},
+                                title  : '{{$calendar->title}} @if(!empty($calendar->verantwortlicher)) ({{$calendar->verantwortlicher}}) @endif',
+                                start  : '{{\Carbon\Carbon::parse($calendar->date)->toIso8601String()}}',
+                                @if(!empty($calendar->dateEnd))
+                                end: '{{\Carbon\Carbon::parse($calendar->dateEnd)->toIso8601String()}}',
+                                @endif
+                            },
+                            @endforeach
+                        ],
                     },
-                    success : function(data){
-                        if (data == "false") {
-                            showNotification("alert-warning", "Fehler beim speichern der Zuordnung", "top", "center", "", "");
-                        } else {
-                            showNotification("alert-success", "Zuordnung gespeichert", "top", "center", "", "");
-
-                            tr = $(".btn-subscribe[positionid="+data.id+"]").parent();
-                            $(".btn-subscribe[positionid="+data.id+"]").remove();
-
-                            if (data.user_id == "null") {
-                                $(tr).html('<span class="badge bg-light-green">{{substr(\Illuminate\Support\Facades\Auth::user()->first_name, 0, 1)}}. {{\Illuminate\Support\Facades\Auth::user()->name}}</span>');
-                            } else {
-                                $(tr).html('<button type="button" class="btn bg-orange waves-effect btn-unsubscribe" positionid="'+data.id+'"><i class="material-icons">check_circle</i>Meldung zurückziehen</button>');
-                            }
-                        }
-                    }
-                });
-            });
-
-            $('.card').on('click', '.btn-unsubscribe', function () {
-                $.ajax({
-                    type: "POST",
-                    url: '/position/'+$(this).attr('positionid')+'/unsubscribe',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    {
+                        //TODO: trainings
+                        events: [
+                            ],
+                        color: '#607D8B',
+                        //textColor: 'yellow'
                     },
-                    success : function(pos_id){
-                        if (pos_id == "false") {
-                            showNotification("alert-warning", "Fehler beim speichern der Zuordnung", "top", "center", "", "");
-                        } else {
-                            showNotification("alert-success", "Meldung zurückgenommen", "top", "center", "", "");
-
-                            tr = $(".btn-unsubscribe[positionid="+pos_id+"]").parent();
-                            $(".btn-unsubscribe[positionid="+pos_id+"]").remove();
-
-                            $(tr).html('<button type="button" class="btn bg-deep-orange waves-effect btn-subscribe" positionid="'+pos_id+'"><i class="material-icons">touch_app</i>Melden</button>');
-                        }
-                    }
-                });
-            });
-
-            //TODO: change to delete
-            @if($isAdmin || $isTrainingEditor)
-            $('.btn-authorize').on('click', function () {
-                $(this).parent().attr("positionid", $(this).attr('positionid'));
-                $(this).remove();
-
-                $.ajax({
-                    type: "POST",
-                    url: '/position/'+$(this).attr('candidateid')+'/authorize',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    {
+                        //TODO: services of user
+                        events: [
+                        ],
+                        color: '#F44336',
+                        textColor: 'black'
                     },
-                    success : function(data){
-                        if (data == "false") {
-                            showNotification("alert-warning", "Fehler beim freigeben", "top", "center", "", "");
-                            $("span[positionid="+data.id+"]").removeAttr('positionid')
-                        } else {
-                            showNotification("alert-success", "Zuordnung freigegeben", "top", "center", "", "");
+                    {
+                        //TODO: all services where user is not paticipating
+                    },
+                ]
 
-                            //remove unsubscripe btn (if admin is a candidate)
-                            $(".btn-unsubscribe[positionid="+data.id+"]").remove();
-
-                            //remove all authorize
-                            $($(".btn-authorize[positionid="+data.id+"]").closest('row')).remove();
-
-                            //remove all btn-subscribe
-                            $(".btn-subscribe[positionid="+data.id+"]").remove();
-
-                            //set authorized green
-                            if(data.user_id == {{\Illuminate\Support\Facades\Auth::user()->id}}) {
-                                $("span[positionid="+data.id+"]").removeClass('bg-orange').addClass('bg-light-green');
-                            } else {
-                                $("span[positionid="+data.id+"]").removeClass('bg-orange').addClass('bg-green');
-                            }
-                        }
-                    }
-                });
             });
-            @endif
+            calendar.render();
+
         });
 
-
-        $('.collapse').on('shown.bs.collapse', function(){
-            $(this).parent().find(".glyphicon-collapse-down").removeClass("glyphicon-collapse-down").addClass("glyphicon-collapse-up");
-        }).on('hidden.bs.collapse', function(){
-            $(this).parent().find(".glyphicon-collapse-up").removeClass("glyphicon-collapse-up").addClass("glyphicon-collapse-down");
-        });
     </script>
 @endsection
