@@ -93,14 +93,39 @@
                         color: '#607D8B',
                     },
                     {
-                        //TODO: services of user
+                        //services of user
                         events: [
+                            @forEach($services_of_user as $service)
+                            {
+                                id : {{$service->id}},
+                                title  : 'Wachdienst {{$service->location}} @if(!empty($service->comment)) ({{$service->comment}}) @endif',
+                                start  : '{{\Carbon\Carbon::parse($service->date)->toIso8601String()}}',
+                                @if(!empty($service->dateEnd))
+                                end: '{{\Carbon\Carbon::parse($service->dateEnd)->toIso8601String()}}',
+                                @endif
+                            },
+                            @endforeach
                         ],
                         color: '#F44336',
                         textColor: 'black'
                     },
                     {
-                        //TODO: all services where user is not paticipating
+                        //all services where user is not participating
+                        events: [
+                                @forEach($services_without_user as $service)
+                            {
+                                id : {{$service->id}},
+                                title  : 'Wachdienst {{$service->location}} @if(!empty($service->comment)) ({{$service->comment}}) @endif',
+                                start  : '{{\Carbon\Carbon::parse($service->date)->toIso8601String()}}',
+                                @if(!empty($service->dateEnd))
+                                end: '{{\Carbon\Carbon::parse($service->dateEnd)->toIso8601String()}}',
+                                @endif
+                                allDay: true
+                            },
+                            @endforeach
+                        ],
+                        color: '#c0c0c0',
+                        textColor: 'black'
                     },
                 ]
 

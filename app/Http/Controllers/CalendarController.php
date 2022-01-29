@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Calendar;
 use App\Http\Requests\StoreCalendarRequest;
+use App\Service;
 use App\Training;
 use App\User;
 use Carbon\Carbon;
@@ -24,7 +25,15 @@ class CalendarController extends Controller
         $trainings = Training::where('date','>=', DB::raw('CURDATE() -INTERVAL 1 YEAR'))->where('client_id', '=', Auth::user()->currentclient_id)
             ->orderBy('date')->get();
 
-        return view('calendar.index', compact('calendars', 'trainings', 'isAdmin', 'isTrainingEditor'));
+        //user -> user_pos -> pos -> service
+        $services_of_user = Auth::user()->services()->where('services.date','>=', DB::raw('CURDATE() -INTERVAL 1 YEAR'))->where('services.client_id', '=', Auth::user()->currentclient_id)
+            ->orderBy('date')->get();
+
+        $services = Service::where('services.date','>=', DB::raw('CURDATE() -INTERVAL 1 YEAR'))->where('services.client_id', '=', Auth::user()->currentclient_id)
+            ->orderBy('date')->get();
+        $services_without_user = $services->diff($services_of_user);
+
+        return view('calendar.index', compact('calendars', 'trainings', 'services_of_user', 'services_without_user', 'isAdmin', 'isTrainingEditor'));
     }
 
     /**
