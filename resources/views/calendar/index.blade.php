@@ -56,6 +56,7 @@
                 firstDay: 1,
                 //navLinks: true, // can click day/week names to navigate views
                 dayMaxEvents: true, // allow "more" link when too many events
+                @if($isAdmin || $isTrainingEditor)
                 //editable: true,
                 eventClick: function(event) {
                     if(event.event.id) {
@@ -66,6 +67,7 @@
                         }
                     }
                 },
+                @endif
                 eventSources: [
                     {
                         //calendar events
