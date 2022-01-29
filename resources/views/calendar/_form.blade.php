@@ -4,7 +4,7 @@
     {{ Form::model($calendar->toArray(), ['action' => ['CalendarController@store', $calendar->id]]) }}
 @endif
 
-<div class="col-lg-5 col-md-12 col-sm-12 col-xs-12">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <div class="row clearfix">
         <div class="col-sm-10">
             <div class="form-group {{$errors->has('date') ? 'has-error' : ''}}">
@@ -64,9 +64,6 @@
 
 </div>
 
-<div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
-</div>
-
 <div class="row clearfix">
     <div class="col-sm-1 pull-right">
         <div class="form-line">
@@ -95,28 +92,17 @@
                 format: 'DD MM YYYY HH:mm',
                 clearButton: true,
                 weekStart: 1,
-                lang : 'de',
-                minDate : new Date()
-            });
-            $('#sendbydatetime').bootstrapMaterialDatePicker({
-                format: 'DD MM YYYY HH:mm',
-                clearButton: true,
-                weekStart: 1,
-                lang : 'de',
-                minDate : new Date()
+                lang : 'de'
             });
             $('#date-start').bootstrapMaterialDatePicker({
                 format: 'DD MM YYYY HH:mm',
                 clearButton: true,
                 weekStart: 1,
-                lang : 'de',
-                minDate : new Date()
+                lang : 'de'
             }).on('change', function(e, date)
             {
                 $('#date-end').bootstrapMaterialDatePicker('setMinDate', date);
                 $('#date-end').bootstrapMaterialDatePicker('setDate', moment(date).clone().add(3, 'hours'));
-
-                $('#sendbydatetime').bootstrapMaterialDatePicker('setMaxDate', date);
             });
 
         });
