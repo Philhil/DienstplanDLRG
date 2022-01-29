@@ -43,7 +43,7 @@ class CalendarController extends Controller
      */
     public function create()
     {
-        if (!Auth::user()->isAdmin()) {
+        if (!Auth::user()->isAdmin() && !Auth::user()->isTrainingEditor()) {
             abort(402, 'Nope');
         }
 
@@ -86,10 +86,9 @@ class CalendarController extends Controller
      */
     public function show($id)
     {
-        if(!Auth::user()->isAdmin()) {
+        if(!Auth::user()->isAdmin() && !Auth::user()->isTrainingEditor()) {
             abort(402, "Nope.");
         }
-        // if admin or headofservice (service->positions where user && position->quali headofservice)
     }
 
     /**
@@ -100,11 +99,15 @@ class CalendarController extends Controller
      */
     public function edit($id)
     {
-        if (!Auth::user()->isAdmin()) {
+        if (!Auth::user()->isAdmin() && !Auth::user()->isTrainingEditor()) {
             abort(402, "Nope.");
         }
 
         $calendar = Calendar::findOrFail($id);
+
+        if (!Auth::user()->isAdminOfClient($calendar->client_id) && !Auth::user()->isTrainingEditorOfClient($calendar->client_id)) {
+            abort(402, "Nope.");
+        }
 
         return view('calendar.edit', compact('calendar'));
     }
@@ -127,7 +130,6 @@ class CalendarController extends Controller
         if (!Auth::user()->isAdminOfClient($calendar->client_id) && !Auth::user()->isTrainingEditorOfClient($calendar->client_id)) {
             abort(402, "Nope.");
         }
-
 
         $calendar->date = Carbon::createFromFormat('d m Y H:i', $request->get('date'));
         $calendar->dateEnd = empty($request->get('dateEnd')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('dateEnd'));
