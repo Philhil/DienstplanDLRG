@@ -207,4 +207,9 @@ class User extends Authenticatable
         //Training
         return $this->trainings_inHolidayList();
     }
+
+    public function services()
+    {
+        return $this->hasManyThrough(Service::class, Position::class, 'user_id', 'id', 'id', 'service_id');
+    }
 }
