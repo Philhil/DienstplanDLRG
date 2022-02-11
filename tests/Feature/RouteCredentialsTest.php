@@ -284,6 +284,16 @@ class RouteCredentialsTest extends TestCase
         //Statistic
         $this->followingRedirects()->get('/statistic')->assertStatus(200)->assertViewIs('auth.login');
         $this->post('/statistic', $session)->assertStatus(419);
+
+        //Calendar
+        $this->followingRedirects()->get('/calendar')->assertStatus(200)->assertViewIs('auth.login');
+        $this->post('/calendar', $session)->assertStatus(419);
+        $this->followingRedirects()->get('/calendar/1')->assertStatus(200)->assertViewIs('auth.login');
+        $this->put('/calendar/1', $session)->assertStatus(419);
+        $this->delete('/calendar/1', $session)->assertStatus(419);
+        $this->followingRedirects()->get('/calendar/1/edit')->assertStatus(200)->assertViewIs('auth.login');
+        $this->followingRedirects()->get('/calendar/1/delete')->assertStatus(200)->assertViewIs('auth.login');
+        $this->followingRedirects()->get('/calendar/create')->assertStatus(200)->assertViewIs('auth.login');
     }
 
     /**
@@ -734,6 +744,27 @@ class RouteCredentialsTest extends TestCase
         //GET|HEAD                               | userguide
         $response = $this->actingAs($user)->get('/userguide');
         self::assertTrue($response->headers->get("content-type") == "application/pdf");
+
+        //Calendar
+        //GET|HEAD                          | calendar
+        $this->actingAs($user)->followingRedirects()->get('/calendar')
+            ->assertStatus(200)->assertViewIs('calendar.index')
+            ->assertSee('Impressum')->assertSee('Datenschutz');
+        //POST                              | Calendar
+        $this->actingAs($user)->followingRedirects()->post('/calendar', ['_token' => $token])->assertStatus(200)->assertViewIs('calendar.index'); //only as admin or trainingseditor
+        //GET                               | calendar/{calendar}
+        $this->actingAs($user)->get('/calendar/1')->assertStatus(402); //only as admin or trainingseditor
+        //PUT                               | calendar/{calendar}
+        $this->actingAs($user)->put('/calendar/1', ['_token' => $token])->assertStatus(402); //only as admin or trainingseditor
+        //DELETE                            | calendar/{calendar}
+        $this->actingAs($user)->delete('/calendar/1', ['_token' => $token])->assertStatus(402); //only as admin or trainingseditor
+        //GET                               | calendar/{calendar}
+        $this->actingAs($user)->get('/calendar/1/edit')->assertStatus(402); //only as admin or trainingseditor
+        //GET                               | calendar/{calendar}
+        $this->actingAs($user)->get('/calendar/1/delete')->assertStatus(402); //only as admin or trainingseditor
+        //GET|HEAD                          | alendar/create
+        $this->actingAs($user)->get('/calendar/create')->assertStatus(402); //only as admin or trainingseditor
+
 
         //POST                                   | logout
         $this->actingAs($user)->followingRedirects()->post('/logout', ['_token' => $token])

@@ -16,7 +16,7 @@
                     <a href="{{action('CalendarController@create')}}">
                         <button type="button" class="btn btn-success waves-effect">
                             <i class="material-icons">playlist_add</i>
-                            <span>Hinzufügen</span>
+                            <span>Termin Hinzufügen</span>
                         </button>
                     </a>
                 </ul>

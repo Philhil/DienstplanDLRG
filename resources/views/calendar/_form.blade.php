@@ -65,11 +65,18 @@
 </div>
 
 <div class="row clearfix">
-    <div class="col-sm-1 pull-right">
+    <div class="col-sm-1">
         <div class="form-line">
-            {{ Form::button('Speichern', ['class' => 'form-control btn btn-success waves-effect', 'type' => "submit"]) }}
+            {{ Form::button('Speichern', ['class' => 'form-control btn btn-success waves-effect', 'type' => "submit", 'value' => "submit"]) }}
         </div>
     </div>
+    @if(\Illuminate\Support\Facades\Route::current()->getName() == 'calendar.edit')
+        <div class="col-sm-1">
+            <div class="form-line">
+                <a href="{{ route('calendar.delete', $calendar->id) }}" class="form-control btn btn-danger waves-effect">Löschen</a>
+            </div>
+        </div>
+    @endif
 </div>
 
 {{ Form::close() }}

@@ -18,8 +18,8 @@ class CreateCalendarTable extends Migration
             $table->string('title');
             $table->integer('client_id')->unsigned();
             $table->string('verantwortlicher');
-            $table->timestamp('date');
-            $table->timestamp('dateEnd')->nullable()->default(null);
+            $table->dateTime('date');
+            $table->dateTime('dateEnd')->nullable()->default(null);
             $table->text('location')->nullable()->default(null);
             $table->timestamps();
 

@@ -6,7 +6,6 @@ use App\Calendar;
 use App\Http\Requests\StoreCalendarRequest;
 use App\Service;
 use App\Training;
-use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,7 +55,7 @@ class CalendarController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
      */
     public function store(StoreCalendarRequest  $request)
     {
@@ -66,13 +65,12 @@ class CalendarController extends Controller
             $calendar->dateEnd = empty($request->get('dateEnd')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('dateEnd'));
             $calendar->title = $request->get('title');
             $calendar->verantwortlicher = empty($request->get('verantwortlicher')) ? "" : $request->get('verantwortlicher');
-            $calendar->sendbydatetime = empty($request->get('sendbydatetime')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('sendbydatetime'));
             $calendar->location = $request->get('location');
             $calendar->client_id = Auth::user()->currentclient_id;
             $calendar->save();
 
-            Session::flash('successmessage', ' Neuer Kalender erfolgreich angelegt');
-            return redirect(action('CalendarController@create'));
+            Session::flash('successmessage', ' Neuer Kalendereintrag erfolgreich angelegt');
+            return redirect(action('CalendarController@index'));
         }
 
         abort(402, "Nope.");
@@ -95,7 +93,7 @@ class CalendarController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function edit($id)
     {
@@ -117,7 +115,7 @@ class CalendarController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
      */
     public function update(Request $request, $id)
     {
@@ -135,10 +133,10 @@ class CalendarController extends Controller
         $calendar->dateEnd = empty($request->get('dateEnd')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('dateEnd'));
         $calendar->title = $request->get('title');
         $calendar->verantwortlicher = empty($request->get('verantwortlicher')) ? "" : $request->get('verantwortlicher');
-        $calendar->sendbydatetime = empty($request->get('sendbydatetime')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('sendbydatetime'));
         $calendar->location = $request->get('location');
         $calendar->save();
 
+        Session::flash('successmessage', 'Kalendereintrag gespeichert');
         return redirect(action('CalendarController@index'));
     }
 
@@ -146,7 +144,7 @@ class CalendarController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
      */
     public function destroy($id)
     {
@@ -161,6 +159,7 @@ class CalendarController extends Controller
         }
 
         $calendar->forceDelete();
+        Session::flash('successmessage', 'Kalendereintrag gelöscht');
         return redirect(action('CalendarController@index'));
     }
 }
