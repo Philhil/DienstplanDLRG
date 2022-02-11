@@ -57,13 +57,15 @@ return [
         'testing' => [
             'driver'    => 'mysql',
             'host'      => env('DB_TEST_HOST', 'localhost'),
+            'port'      => env('DB_TEST_PORT', '3306'),
             'database'  => env('DB_TEST_DATABASE', 'travis'),
             'username'  => env('DB_TEST_USERNAME', 'root'),
             'password'  => env('DB_TEST_PASSWORD', ''),
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
+            'charset'   => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
             'prefix'    => '',
             'strict'    => false,
+            'engine'    => null,
         ],
 
         'pgsql' => [
@@ -75,7 +77,7 @@ return [
             'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'public',
+            'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
 
