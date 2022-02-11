@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Calendar;
 use App\Client;
 use App\Client_user;
 use App\Credit;
@@ -101,7 +102,8 @@ class GenerateDemoClient extends Command
             $client_user = Client_user::create([
                 'client_id' => $client->id,
                 'user_id' => $user->id,
-                'isAdmin' => 0
+                'isAdmin' => 0,
+                'isTrainingEditor' => 0
             ]);
             $client_user->approved = true;
             $client_user->save();
@@ -109,7 +111,8 @@ class GenerateDemoClient extends Command
             $client_user = Client_user::create([
                 'client_id' => $client->id,
                 'user_id' => $admin->id,
-                'isAdmin' => 1
+                'isAdmin' => 1,
+                'isTrainingEditor' => 0
             ]);
             $client_user->approved = true;
             $client_user->save();
@@ -278,6 +281,16 @@ class GenerateDemoClient extends Command
             $holiday->to = Carbon::tomorrow()->endOfDay();
             $holiday->user_id = $user->id;
             $holiday->save();
+
+            //create Calendar
+            $calendar = Calendar::create([
+                'title' => "Demo Kalendereintrag",
+                'client_id' => $client->id,
+                'Verantwortlicher' => $user->Name,
+                'date' => Carbon::today()->addWeek()->hour(19)->minute(0)->second(0),
+                'dateEnd' => Carbon::today()->addWeek()->hour(21)->minute(0)->second(0),
+                'location' => "An der Demo-Wachstation",
+            ]);
         }
         else
         {

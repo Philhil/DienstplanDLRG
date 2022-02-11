@@ -43,6 +43,12 @@
                 </a>
             </li>
             @endif
+            <li class="{{active('calendar.index')}}">
+                <a href="{{action('CalendarController@index')}}">
+                    <i class="material-icons">calendar_today</i>
+                    <span>Kalender</span>
+                </a>
+            </li>
             <li class="{{active('news.index')}} {{active('news.edit')}}">
                 <a href="{{ action('NewsController@index') }}">
                     <i class="material-icons">forum</i>
@@ -92,6 +98,12 @@
                 </li>
                 @endif
                 @can('administration')
+                    <li class="{{active('calendar.create')}}">
+                        <a href="{{action('CalendarController@create')}}">
+                            <i class="material-icons">calendar_today</i>
+                            <span>Kalendereintrag anlegen</span>
+                        </a>
+                    </li>
                     <li class="{{active('news.create')}}">
                         <a href="{{ action('NewsController@create') }}">
                             <i class="material-icons">chat</i>
@@ -157,3 +169,4 @@
     <!-- #Footer -->
 </aside>
 <!-- #END# Left Sidebar -->
+
