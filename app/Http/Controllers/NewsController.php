@@ -16,7 +16,7 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $newss = News::where('client_id', '=', Auth::user()->currentclient_id)->orderBy('created_at', 'DESC')->with('user')->get();
+        $newss = News::where('client_id', '=', Auth::user()->currentclient_id)->orderBy('created_at', 'DESC')->with('user')->paginate(15);
         return view('news.index', compact('newss'));
     }
 

@@ -33,6 +33,11 @@
         </div>
     @endforeach
 
+    {{-- Pagination --}}
+    <div class="d-felx justify-content-center">
+        {{ $newss->links() }}
+    </div>
+
 @endsection
 
 @section('post_body')
