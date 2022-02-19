@@ -12,6 +12,7 @@ use App\Position;
 use App\Qualification;
 use App\Qualification_user;
 use App\Service;
+use App\Survey;
 use App\Training;
 use App\Training_user;
 use App\User;
@@ -74,7 +75,8 @@ class GenerateDemoClient extends Command
                 'mailReplyAddress' => env("MAIL_FROM_ADDRESS","demodienstplan@philhil.de"),
                 'module_training' => true,
                 'module_training_credit' => true,
-                'module_statistic' => true
+                'module_statistic' => true,
+                'module_survey' => true
             ]);
 
             //create Users
@@ -290,6 +292,15 @@ class GenerateDemoClient extends Command
                 'date' => Carbon::today()->addWeek()->hour(19)->minute(0)->second(0),
                 'dateEnd' => Carbon::today()->addWeek()->hour(21)->minute(0)->second(0),
                 'location' => "An der Demo-Wachstation",
+            ]);
+
+            //create Survey
+            $survey = Survey::create([
+                'client_id' => $client->id,
+                'title' => "Demo Survey",
+                'content' => "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                'dateStart' => Carbon::today()->addWeek()->hour(19)->minute(0)->second(0),
+                'dateEnd' => Carbon::today()->addWeek()->hour(21)->minute(0)->second(0),
             ]);
         }
         else

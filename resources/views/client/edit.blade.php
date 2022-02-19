@@ -96,6 +96,17 @@
                         </thead>
                         <tbody>
                             <tr class="strikeout">
+                                <td>Abfragen und Bestätigungen</td>
+                                <td>
+                                    <p>Aktiviert das Verwalten von Abfragen und Bestätigungen dieser. Abfragen dienen zur Belehrung und Bestätigung und dokumentieren Rückmeldungen der Nutzer. Z.B. Durchführung von UVV Unterweisung oder Abfragen von aktuellen Kontaktdaten.</p>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label><input type="checkbox" id="module_survey" @if($client->module_survey)checked=""@endif @if(!\Illuminate\Support\Facades\Auth::user()->isSuperAdmin())disabled=""@endif><span class="lever"></span></label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="strikeout">
                                 <td>Fortbildungen</td>
                                 <td>
                                     <p>Aktiviert das Verwalten von Fortbildungen im Portal. Hierbei können unter anderem Infomails zeitlich vorgegeben automatisiert versendet werden</p>

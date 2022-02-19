@@ -57,5 +57,6 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'EnsureClientAssigned' => \App\Http\Middleware\EnsureClientAssigned::class,
+        'SurveyHandler' => \App\Http\Middleware\SurveyHandler::class,
     ];
 }

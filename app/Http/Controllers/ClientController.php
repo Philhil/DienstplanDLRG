@@ -300,6 +300,9 @@ class ClientController extends Controller
         $client = Client::findorfail($request->get('client_id'));
 
         switch ($request->get('module')){
+            case "module_survey":
+                $client->module_survey = $request->get('state') == "true" ? 1 : 0;
+                break;
             case "module_training":
                 $client->module_training = $request->get('state') == "true" ? 1 : 0;
                 break;

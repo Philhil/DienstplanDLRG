@@ -22,7 +22,8 @@ class Client extends Model
         'defaultServiceEnd',
         'module_training',
         'module_training_credit',
-        'module_statistic'
+        'module_statistic',
+        'module_survey'
     ];
 
     protected $dates = [
@@ -76,7 +77,7 @@ class Client extends Model
 
     public function Qualifications()
     {
-        return $this->hasMany( Qualification::class);
+        return $this->hasMany( Qualification::class)->orderBy('name');
     }
 
     public function News()
@@ -110,5 +111,10 @@ class Client extends Model
             $to = $season->copy()->addYear();
         }
         return ["from" => $from, "to" => $to];
+    }
+
+    public function Surveys()
+    {
+        return $this->hasMany( Survey::class);
     }
 }

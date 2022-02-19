@@ -128,6 +128,8 @@
 
     @yield('post_body')
 
+    @include('_layouts/modal')
+
 </body>
 
 @endsection

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
@@ -211,5 +212,45 @@ class User extends Authenticatable
     public function services()
     {
         return $this->hasManyThrough(Service::class, Position::class, 'user_id', 'id', 'id', 'service_id');
+    }
+
+    //get all SurveyUser of a specific survey
+    public function mySurveyUser($surveyId)
+    {
+        return $this->hasMany(Survey_user::class)->where('survey_id',$surveyId);
+    }
+
+    //get all SurveyUser related to this user
+    public function mySurveyUsers()
+    {
+        return $this->hasMany(Survey_user::class);
+    }
+
+    //get all open SurveyUser related to this user
+    public function myOpenSurveyUsers()
+    {
+        //get all serveys of clients in Daterange
+        $surveys = $this->currentclient()->Surveys()
+            ->where(function($query) {
+                $query->whereDate('dateStart', '<=', Carbon::now())
+                ->orWhereNull('dateStart');
+            })
+            ->where(function($query) {
+                $query->whereDate('dateEnd', '>=', Carbon::now())
+                    ->orWhereNull('dateEnd');
+            })
+        //left join to get all surveys where no survey_user exsist or (survey_user.vote == null and rememberat is in past)
+            ->leftJoin('survey_users', 'surveys.id', '=', 'survey_users.survey_id')
+            ->where(function($query) {
+                $query->whereNull('survey_users.survey_id')
+                    ->orWhere(function($query) {
+                        $query->whereNull('survey_users.vote')
+                            ->whereDate('survey_users.rememberAt', '<=', Carbon::today());
+                    });
+            })
+            ->select('surveys.*')
+            ->orderBy('surveys.id');
+
+        return $surveys;
     }
 }

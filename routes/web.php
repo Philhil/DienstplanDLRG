@@ -27,7 +27,7 @@ Route::get('/order', 'OrderController@index');
 Route::get('/order/create/{package}', 'OrderController@create');
 Route::post('/order/{package}', 'OrderController@store');
 
-Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web']], function () {
+Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web', 'SurveyHandler']], function () {
 
     Route::redirect('/', '/service');
     Route::get('/home', 'HomeController@index')->name('home');
@@ -85,4 +85,8 @@ Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web']], function
     Route::match(['get', 'post'], 'position/{id}/position_user', 'PositionController@position_user');
 
     Route::match(['get', 'post'], 'statistic', 'StatisticController@index')->name('statistic');
+
+    Route::resource('survey', 'SurveyController')->withoutMiddleware(['SurveyHandler']);
+    Route::post('survey/vote/{surveyid}', 'SurveyController@vote')->name('survey.vote')->withoutMiddleware(['SurveyHandler']);
+    Route::get('survey/postpone/{surveyid}', 'SurveyController@postpone')->name('survey.postpone')->withoutMiddleware(['SurveyHandler']);
 });

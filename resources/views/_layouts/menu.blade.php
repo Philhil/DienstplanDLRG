@@ -110,6 +110,14 @@
                             <span>Nachricht erstellen</span>
                         </a>
                     </li>
+                    @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_survey)
+                        <li class="{{active('survey.index')}}">
+                            <a href="{{ action('SurveyController@index') }}">
+                                <i class="material-icons">poll</i>
+                                <span>Abfragen</span>
+                            </a>
+                        </li>
+                    @endif
                     <li class="{{active('qualification.*')}}">
                         <a href="{{ action('QualificationController@index') }}">
                             <i class="material-icons">local_activity</i>

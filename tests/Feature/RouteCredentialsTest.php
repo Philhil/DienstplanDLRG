@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Client;
 use App\Holiday;
 use App\News;
 use App\Position;
 use App\Service;
+use App\Survey;
+use App\Survey_user;
 use App\Training;
 use App\Training_user;
 use App\User;
@@ -294,6 +297,17 @@ class RouteCredentialsTest extends TestCase
         $this->followingRedirects()->get('/calendar/1/edit')->assertStatus(200)->assertViewIs('auth.login');
         $this->followingRedirects()->get('/calendar/1/delete')->assertStatus(200)->assertViewIs('auth.login');
         $this->followingRedirects()->get('/calendar/create')->assertStatus(200)->assertViewIs('auth.login');
+
+        //Survey
+        $this->followingRedirects()->get('/survey')->assertStatus(200)->assertViewIs('auth.login');
+        $this->post('/survey', $session)->assertStatus(419);
+        $this->followingRedirects()->get('/survey/1')->assertStatus(200)->assertViewIs('auth.login');
+        $this->put('/survey/1', $session)->assertStatus(419);
+        $this->delete('/survey/1', $session)->assertStatus(419);
+        $this->followingRedirects()->get('/survey/1/edit')->assertStatus(200)->assertViewIs('auth.login');
+        $this->followingRedirects()->get('/survey/create')->assertStatus(200)->assertViewIs('auth.login');
+        $this->followingRedirects()->post('/survey/vote/1')->assertStatus(419);
+        $this->followingRedirects()->get('/survey/postpone/1')->assertStatus(200)->assertViewIs('auth.login');
     }
 
     /**
@@ -765,6 +779,28 @@ class RouteCredentialsTest extends TestCase
         //GET|HEAD                          | alendar/create
         $this->actingAs($user)->get('/calendar/create')->assertStatus(402); //only as admin or trainingseditor
 
+        //Survey
+        //GET|HEAD        survey
+        $this->actingAs($user)->get('/survey')->assertStatus(402); //only if admin of client
+        //POST            survey
+        $this->actingAs($user)->post('/survey', ['_token' => $token])->assertStatus(402); //only if admin of client
+        //GET|HEAD        survey/create
+        $this->actingAs($user)->get('/survey/create')->assertStatus(402); //only if admin of client
+        //GET|HEAD        survey/postpone/{surveyid}
+        $this->actingAs($user)->get('/survey/postpone/1')->assertRedirect()->assertCookieMissing('errormessage'); //redirect back on success
+        //POST            survey/vote/{surveyid}
+        $this->actingAs($user)->post('/survey/vote/1', ['_token' => $token, 'value' => "accept"])->assertRedirect('/survey/1');
+        //GET|HEAD        survey/{survey} //set dateStart to yesterday to access a currently activ survey
+        $survey = Survey::find(1);
+        $survey->dateStart = Carbon::yesterday();
+        $survey->save();
+        $this->actingAs($user)->get('/survey/1')->assertOk();
+        //PUT|PATCH       survey/{survey}
+        $this->actingAs($user)->put('/survey/1', ['_token' => $token])->assertStatus(402); //only if admin of client
+        //DELETE          survey/{survey}
+        $this->actingAs($user)->delete('/survey/1', ['_token' => $token])->assertStatus(402); //only if admin of client
+        //GET|HEAD        survey/{survey}/edit
+        $this->actingAs($user)->get('/survey/1/edit')->assertStatus(402); //only if admin of client
 
         //POST                                   | logout
         $this->actingAs($user)->followingRedirects()->post('/logout', ['_token' => $token])
