@@ -209,7 +209,7 @@ class SurveyController extends Controller
     {
         if(Auth::user()->isAdmin()) {
             $survey = Survey::findOrFail($id);
-            $survey->destroy();
+            $survey->delete();
 
             Session::flash('successmessage', 'Abfrage erfolgreich gelöscht');
             return redirect(action('SurveyController@index'));

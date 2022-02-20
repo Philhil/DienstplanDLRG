@@ -239,13 +239,27 @@ class User extends Authenticatable
                 $query->whereDate('dateEnd', '>=', Carbon::now())
                     ->orWhereNull('dateEnd');
             })
-        //left join to get all surveys where no survey_user exsist or (survey_user.vote == null and rememberat is in past)
-            ->leftJoin('survey_users', 'surveys.id', '=', 'survey_users.survey_id')
+            //check already voted surveys
+            ->leftJoin('survey_users', function($join) {
+                $join->on('survey_users.survey_id', '=', 'surveys.id')
+                    ->where('survey_users.user_id', '=', $this->id);
+            })
             ->where(function($query) {
                 $query->whereNull('survey_users.survey_id')
                     ->orWhere(function($query) {
                         $query->whereNull('survey_users.vote')
                             ->whereDate('survey_users.rememberAt', '<=', Carbon::today());
+                    });
+            })
+            //check qualification
+            ->leftJoin('qualification_users', function($join) {
+                $join->on('qualification_users.qualification_id', '=', 'surveys.qualification_id')
+                    ->where('qualification_users.user_id', '=', $this->id);
+            })
+            ->where(function($query) {
+                $query->whereNull('surveys.qualification_id')
+                    ->orWhere(function($query) {
+                        $query->whereNotNull('qualification_users.user_id');
                     });
             })
             ->select('surveys.*')
