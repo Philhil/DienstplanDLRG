@@ -41,12 +41,12 @@
                         @endif
 
                         <div class="col-sm-1 col-xs-3">
-                            {{ Form::button('Zustimmen', ['class' => 'btn btn-success waves-effect', 'type' => "submit", 'value' => "accept"]) }}
+                            {{ Form::button('Zustimmen', ['class' => 'btn btn-success waves-effect', 'type' => "submit", 'id' => 'submit', 'name' => 'submit', 'value' => "accept"]) }}
                         </div>
 
                         @if(!$survey->mandatory)
                         <div class="col-sm-1 col-xs-3">
-                            {{ Form::button('Ablehnen', ['class' => 'btn btn-danger waves-effect', 'type' => "submit", 'value' => "deny"]) }}
+                            {{ Form::button('Ablehnen', ['class' => 'btn btn-danger waves-effect', 'type' => "submit", 'id' => 'submit', 'name' => 'submit', 'value' => "deny"]) }}
                         </div>
                         @endif
 

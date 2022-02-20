@@ -245,7 +245,7 @@ class SurveyController extends Controller
         $survey_user->survey_id = $survey_id;
         $survey_user->user_id = Auth::user()->id;
         if(!$survey->mandatory) {
-            $survey_user->vote = $request->get('value') === 'accept' ? true : false;
+            $survey_user->vote = $request->get('submit') === 'accept' ? true : false;
         }
         else {
             $survey_user->vote = true;

@@ -95,7 +95,7 @@
 
     </div>
 
-    @if(isset($aUserHasAlreadyVoted) && !$aUserHasAlreadyVoted)
+    @if(isset($aUserHasAlreadyVoted) && $aUserHasAlreadyVoted)
         <div class="alert alert-danger">
             <strong>VORSICHT!</strong> Nutzer haben sich zu dieser Abfrage bereits gemeldet. Das verändern der Abfrage kann die Integrität der Rückmeldungen verletzen.
         </div>
