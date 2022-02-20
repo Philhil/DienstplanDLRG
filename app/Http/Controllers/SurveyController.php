@@ -121,6 +121,11 @@ class SurveyController extends Controller
                 elseif(isset($survey->dateEnd)) {
                     $isInDateRange = Carbon::now()->lte($survey->dateEnd);
                 }
+                //no date is set
+                else
+                {
+                    $isInDateRange = true;
+                }
             }
 
             if($isInDateRange) {
