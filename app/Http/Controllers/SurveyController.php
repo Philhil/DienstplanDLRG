@@ -55,7 +55,7 @@ class SurveyController extends Controller
         if($isAdmin) {
             $survey = new Survey();
             $qualifications = Auth::user()->currentclient()->qualifications()->pluck('name', 'id');
-            $qualifications->prepend('-Alle Nutzer-');
+            $qualifications->prepend('-Alle Nutzer-', -1);
             return view('survey.create', compact('survey', 'isAdmin', 'qualifications'));
         }
 
@@ -80,7 +80,7 @@ class SurveyController extends Controller
             $survey->dateEnd = empty($request->get('dateEnd')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('dateEnd'));
             $survey->mandatory = isset($request['mandatory']);
             $survey->passwordConfirmationRequired = isset($request['passwordConfirmationRequired']);
-            $survey->qualification_id = empty($request->get('qualification_id')) ? null : $request->get('qualification_id');
+            $survey->qualification_id = (!empty($request->get('qualification_id')) && ((int)$request->get('qualification_id') >= 0)) ? (int)$request->get('qualification_id') : null;
 
             $survey->save();
 
@@ -161,7 +161,7 @@ class SurveyController extends Controller
         if($isAdmin) {
             $survey = Survey::findOrFail($id);
             $qualifications = Auth::user()->currentclient()->qualifications()->pluck('name', 'id');
-            $qualifications->prepend('-Alle Nutzer-');
+            $qualifications->prepend('-Alle Nutzer-', -1);
             $aUserHasAlreadyVoted = Survey_user::where('survey_id', $survey->id)->exists();
 
             return view('survey.edit', compact('survey', 'isAdmin', 'qualifications', 'aUserHasAlreadyVoted'));
@@ -181,18 +181,17 @@ class SurveyController extends Controller
     {
         if(Auth::user()->isAdmin()) {
             $survey = Survey::findOrFail($id);
-            $survey->client_id = Auth::user()->currentclient_id;
             $survey->title = $request->get('title');
             $survey->content = $request->get('content');
             $survey->dateStart = empty($request->get('dateStart')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('dateStart'));
             $survey->dateEnd = empty($request->get('dateEnd')) ? null : Carbon::createFromFormat('d m Y H:i', $request->get('dateEnd'));
             $survey->mandatory = isset($request['mandatory']);
             $survey->passwordConfirmationRequired = isset($request['passwordConfirmationRequired']);
-            $survey->qualification_id = empty($request->get('qualification_id')) ? null : $request->get('qualification_id');
+            $survey->qualification_id = (!empty($request->get('qualification_id')) && ((int)$request->get('qualification_id') >= 0)) ? (int)$request->get('qualification_id') : null;
 
             $survey->save();
 
-            Session::flash('successmessage', 'Abfrage erfolgreich erstellt');
+            Session::flash('successmessage', 'Abfrage erfolgreich gespeichert');
             return redirect(action('SurveyController@index'));
         }
 
