@@ -232,11 +232,11 @@ class User extends Authenticatable
         //get all serveys of clients in Daterange
         $surveys = $this->currentclient()->Surveys()
             ->where(function($query) {
-                $query->whereDate('dateStart', '<=', Carbon::now())
+                $query->where('dateStart', '<=', Carbon::now())
                 ->orWhereNull('dateStart');
             })
             ->where(function($query) {
-                $query->whereDate('dateEnd', '>=', Carbon::now())
+                $query->where('dateEnd', '>=', Carbon::now())
                     ->orWhereNull('dateEnd');
             })
             //check already voted surveys
