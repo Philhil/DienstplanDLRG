@@ -150,7 +150,25 @@ Analog den Diensten (Kapitel \ref{cha:dienste} \nameref{cha:dienste}) kann sich 
 	\caption[Fortbildungs-Zuweisung]{Dienstplan Fortbildungs-Zuweisung}
 	\label{fig:view_training_assign}
 \end{figure}
-		
+
+\section{Abfragen und Bestätigungen}
+\label{sec:admin_survey}
+\textit{{\small Um diese Funktion zu nutzen, muss das Modul Abfragen und Bestätigungen freigeschaltet sein.}}
+
+Mittels Abfragen werden in definierten Zeiträumen den Benutzern diese auf allen Seiten sehr präsent eingeblendet. Allgemein können diese für Umfragen oder Belehrung und Bestätigung sowie deren Rückmeldungen dokumentieren genutzt werden. Somit kann z.B. eine Durchführung von UVV Unterweisung oder Abfragen von aktuellen Kontaktdaten realisiert werden.
+Benutzer können Abfragen drei mal verschieben bevor diese zwingend beantwortet werden müssen. Abfragen müssen je nach Eigenschaften von den Benutzern mit einem Passwort bestätigt werden, um der Abfrage einen offiziellen charakter zu verleihen.
+
+Hier eine kurze Erläuterung zu den Besonderheiten der Eigenschaften von Abfragen:
+\begin{itemize}
+    \item[\textbf{Titel:}] Titel der Abfrage welcher kurz und knapp sein sollte, da dieser in einem kleinen Meldungsfeld den Nutzern angezeigt werden.
+	\item[\textbf{Text:}] Text welcher Handlungsanweisungen an Nutzern gibt. Das Abstimmen oder zustimmen der Nutzer hängt von diesem Text ab.
+	\item[\textbf{Von:}] Ab welchem Datum die Abfrage starten soll. Bei leerer eingabe wird die Abfrage sofort gestartet.
+	\item[\textbf{Bis:}] Bis welchem Datum die Abfrage durchgeführt werden soll. Bei leerer eingabe wird die Abfrage für immer laufen. D.h. Neuregistrierung bekommen diese Abfragen beim ersten Login auch sofort angezeigt.
+	\item[\textbf{Abfrage muss zugestimmt werden:}] Aktiviert: Nutzer haben nur die Möglichkeit zuzustimmen. Deaktiviert: Nutzer können Abfragen zustimmen oder ablehnen.
+	\item[\textbf{Nutzer müssen Passwort zum zustimmen eingeben:}] Es kann nur mit dem eigenen Passwort zugestimmt oder abgelehnt werden.
+	\item[\textbf{Nur für Nutzer mit Qualifikation::}] Abfragen werden nur Nutzern mit entsprechender Qualifikation angezeigt. Sollen mehrere Qualifikationen berücksichtigt werden, müssen mehrere Abfragen erstellt werden.
+\end{itemize}
+
 \section{Nachrichtenverwaltung}
 \label{sec:admin_news}
 Verfasste Nachrichten werden an alle Nutzer versendet. Je nach Einstellung der Gliederung wird eine E-Mail an die Mailingliste oder aber an jeden Benutzer einzeln versendet.
