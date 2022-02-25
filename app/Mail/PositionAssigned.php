@@ -60,8 +60,9 @@ class PositionAssigned extends Mailable implements ShouldQueue
             if(!empty($service->comment)) {
                 $vEvent->setDescription($service->comment);
             }
-            $vEvent->setLocation((new \Eluceo\iCal\Domain\ValueObject\Location($service->location, $service->location)));
-
+            if (!empty($service->location)) {
+                $vEvent->setLocation((new \Eluceo\iCal\Domain\ValueObject\Location($service->location, $service->location)));
+            }
             $vCalendar = new \Eluceo\iCal\Domain\Entity\Calendar([$vEvent]);
             $iCalendarComponent = (new \Eluceo\iCal\Presentation\Factory\CalendarFactory())->createCalendar($vCalendar);
 
