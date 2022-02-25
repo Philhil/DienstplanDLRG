@@ -13,7 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class PositionCandidatureMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable;
 
     protected $position;
     protected $user;
@@ -27,10 +27,13 @@ class PositionCandidatureMail extends Mailable implements ShouldQueue
      */
     public function __construct(PositionCandidature $positionCandidature, Client $client)
     {
-        $this->positionCandidature = $positionCandidature;
-        $this->position = $positionCandidature->position()->with('service')->with('qualification')->first();
-        $this->user = $positionCandidature->user()->first();
-        $this->client = $client;
+        //check if position candidature still exist
+        if (isset($positionCandidature) && PositionCandidature::find($positionCandidature->id) != null) {
+            $this->position = $positionCandidature->position()->with('service')->with('qualification')->first();
+            $this->user = $positionCandidature->user()->first();
+            $this->positionCandidature = $positionCandidature;
+            $this->client = $client;
+        }
     }
 
     /**
