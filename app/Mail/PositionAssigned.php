@@ -50,7 +50,7 @@ class PositionAssigned extends Mailable implements ShouldQueue
                 $occurrence = new \Eluceo\iCal\Domain\ValueObject\TimeSpan($start, $end);
             }
             else {
-                $date = new \Eluceo\iCal\Domain\ValueObject\Date(new \DateTime($service->date->toDateString()));
+                $date = new \Eluceo\iCal\Domain\ValueObject\Date(new \DateTimeImmutable($service->date->toDateString()));
                 $occurrence = new \Eluceo\iCal\Domain\ValueObject\SingleDay($date);
             }
 
