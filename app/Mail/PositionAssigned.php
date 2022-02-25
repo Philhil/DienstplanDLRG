@@ -38,28 +38,33 @@ class PositionAssigned extends Mailable implements ShouldQueue
         $client = $this->position->service()->first()->client()->first();
         $service = $this->position->service()->first();
 
-        $dateEnd = !empty($service->dateEnd) ? $service->dateEnd->toDateTimeString() : $service->date->toDateString();
-        $setTime = !empty($service->dateEnd) ? false : true;
+        if (!empty($service->dateEnd)) {
+            $start = new \Eluceo\iCal\Domain\ValueObject\DateTime(new \DateTime($service->date->toDateTimeString()), true);
+            $end = new \Eluceo\iCal\Domain\ValueObject\DateTime(new \DateTime($service->dateEnd->toDateTimeString()), true);
+            $occurrence = new \Eluceo\iCal\Domain\ValueObject\TimeSpan($start, $end);
+        }
+        else {
+            $date = new \Eluceo\iCal\Domain\ValueObject\Date(new \DateTime($service->date->toDateString()));
+            $occurrence = new \Eluceo\iCal\Domain\ValueObject\SingleDay($date);
+        }
 
-        $vCalendar = new \Eluceo\iCal\Component\Calendar('dlrgdienstplan.de');
-        $vEvent = new \Eluceo\iCal\Component\Event();
-        $vEvent
-            ->setDtStart(new \DateTime($service->date->toDateTimeString()))
-            ->setDtEnd(new \DateTime($dateEnd))
-            ->setNoTime($setTime)
-            ->setUseTimezone(true)
-            ->setSummary('Wachdienst')
-            ->setDescription($service->comment)
-            ->setLocation($service->location);
+        $vEvent = new \Eluceo\iCal\Domain\Entity\Event();
+        $vEvent->setOccurrence($occurrence);
+        $vEvent->setSummary('Wachdienst');
+        if(!empty($service->comment)) {
+            $vEvent->setDescription($service->comment);
+        }
+        $vEvent->setLocation((new \Eluceo\iCal\Domain\ValueObject\Location($service->location, $service->location)));
 
-        $vCalendar->addComponent($vEvent);
+        $vCalendar = new \Eluceo\iCal\Domain\Entity\Calendar([$vEvent]);
+        $iCalendarComponent = (new \Eluceo\iCal\Presentation\Factory\CalendarFactory())->createCalendar($vCalendar);
 
         return $this->subject('Dienstplan📟: Dienst zugewiesen')->view('email.position')->with([
             'position' => $this->position,
             'servicepositions' => $this->servicepositions,
             'authorizedby' => $this->authorizedby,
         ])->replyTo($client->mailReplyAddress, $client->mailSenderName)
-        ->attachData($vCalendar->render(), 'dienst'.$service->date->toDateString().'.ics', [
+        ->attachData(((string) $iCalendarComponent), 'dienst'.$service->date->toDateString().'.ics', [
             'mime' => 'text/calendar;charset=UTF-8;method=REQUEST',
         ]);
     }
