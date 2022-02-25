@@ -26,6 +26,6 @@ class PositionAuthorized
     public function handle(\App\Events\PositionAuthorized $event)
     {
         $position = $event->position;
-        Mail::to($position->user()->get())->queue(new PositionAssigned($position, $event->authorizedby));
+        Mail::to($position->user()->get())->later(now()->addMinutes(5), new PositionAssigned($position, $event->authorizedby, $position->user_id));
     }
 }
