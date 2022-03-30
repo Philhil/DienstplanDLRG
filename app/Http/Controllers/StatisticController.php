@@ -149,7 +149,8 @@ class StatisticController extends Controller
             ->join('services', 'positions.service_id', '=', 'services.id')->where('services.client_id', '=', Auth::user()->currentclient_id)
             ->whereBetween('services.date', [$from, $to])
             ->groupBy('positions.user_id')
-            ->count();
+            ->get()->count();
+        //instead groupBy -> get -> count: ->distinct('positions.user_id')->count('positions.user_id');
         $stat->put('users_min1pos', $users_min1pos);
 
         //AVG Zusage zu Diensten
