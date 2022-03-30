@@ -296,6 +296,7 @@ class TrainingController extends Controller
     {
         $training_user = Training_user::findOrFail($training_userid);
 
+        //isAdmin || isTrainingeditor || (is own user in Training_user and training is not today)
         if(Auth::user()->isAdminOfClient($training_user->training->client_id) || Auth::user()->isTrainingEditorOfClient($training_user->training->client_id) ||
             (Training_user::where(['id' => $training_userid, 'user_id' => Auth::user()->id])->count() > 0 && !(Training_user::findOrFail($training_userid)->training->date)->isToday())) {
 
