@@ -159,8 +159,8 @@ class User extends Authenticatable
         $servicesList = [];
         foreach ($this->holidaysInFuture()->get() as $holiday)
         {
-            $from = $holiday->from;
-            $to = $holiday->to;
+            $from = $holiday->from->startOfDay();
+            $to = $holiday->to->endOfDay();
             $services = Service::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
                 ->with(['positions.candidatures.user'=> function ($query) {
                     $query->where('id', '=', Auth::user()->id);
@@ -181,8 +181,8 @@ class User extends Authenticatable
         $trainingsList = [];
         foreach ($this->holidaysInFuture()->get() as $holiday)
         {
-            $from = $holiday->from;
-            $to = $holiday->to;
+            $from = $holiday->from->startOfDay();
+            $to = $holiday->to->endOfDay();
             $trainings = Training::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
                 ->with(['positions.candidatures.user'=> function ($query) {
                     $query->where('id', '=', Auth::user()->id);
