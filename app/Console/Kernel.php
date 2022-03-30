@@ -39,7 +39,8 @@ class Kernel extends ConsoleKernel
             //backups not in DEMO mode
             $schedule->command('backup:clean')->daily()->at('01:00');
             $schedule->command('backup:run --only-db')->daily()->at('02:00');
-            $schedule->command('backup:run')->weekly()->mondays()->at('02:30');
+            //backup of application. As this should be the stable release on Github, this is normally not necessary
+            //$schedule->command('backup:run')->monthlyOn(1, '02:30');
         }
     }
 
