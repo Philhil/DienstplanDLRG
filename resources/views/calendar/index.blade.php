@@ -56,18 +56,23 @@
                 firstDay: 1,
                 //navLinks: true, // can click day/week names to navigate views
                 dayMaxEvents: true, // allow "more" link when too many events
-                @if($isAdmin || $isTrainingEditor)
-                //editable: true,
                 eventClick: function(event) {
                     if(event.event.id) {
                         switch (event.event.groupId) {
+                            @if($isAdmin || $isTrainingEditor)
                             case "calendar":
                                 window.location.href='/calendar/'+event.event.id+'/edit';
+                                break;
+                            @endif
+                            case "training":
+                                window.location.href='training#training'+event.event.id;
+                                break;
+                            case "service":
+                                window.location.href='service#service'+event.event.id;
                                 break;
                         }
                     }
                 },
-                @endif
                 eventSources: [
                     {
                         //calendar events
