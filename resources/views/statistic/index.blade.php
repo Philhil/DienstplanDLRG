@@ -89,7 +89,7 @@
                                 </div>
                                 <div class="content">
                                     <div class="text">Anzahl {{$quali->short}}</div>
-                                    <div class="number count-to" data-from="0" data-to="{{$quali->users_count}}" data-speed="1000" data-fresh-interval="20">{{$overviewStats['users']}}</div>
+                                    <div class="number count-to" data-from="0" data-to="{{$quali->users_count}}" data-speed="1000" data-fresh-interval="20">{{$quali->users_count}}</div>
                                 </div>
                             </div>
                         </div>
