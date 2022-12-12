@@ -3,10 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class News extends Model
 {
     protected $table = 'newss';
+
+    use HasFactory;
 
     protected $fillable = [
         'title', 'content',
