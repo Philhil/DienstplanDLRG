@@ -630,9 +630,6 @@ class RouteCredentialsTest extends TestCase
         $this->actingAs($user)->get('/qualification_user/delete/1/1')->assertStatus(402);//only as admin
         $this->actingAs($user)->post('/qualification_user/delete/1/1', ['_token' => $token])->assertStatus(402); //only as admin
 
-        //GET|HEAD                               | redirect
-        $this->actingAs($user)->get('/redirect')->assertStatus(302); //redirect to facebook login
-
         //GET|HEAD                               | register
         $this->actingAs($user)->followingRedirects()->get('/register')
             ->assertStatus(200)->assertViewIs('home.index')
