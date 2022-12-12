@@ -381,4 +381,63 @@ class ServiceController extends Controller
 
         return $this->destroy($id);
     }
+
+    /**
+     * Display a listing of services from the past.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function history()
+    {
+      if(!Auth::user()->isAdmin()) {
+          abort(402, "Nope.");
+      }
+
+      $services = Service::whereDate('date', '<=', Carbon::now())->where('client_id', '=', Auth::user()->currentclient_id)
+          ->orderBy('date', 'desc')->with('openpositions')
+          ->with('positions.qualification')
+          ->with('positions.user')
+          ->paginate(30);
+
+      $user = User::where(['id' => Auth::user()->id])->with('qualifications')->first();
+      $isAdmin = $user->isAdmin();
+      $servicesHoliday = $user->services_inHolidayList();
+
+      return view('service.history', compact('services', 'user', 'servicesHoliday', 'isAdmin'));
+    }
+
+    /**
+     * Finalize a service.
+     *
+     * @return
+     */
+    public function finalize($id)
+    {
+      //only allowed if user is admin
+      if(!Auth::user()->isAdmin() || Service::where(['id' => $id, 'client_id' => Auth::user()->currentclient_id])->count() <= 0) {
+          abort(402, "Nope.");
+      }
+
+      $service = Service::findOrFail($id);
+
+      //if Service dateEnd do NOT exsist and date is today or in history
+      //OR dateEnd exsist and is today or in history
+      if(
+        (empty($service->dateEnd) && Carbon::now()->endOfDay()->gte($service->date))
+        ||
+        (!empty($service->dateEnd) && Carbon::now()->endOfDay()->gte($service->dateEnd))
+        )
+      {
+        $service->finalized_at = Carbon::now();
+        $service->finalized_by = Auth::user()->id;
+        $service->save();
+        Session::flash('successmessage', 'Dienst erfolgreich abgeschlossen');
+      }
+      else
+      {
+        Session::flash('errormessage', 'Dienste aus der Zukunf können nicht abgeschlossen werden.');
+      }
+
+      return redirect()->back();
+    }
 }
