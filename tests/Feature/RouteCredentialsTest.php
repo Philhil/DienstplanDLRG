@@ -94,15 +94,6 @@ class RouteCredentialsTest extends TestCase
             ->assertSee('Dein Benutzer muss erst freigeschaltet werden. Du wirst per E-Mail benachrichtigt.')
             ->assertSee('Impressum')->assertSee('Datenschutz');
 
-        //Social Auth GET
-        $this->get('/redirect')->assertStatus(302);
-        $this->followingRedirects()->get('/redirect');
-
-        $this->get('/callback')->assertStatus(302);
-        $this->followingRedirects()->get('/callback')
-            ->assertStatus(200)
-            ->assertSee('Die nötigen Daten können nicht von Facebook abrufen werden oder es wurde der App nicht zugestimmt.');
-
         // impressum
         $this->get('/impressum')->assertStatus(200)->assertSee('Impressum')->assertSee('Datenschutz');;
 
