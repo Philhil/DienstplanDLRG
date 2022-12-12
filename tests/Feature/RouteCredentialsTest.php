@@ -368,9 +368,6 @@ class RouteCredentialsTest extends TestCase
             ->assertStatus(200)->assertViewIs('home.index')
             ->assertSee('Impressum')->assertSee('Datenschutz');
 
-        //GET|HEAD                               | callback
-        $this->actingAs($user)->followingRedirects()->get('/callback')->assertStatus(200);
-
         //GET|HEAD                               | captcha/api/{config?}
         $this->actingAs($user)->followingRedirects()->get('/captcha/api/')
             ->assertStatus(200);
