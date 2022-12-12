@@ -18,8 +18,6 @@ Route::get('/auth/success', [
     'uses' => 'Auth\RegisterController@success'
 ]);
 
-Route::get('/redirect', 'SocialAuthController@redirect');
-Route::get('/callback', 'SocialAuthController@callback');
 Route::view('/impressum', 'legal.impressum')->name("legal.impressum");
 Route::view('/datenschutz', 'legal.datenschutz');
 

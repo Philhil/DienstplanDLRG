@@ -94,15 +94,6 @@ class RouteCredentialsTest extends TestCase
             ->assertSee('Dein Benutzer muss erst freigeschaltet werden. Du wirst per E-Mail benachrichtigt.')
             ->assertSee('Impressum')->assertSee('Datenschutz');
 
-        //Social Auth GET
-        $this->get('/redirect')->assertStatus(302);
-        $this->followingRedirects()->get('/redirect');
-
-        $this->get('/callback')->assertStatus(302);
-        $this->followingRedirects()->get('/callback')
-            ->assertStatus(200)
-            ->assertSee('Die nötigen Daten können nicht von Facebook abrufen werden oder es wurde der App nicht zugestimmt.');
-
         // impressum
         $this->get('/impressum')->assertStatus(200)->assertSee('Impressum')->assertSee('Datenschutz');;
 
@@ -377,9 +368,6 @@ class RouteCredentialsTest extends TestCase
             ->assertStatus(200)->assertViewIs('home.index')
             ->assertSee('Impressum')->assertSee('Datenschutz');
 
-        //GET|HEAD                               | callback
-        $this->actingAs($user)->followingRedirects()->get('/callback')->assertStatus(200);
-
         //GET|HEAD                               | captcha/api/{config?}
         $this->actingAs($user)->followingRedirects()->get('/captcha/api/')
             ->assertStatus(200);
@@ -641,9 +629,6 @@ class RouteCredentialsTest extends TestCase
         //GET|POST|HEAD                          | qualification_user/delete/{user_id}/{qualification_id}
         $this->actingAs($user)->get('/qualification_user/delete/1/1')->assertStatus(402);//only as admin
         $this->actingAs($user)->post('/qualification_user/delete/1/1', ['_token' => $token])->assertStatus(402); //only as admin
-
-        //GET|HEAD                               | redirect
-        $this->actingAs($user)->get('/redirect')->assertStatus(302); //redirect to facebook login
 
         //GET|HEAD                               | register
         $this->actingAs($user)->followingRedirects()->get('/register')
