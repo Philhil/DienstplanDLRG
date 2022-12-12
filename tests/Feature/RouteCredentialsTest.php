@@ -665,9 +665,9 @@ class RouteCredentialsTest extends TestCase
             ->assertSee('Impressum')->assertSee('Datenschutz');
 
         //GET|HEAD
-        $this->actingAs($user)->get('/servicehistory')->assertStatus(403);  //only as admin
+        $this->actingAs($user)->get('/servicehistory')->assertStatus(402);  //only as admin
         //GET|HEAD
-        $this->actingAs($user)->get('/service/finalize/1')->assertStatus(403);  //only as admin
+        $this->actingAs($user)->get('/service/finalize/1')->assertStatus(402);  //only as admin
 
         //POST                                   | service
         $this->actingAs($user)->post('/service', ['_token' => $token])->assertStatus(403); //only as admin
