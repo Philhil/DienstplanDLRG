@@ -16,7 +16,7 @@ class Service extends Model
     ];
 
     protected $dates = [
-        'date', 'dateEnd',
+        'date', 'dateEnd', 'finalized_at'
     ];
 
     protected $attributes = array(

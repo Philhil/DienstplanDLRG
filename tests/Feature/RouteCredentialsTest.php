@@ -201,6 +201,9 @@ class RouteCredentialsTest extends TestCase
 
         //service (resource)
         $this->followingRedirects()->get('/service')->assertStatus(200)->assertViewIs('auth.login');
+        $this->followingRedirects()->get('/servicehistory')->assertStatus(200)->assertViewIs('auth.login');
+        $this->followingRedirects()->get('/service/finalize/1')->assertStatus(200)->assertViewIs('auth.login');
+
         $this->post('/service', $session)->assertStatus(419);
         $this->followingRedirects()->get('/service/1')->assertStatus(200)->assertViewIs('auth.login');
         $this->put('/service/1', $session)->assertStatus(419);
@@ -660,6 +663,11 @@ class RouteCredentialsTest extends TestCase
         $this->actingAs($user)->get('/service')
             ->assertStatus(200)->assertViewIs('service.index')
             ->assertSee('Impressum')->assertSee('Datenschutz');
+
+        //GET|HEAD
+        $this->actingAs($user)->get('/servicehistory')->assertStatus(402);  //only as admin
+        //GET|HEAD
+        $this->actingAs($user)->get('/service/finalize/1')->assertStatus(402);  //only as admin
 
         //POST                                   | service
         $this->actingAs($user)->post('/service', ['_token' => $token])->assertStatus(403); //only as admin

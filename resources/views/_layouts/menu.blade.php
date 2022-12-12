@@ -35,6 +35,14 @@
                     <span>Dienste</span>
                 </a>
             </li>
+            @can('administration')
+            <li class="{{active('service.history')}}">
+                <a href="{{ action('ServiceController@history') }}">
+                    <i class="material-icons">assignment</i>
+                    <span>Dienst Historie</span>
+                </a>
+            </li>
+            @endcan
             @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_training)
             <li class="{{active('training.index')}}">
                 <a href="{{ action('TrainingController@index') }}">
