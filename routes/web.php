@@ -89,4 +89,6 @@ Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web', 'SurveyHan
     Route::resource('survey', 'SurveyController')->withoutMiddleware(['SurveyHandler']);
     Route::post('survey/vote/{surveyid}', 'SurveyController@vote')->name('survey.vote')->withoutMiddleware(['SurveyHandler']);
     Route::get('survey/postpone/{surveyid}', 'SurveyController@postpone')->name('survey.postpone')->withoutMiddleware(['SurveyHandler']);
+
+    Route::resource('tag', 'TagController');
 });

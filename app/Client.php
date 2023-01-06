@@ -117,4 +117,10 @@ class Client extends Model
     {
         return $this->hasMany( Survey::class);
     }
+
+    public function Tags()
+    {
+        return $this->hasMany( Tag::class)->orderBy('name');
+    }
+
 }

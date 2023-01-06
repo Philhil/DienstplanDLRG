@@ -113,8 +113,10 @@ class ClientController extends Controller
         $adminsOfClient = $client->Admins()->get();
         $notrainingeditorsOfClient = $client->noTrainingEditors()->get();
         $trainingeditorsOfClient = $client->TrainingEditors()->get();
+        $tags = $client->Tags()->get();
 
-        return view('client.edit', compact('client', 'usersOfClient', 'adminsOfClient', 'notrainingeditorsOfClient', 'trainingeditorsOfClient'));
+        return view('client.edit', compact('client', 'usersOfClient', 'adminsOfClient',
+            'notrainingeditorsOfClient', 'trainingeditorsOfClient', 'tags'));
     }
 
     /**
