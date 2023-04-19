@@ -18,7 +18,7 @@
         "barryvdh/laravel-dompdf": "^1.0.0",
         "doctrine/dbal": "^3.0",
         "eluceo/ical": "^2.5",
-        "guzzlehttp/psr7": "2.1.1",
+        "guzzlehttp/psr7": "2.4.5",
         "hisorange/browser-detect": "^4.3",
         "laravel/framework": "^9.0",
         "laravel/socialite": "^5.0",
