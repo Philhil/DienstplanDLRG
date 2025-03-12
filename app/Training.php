@@ -10,8 +10,10 @@ class Training extends Model
         'title', 'client_id', 'content', 'date', 'dateEnd', 'location', 'sendbydatetime',
     ];
 
-    protected $dates = [
-        'date', 'dateEnd', 'sendbydatetime'
+    protected $casts = [
+        'date' => 'datetime',
+        'dateEnd' => 'datetime',
+        'sendbydatetime' => 'datetime'
     ];
 
     public function positions()

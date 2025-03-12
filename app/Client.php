@@ -26,8 +26,9 @@ class Client extends Model
         'module_survey'
     ];
 
-    protected $dates = [
-        'create_at', 'seasonStart'
+    protected $casts = [
+        'create_at' => 'datetime',
+        'seasonStart' => 'datetime'
     ];
 
     public function user_all()

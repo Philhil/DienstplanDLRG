@@ -10,8 +10,9 @@ class Calendar extends Model
       'titel', 'client_id', 'verantwortlicher', 'date', 'dateEnd', 'location'
     ];
 
-    protected $dates = [
-       'date', 'dateEnd'
+    protected $casts = [
+        'date' => 'datetime',
+        'dateEnd' => 'datetime'
     ];
 
     public function  client()
