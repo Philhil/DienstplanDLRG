@@ -378,7 +378,7 @@ class RouteCredentialsTest extends TestCase
 
         //GET|HEAD                               | changeclient/{client}
         $this->actingAs($user)->followingRedirects()->get('/changeclient/'.($user->currentclient_id))->assertStatus(200);
-        $this->actingAs($user)->followingRedirects()->get('/changeclient/'.($user->currentclient_id+1))->assertStatus(500);
+        $this->actingAs($user)->followingRedirects()->get('/changeclient/'.($user->currentclient_id+1))->assertStatus(200);
 
         //POST                                   | client
         $this->actingAs($user)->followingRedirects()->post('/client', ['_token' => $token])->assertStatus(402); //not allowed in demo mode

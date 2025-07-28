@@ -70,11 +70,11 @@
                                                 </button>
                                             @endif
                                             @if($isAdmin || $isTrainingEditor)
-                                                {{ Form::open(['url' => '/position/'. $position->id .'/position_user/', 'method' => 'get', 'style'=>'display:inline-block']) }}
+                                                {{ html()->form('GET', '/position/'. $position->id .'/position_user/')->attribute('style = "display:inline-block"')->open() }}
                                                 <button type="submit" class="btn btn-xs bg-deep-orange waves-effect btn-delete">
                                                     <i class="material-icons">playlist_add</i>
                                                 </button>
-                                                {{ Form::close() }}
+                                                {{ html()->form()->close() }}
                                             @endif
 
                                             @if($position->comment)
@@ -90,11 +90,11 @@
                                                         {{substr ($training_users->user->first_name, 0, 1)}}. {{$training_users->user->name}}
                                                         {{-- if is user -> possibility to remove him self --}}
                                                         @if(($training_users->user->id == $user->id && !($training_users->training->date)->isToday()) || $isAdmin || $isTrainingEditor)
-                                                            {{ Form::open(['url' => '/training/training_user/'. $training_users->id .'/delete/', 'method' => 'delete', 'style'=>'display:inline-block']) }}
+                                                            {{ html()->form('DELETE', '/training/training_user/'. $training_users->id .'/delete/')->attribute('style = "display:inline-block"')->open() }}
                                                             <button type="submit" class="btn btn-xs btn-warning waves-effect btn-delete">
                                                                 <i class="material-icons">delete</i>
                                                             </button>
-                                                            {{ Form::close() }}
+                                                            {{ html()->form()->close() }}
                                                         @endif
                                                     </span>
                                                 @endif
@@ -131,11 +131,11 @@
                                                 </button>
                                             @endif
                                             @if($isAdmin || $isTrainingEditor)
-                                                {{ Form::open(['url' => '/position/'. $position->id .'/position_user', 'method' => 'get', 'style'=>'display:inline-block']) }}
+                                                {{ html()->form('GET', '/position/'. $position->id .'/position_user')->attribute('style = "display:inline-block"')->open() }}
                                                 <button type="submit" class="btn btn-xs bg-deep-orange waves-effect btn-delete">
                                                     <i class="material-icons">playlist_add</i>
                                                 </button>
-                                                {{ Form::close() }}
+                                                {{ html()->form()->close() }}
                                             @endif
                                             @if($position->comment)
                                                 <br>
@@ -150,11 +150,11 @@
                                                         {{substr ($training_users->user->first_name, 0, 1)}}. {{$training_users->user->name}}
                                                         {{-- if is user -> possibility to remove him self --}}
                                                         @if(($training_users->user->id == $user->id && !($training_users->training->date)->isToday()) || $isAdmin || $isTrainingEditor)
-                                                            {{ Form::open(['url' => '/training/training_user/'. $training_users->id .'/delete/', 'method' => 'delete', 'style'=>'display:inline-block']) }}
+                                                           {{ html()->form('DELETE', '/training/training_user/'. $training_users->id .'/delete/')->attribute('style = "display:inline-block"')->open() }}
                                                             <button type="submit" class="btn btn-xs btn-warning waves-effect btn-delete">
                                                                 <i class="material-icons">delete</i>
                                                             </button>
-                                                            {{ Form::close() }}
+                                                            {{ html()->form()->close() }}
                                                         @endif
                                                     </span>
                                                 @endif

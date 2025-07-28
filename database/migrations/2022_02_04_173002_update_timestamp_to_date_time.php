@@ -15,14 +15,14 @@ class UpdateTimestampToDateTime extends Migration
     {
         Schema::table('services', function (Blueprint $table) {
             $table->dateTime('date')->change();
-            $table->dateTime('dateEnd')->change();
+            $table->dateTime('dateEnd')->nullable()->default(null)->change();
         });
 
         Schema::table('trainings', function (Blueprint $table) {
             $table->dateTime('date')->change();
-            $table->dateTime('dateEnd')->change();
-            $table->dateTime('sendbydatetime')->change();
-            $table->dateTime('sended')->change();
+            $table->dateTime('dateEnd')->nullable()->default(null)->change();
+            $table->dateTime('sendbydatetime')->nullable()->default(null)->change();
+            $table->dateTime('sended')->nullable()->default(null)->change();
         });
     }
 

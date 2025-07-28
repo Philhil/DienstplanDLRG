@@ -179,7 +179,7 @@
             Programming: &copy; 2017 - <?php echo date('Y') ?> <a href="https://github.com/Philhil/DienstplanDLRG">Philippe Käufer</a>.
         </div>
         <div class="version">
-            <b>Version: </b> 2022.1
+            <b>Version: </b> 2025.1
         </div>
     </div>
     <!-- #Footer -->

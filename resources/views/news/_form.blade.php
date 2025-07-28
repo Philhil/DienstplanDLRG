@@ -1,7 +1,7 @@
 @if(\Illuminate\Support\Facades\Route::current()->getName() == 'news.edit')
-    {{ Form::model($news, ['action' => ['NewsController@update', $news->id], 'method' => 'PUT']) }}
+    {{ html()->modelForm($news, 'PUT', action('NewsController@update', $news->id))->open() }}
 @else
-    {{ Form::model($news, ['action' => ['NewsController@store', $news->id]]) }}
+    {{ html()->modelForm($news, 'POST', action('NewsController@store', $news->id))->open() }}
 @endif
 
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -10,8 +10,8 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('comment') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('title', 'Titel:') }}
-                    {{ Form::text('title', old('title'), ['placeholder' => "Titel...", 'class' => 'form-control no-resize']) }}
+                    {{ html()->label('Titel:', 'title') }}
+                    {{ html()->text('title')->class('form-control no-resize')->placeholder("Titel...") }}
                     {!! $errors->first('title', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -22,7 +22,7 @@
     <div class="row clearfix">
         <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
             <div class="form-line">
-                {{ Form::textarea('content', old('content'), ['class' => 'form-control', 'id'=>"tinymce"]) }}
+                {{ html()->textarea('content')->class('form-control')->id("tinymce") }}
                 {!! $errors->first('content', '<p class="help-block">:message</p>') !!}
             </div>
         </div>
@@ -33,11 +33,11 @@
 <div class="row clearfix">
     <div class="col-sm-1 pull-right">
         <div class="form-line">
-            {{ Form::button('Speichern', ['class' => 'form-control btn btn-success waves-effect', 'type' => "submit"]) }}
+            {{ html()->button('Speichern', 'submit')->class('form-control btn btn-success waves-effect') }}
         </div>
     </div>
 </div>
-{{ Form::close() }}
+{{ html()->closeModelForm() }}
 
 
 @section('post_body')

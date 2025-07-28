@@ -99,7 +99,7 @@ class Client extends Model
     public function Season()
     {
         $season = $this->seasonStart;
-        $season->year(Carbon::now()->format('Y'));
+        $season->year((int)Carbon::now()->format('Y'));
 
         if ($season->isFuture())
         {

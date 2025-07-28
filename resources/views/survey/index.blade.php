@@ -55,11 +55,11 @@
                                         <i class="material-icons">mode_edit</i>
                                     </button>
                                 </a>
-                                {{ Form::open(['url' => '/survey/'.$survey->id, 'method' => 'delete', 'style'=>'display:inline-block']) }}
+                                {{ html()->form('DELETE', '/survey/'.$survey->id)->attribute('style = "display:inline-block"')->open() }}
                                 <button type="submit" class="btn btn-danger waves-effect btn-delete">
                                     <i class="material-icons">delete</i>
                                 </button>
-                                {{ Form::close() }}
+                                {{ html()->form()->close() }}
                             </td>
                         </tr>
                     @endforeach

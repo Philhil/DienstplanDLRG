@@ -1,7 +1,7 @@
 @if(\Illuminate\Support\Facades\Route::current()->getName() == 'service.edit')
-    {{ Form::model($service->toArray() + $positions->toArray(), ['action' => ['ServiceController@update', $service->id], 'method' => 'PUT']) }}
+    {{ html()->modelForm($service->toArray() + $positions->toArray(), 'PUT', action('ServiceController@update', $service->id))->open() }}
 @else
-    {{ Form::model($service->toArray() + $positions->toArray(), ['action' => ['ServiceController@store', $service->id]]) }}
+    {{ html()->modelForm($service->toArray() + $positions->toArray(), 'POST', action('ServiceController@store', $service->id))->open() }}
 @endif
 
 <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
@@ -10,8 +10,8 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('date') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('date', 'Datum:') }}
-                    {{ Form::text('date', old('date', !empty($service->date) ? $service->date->format('d m Y H:i') : ''), ['id' => 'date-start', 'class' => 'datepicker form-control', 'placeholder'=>'Datum auswählen...', 'required'=>"true"]) }}
+                    {{ html()->label('Datum:', 'date') }}
+                    {{ html()->text('date', old('date', !empty($service->date) ? $service->date->format('d m Y H:i') : ''))->class('datepicker form-control')->id('date-start')->required()->placeholder('Datum auswählen...') }}
                     {!! $errors->first('date', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -22,8 +22,8 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('dateEnd') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('dateEnd', 'Datum Ende:') }}
-                    {{ Form::text('dateEnd', old('dateEnd', !empty($service->dateEnd) ? $service->dateEnd->format('d m Y H:i') : ''), ['id' => 'date-end', 'class' => 'datepicker form-control', 'placeholder'=>'Datum auswählen...']) }}
+                    {{ html()->label('Datum Ende:', 'dateEnd') }}
+                    {{ html()->text('dateEnd', old('dateEnd', !empty($service->dateEnd) ? $service->dateEnd->format('d m Y H:i') : ''))->class('datepicker form-control')->id('date-end')->placeholder('Datum auswählen...') }}
                     {!! $errors->first('dateEnd', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -33,9 +33,9 @@
     <div class="row clearfix">
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('hastoauthorize') ? 'has-error' : ''}}">
-                {{Form::hidden('hastoauthorize',0)}}
-                {{ Form::checkbox('hastoauthorize', 1, old('hastoauthorize') or $service->hastoauthorize != 0 ? true : false, ['class' => 'filled-in', 'id' => "hastoauthorize"]) }}
-                {{ Form::label('hastoauthorize', 'Muss freigegeben werden') }}
+                {{ html()->hidden('hastoauthorize', 0) }}
+                {{ html()->checkbox('hastoauthorize', old('hastoauthorize') or $service->hastoauthorize != 0 ? true : false, 1)->class('filled-in')->id("hastoauthorize") }}
+                {{ html()->label('Muss freigegeben werden', 'hastoauthorize') }}
                 {!! $errors->first('hastoauthorize', '<p class="help-block">:message</p>') !!}
             </div>
         </div>
@@ -45,8 +45,8 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('comment') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('comment', 'Bemerkung:') }}
-                    {{ Form::textarea('comment', old('comment'), ['placeholder' => "Bemerkung...", 'rows' => 2, 'class' => 'form-control no-resize']) }}
+                    {{ html()->label('Bemerkung:', 'comment') }}
+                    {{ html()->textarea('comment')->class('form-control no-resize')->placeholder("Bemerkung...")->rows(2) }}
                     {!! $errors->first('comment', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -57,8 +57,8 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('location') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('location', 'Ort (Mit Koordinaten darstellbar auf Karte):') }}
-                    {{ Form::text('location', old('location', $service->location), ['id' => 'location', 'class' => 'location form-control', 'placeholder'=>'Ort eingeben...']) }}
+                    {{ html()->label('Ort (Mit Koordinaten darstellbar auf Karte):', 'location') }}
+                    {{ html()->text('location')->class('location form-control')->id('location')->placeholder('Ort eingeben...') }}
                     {!! $errors->first('location', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -116,7 +116,7 @@
                 @foreach($positions as $position)
                     <tr pos_id="{{$position->id}}" class="strikeout">
                         <td>
-                            {{Form::hidden('position[]',$position->id)}}
+                            {{html()->hidden('position[]',$position->id)}}
 
                             <select class="bootstrap-select show-tick" data-live-search="true" name="qualification[]" data-size="5">
                                 @foreach($qualifications as $qualification)
@@ -168,13 +168,13 @@
 <div class="row clearfix">
     <div class="col-sm-1 pull-right">
         <div class="form-line">
-            {{ Form::button('Speichern', ['class' => 'form-control btn btn-success waves-effect', 'type' => "submit"]) }}
+            {{ html()->button('Speichern', 'submit')->class('form-control btn btn-success waves-effect') }}
         </div>
     </div>
 </div>
 
 <div id="delete_position"></div>
-{{ Form::close() }}
+{{ html()->closeModelForm() }}
 
 
 @section('post_body')

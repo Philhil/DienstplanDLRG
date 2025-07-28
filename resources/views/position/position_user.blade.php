@@ -16,11 +16,11 @@
                         <small>{{$comment}}</small>
                     </h2>
                     <ul class="pull-right header-dropdown m-r--5">
-                        {{ Form::open(['url' => action('TrainingController@index'), 'method' => 'get', 'style'=>'display:inline-block']) }}
+                        {{  html()->form('GET', action('TrainingController@index'))->attribute('style = display:inline-block')->open() }}
                         <button type="submit" class="btn btn-subscribe bg-green waves-effect">
                             <i class="material-icons">save</i>
                         </button>
-                        {{ Form::close() }}
+                        {{ html()->form()->close() }}
                     </ul>
                 </div>
                 <div class="body table-responsive">

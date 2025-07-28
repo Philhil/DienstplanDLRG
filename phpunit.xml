@@ -22,5 +22,6 @@
     <server name="MAIL_DRIVER" value="log"/>
     <server name="QUEUE_CONNECTION" value="sync"/>
     <server name="SESSION_DRIVER" value="array"/>
+    <server name="TELESCOPE_ENABLED" value="true"/>
   </php>
 </phpunit>

@@ -135,6 +135,7 @@ class ClientController extends Controller
         }
 
         $validatedData = $request->validate([
+            'name' => 'required|unique:clients|max:255',
             'seasonStart' => 'required',
             'isMailinglistCommunication' => 'boolean',
             'weeklyServiceviewEmail' => 'boolean',
@@ -146,7 +147,7 @@ class ClientController extends Controller
         ]);
         
         $client = Client::findorfail($id);
-        $client->fill($request->except(['name']));
+        $client->fill($request->except(['id', 'module_training', 'module_training_credit', 'module_statistic', 'module_survey']));
         $client->seasonStart = Carbon::createFromFormat('d.m', $request->get("seasonStart"));
         $client->weeklyServiceviewEmail = isset($request['weeklyServiceviewEmail']);
         $client->isMailinglistCommunication = isset($request['isMailinglistCommunication']);

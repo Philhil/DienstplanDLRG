@@ -1,9 +1,9 @@
-{{ Form::model($user, ['action' => ['UserController@update', $user->id], "method" => "PUT"]) }}
+{{ html()->modelForm($user, 'PUT', action('UserController@update', $user->id))->open() }}
 <div class="col-sm-10">
     <div class="form-group {{ $errors->has('name') ? 'has-error' : ''}}">
         <div class="form-line">
-            {{ Form::label('name', 'Nachname:') }}
-            {{ Form::text('name', null, ['class' => 'form-control', 'placeholder' => 'Nachname']) }}
+            {{ html()->label('Nachname:', 'name') }}
+            {{ html()->text('name')->class('form-control')->placeholder('Nachname') }}
             {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
@@ -12,8 +12,8 @@
 <div class="col-sm-10">
     <div class="form-group {{ $errors->has('first_name') ? 'has-error' : ''}}">
         <div class="form-line">
-            {{ Form::label('first_name', 'Vorname:') }}
-            {{ Form::text('first_name', null, ['class' => 'form-control', 'placeholder' => 'Vorname']) }}
+            {{ html()->label('Vorname:', 'first_name') }}
+            {{ html()->text('first_name')->class('form-control')->placeholder('Vorname') }}
             {!! $errors->first('first_name', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
@@ -22,8 +22,8 @@
 <div class="col-sm-10">
     <div class="form-group {{ $errors->has('mobilenumber') ? 'has-error' : ''}}">
         <div class="form-line">
-            {{ Form::label('mobilenumber', 'Handy Nr.:') }}
-            {{ Form::text('mobilenumber', null, ['class' => 'form-control', 'placeholder' => 'Handy Nr.']) }}
+            {{ html()->label('Handy Nr.:', 'mobilenumber') }}
+            {{ html()->text('mobilenumber')->class('form-control')->placeholder('Handy Nr.') }}
             {!! $errors->first('mobilenumber', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
@@ -32,8 +32,8 @@
 <div class="col-sm-10">
     <div class="form-group {{ $errors->has('email') ? 'has-error' : ''}}">
         <div class="form-line">
-            {{ Form::label('email', 'E-Mail:') }}
-            {{ Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'mail@example.org']) }}
+            {{ html()->label('E-Mail:', 'email') }}
+            {{ html()->email('email')->class('form-control')->placeholder('mail@example.org') }}
             {!! $errors->first('email', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
@@ -45,8 +45,8 @@
 
     <div class="col-sm-10">
         <div class="form-group {{ $errors->has('approved') ? 'has-error' : ''}}">
-            {{ Form::checkbox('approved', 1, null, ['class' => 'filled-in']) }}
-            {{ Form::label('approved', 'Freigegeben') }}
+            {{ html()->checkbox('approved', null, 1)->class('filled-in') }}
+            {{ html()->label('Freigegeben', 'approved') }}
             {!! $errors->first('approved', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
@@ -54,8 +54,8 @@
     <div class="col-sm-10">
         <div class="form-group {{ $errors->has('role') ? 'has-error' : ''}}">
             <div class="form-line">
-                {{ Form::label('role', 'Rolle:') }}
-                {{ Form::select('role', ['benutzer' => 'benutzer', 'admin' => 'admin'], $user->role, ['class' => 'form-control bootstrap-select']) }}
+                {{ html()->label('Rolle:', 'role') }}
+                {{ html()->select('role', ['benutzer' => 'benutzer', 'admin' => 'admin'], $user->role)->class('form-control bootstrap-select') }}
                 {!! $errors->first('role', '<p class="help-block">:message</p>') !!}
             </div>
         </div>
@@ -65,8 +65,9 @@
 
 <div class="col-sm-10">
     <div class="form-line">
-        {{ Form::button('Speichern', ['class' => 'form-control btn btn-success waves-effect', 'type' => "submit"]) }}
+        {{ html()->submit('Speichern')->class('form-control btn btn-success waves-effect') }}
+
     </div>
 </div>
 
-{{ Form::close() }}
+{{ html()->closeModelForm() }}

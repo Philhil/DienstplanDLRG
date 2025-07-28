@@ -1,7 +1,7 @@
 @if(\Illuminate\Support\Facades\Route::current()->getName() == 'training.edit')
-    {{ Form::model($training->toArray() + $positions->toArray(), ['action' => ['TrainingController@update', $training->id], 'method' => 'PUT']) }}
+    {{ html()->modelForm($training->toArray() + $positions->toArray(), 'PUT', action('TrainingController@update', $training->id))->open() }}
 @else
-    {{ Form::model($training->toArray() + $positions->toArray(), ['action' => ['TrainingController@store', $training->id]]) }}
+    {{ html()->modelForm($training->toArray() + $positions->toArray(), 'POST', action('TrainingController@store', $training->id))->open() }}
 @endif
 
 <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12">
@@ -10,8 +10,8 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('date') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('date', 'Von:') }}
-                    {{ Form::text('date', old('date', !empty($training->date) ? $training->date->format('d m Y H:i') : ''), ['id' => 'date-start', 'class' => 'date-start form-control', 'placeholder'=>'Datum auswählen...', 'required'=>"true"]) }}
+                    {{ html()->label('Von:', 'date') }}
+                    {{ html()->text('date', old('date', !empty($training->date) ? $training->date->format('d m Y H:i') : ''))->attributes(['id' => 'date-start', 'class' => 'date-start form-control', 'placeholder'=>'Datum auswählen...', 'required'=>"true"]) }}
                     {!! $errors->first('date', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -21,8 +21,8 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('dateEnd') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('dateEnd', 'Bis:') }}
-                    {{ Form::text('dateEnd', old('dateEnd', !empty($training->dateEnd) ? $training->dateEnd->format('d m Y H:i') : ''), ['id' => 'date-end', 'class' => 'date-end form-control', 'placeholder'=>'Datum auswählen...']) }}
+                    {{ html()->label('Bis:', 'dateEnd') }}
+                    {{ html()->text('dateEnd', old('dateEnd', !empty($training->dateEnd) ? $training->dateEnd->format('d m Y H:i') : ''))->attributes(['id' => 'date-end', 'class' => 'date-end form-control', 'placeholder'=>'Datum auswählen...']) }}
                     {!! $errors->first('dateEnd', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -32,8 +32,8 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('title') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('title', 'Titel:') }}
-                    {{ Form::text('title', old('title'), ['placeholder' => "Titel...", 'class' => 'form-control no-resize', 'required'=>"true"]) }}
+                    {{ html()->label('Titel:', 'title') }}
+                    {{ html()->text('title', old('title'))->attributes(['placeholder' => "Titel...", 'class' => 'form-control no-resize', 'required'=>"true"]) }}
                     {!! $errors->first('title', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -45,7 +45,7 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::textarea('content', old('content'), ['class' => 'form-control', 'id'=>"tinymce"]) }}
+                    {{ html()->textarea('content', old('content'))->class('form-control')->id("tinymce") }}
                     {!! $errors->first('content', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -57,8 +57,8 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('location') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('location', 'Ort (Mit Koordinaten darstellbar auf Karte):') }}
-                    {{ Form::text('location', old('location', $training->location), ['id' => 'location', 'class' => 'location form-control', 'placeholder'=>'Ort eingeben...']) }}
+                    {{ html()->label('Ort (Mit Koordinaten darstellbar auf Karte):', 'location') }}
+                    {{ html()->text('location')->class('location form-control')->id('location')->attributes(['placeholder'=>'Ort eingeben...']) }}
                     {!! $errors->first('location', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -68,8 +68,8 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('sendbydatetime') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('sendbydatetime', 'Automatisch E-Mail versenden am (Leer = deaktiviert):') }}
-                    {{ Form::text('sendbydatetime', old('sendbydatetime', !empty($training->sendbydatetime) ? $training->sendbydatetime->format('d m Y H:i') : ''), ['id' => 'sendbydatetime', 'class' => 'sendbydatetime form-control', 'placeholder'=>'Datum auswählen...']) }}
+                    {{ html()->label('Automatisch E-Mail versenden am (Leer = deaktiviert):', 'sendbydatetime') }}
+                    {{ html()->text('sendbydatetime', old('sendbydatetime', !empty($training->sendbydatetime) ? $training->sendbydatetime->format('d m Y H:i') : ''))->class('sendbydatetime form-control')->id('sendbydatetime')->attributes(['placeholder'=>'Datum auswählen...']) }}
                     {!! $errors->first('sendbydatetime', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -102,7 +102,7 @@
                 @foreach($positions as $position)
                     <tr pos_id="{{$position->id}}" class="strikeout">
                         <td>
-                            {{Form::hidden('position[]',$position->id)}}
+                            {{html()->hidden('position[]',$position->id)}}
                             <select class="bootstrap-select show-tick" data-live-search="true" name="qualification[]">
                                 @foreach($qualifications as $qualification)
                                     <option value="{{$qualification->id}}" @if($position->qualification_id == $qualification->id) selected @endif>{{$qualification->name}}</option>
@@ -131,13 +131,13 @@
 <div class="row clearfix">
     <div class="col-sm-1 pull-right">
         <div class="form-line">
-            {{ Form::button('Speichern', ['class' => 'form-control btn btn-success waves-effect', 'type' => "submit"]) }}
+            {{ html()->button('Speichern', 'submit')->class('form-control btn btn-success waves-effect') }}
         </div>
     </div>
 </div>
 
 <div id="delete_position"></div>
-{{ Form::close() }}
+{{ html()->closeModelForm() }}
 
 
 @section('post_body')
