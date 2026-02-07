@@ -16,11 +16,11 @@
         "laravel/framework": "^12.0",
         "laravel/tinker": "~2.0",
         "laravel/ui": "^4.0",
-        "spatie/laravel-html": "^3.11.3",
         "league/flysystem-aws-s3-v3": "^3.0",
-        "mews/captcha": "~3.0",
+        "mews/captcha": "^3.4",
         "predis/predis": "^3.0",
         "spatie/laravel-backup": "^9.0",
+        "spatie/laravel-html": "^3.11.3",
         "watson/active": "^7.2.0"
     },
     "require-dev": {
