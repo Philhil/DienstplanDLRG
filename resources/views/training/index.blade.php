@@ -5,7 +5,9 @@
 @endsection
 
 @section('content')
-
+    @if(count($trainings) == 0)
+        Aktuell keine Fortbildungen
+    @endif
     @foreach($trainings as $training)
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <span class="anchor" id="training{{$training->id}}"></span>
