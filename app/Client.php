@@ -76,6 +76,20 @@ class Client extends Model
             ->where('isTrainingEditor', '=', true)->orderBy('name');
     }
 
+    public function noStatisticEditors()
+    {
+        return $this->belongsToMany(User::class, 'client_user')
+            ->where('client_user.approved', '=', true)
+            ->where('isStatisticEditor', '=', false)->orderBy('name');
+    }
+
+    public function StatisticEditors()
+    {
+        return $this->belongsToMany(User::class, 'client_user')
+            ->where('client_user.approved', '=', true)
+            ->where('isStatisticEditor', '=', true)->orderBy('name');
+    }
+
     public function Qualifications()
     {
         return $this->hasMany( Qualification::class)->orderBy('name');

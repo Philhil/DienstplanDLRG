@@ -113,8 +113,10 @@ class ClientController extends Controller
         $adminsOfClient = $client->Admins()->get();
         $notrainingeditorsOfClient = $client->noTrainingEditors()->get();
         $trainingeditorsOfClient = $client->TrainingEditors()->get();
+        $nostatisticeditorsOfClient = $client->noStatisticEditors()->get();
+        $statisticeditorsOfClient = $client->StatisticEditors()->get();
 
-        return view('client.edit', compact('client', 'usersOfClient', 'adminsOfClient', 'notrainingeditorsOfClient', 'trainingeditorsOfClient'));
+        return view('client.edit', compact('client', 'usersOfClient', 'adminsOfClient', 'notrainingeditorsOfClient', 'trainingeditorsOfClient', 'nostatisticeditorsOfClient', 'statisticeditorsOfClient'));
     }
 
     /**
@@ -233,6 +235,30 @@ class ClientController extends Controller
             }
 
             $clientuser->isTrainingEditor = $request->get('isTrainingEditor') == 1 ? true : false;
+            $clientuser->save();
+            return "true";
+        }
+        return "false";
+    }
+
+    /**
+     * Set StatisticEditor rights to the specified resource and user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool as String :D
+     */
+    public function statisticeditorClient_User(Request $request)
+    {
+        $clientuser = Client_user::where(['client_id' => $request->get('client_id'), 'user_id' => $request->get('user_id')])->first();
+
+        if ( !is_null($clientuser))
+        {
+            //kann nur von admins oder superadmin erfolgen.
+            if(!Auth::user()->isAdminOfClient($request->get('client_id')) && !Auth::user()->isSuperAdmin()) {
+                abort(402, "Nope.");
+            }
+
+            $clientuser->isStatisticEditor = $request->get('isStatisticEditor') == 1 ? true : false;
             $clientuser->save();
             return "true";
         }
