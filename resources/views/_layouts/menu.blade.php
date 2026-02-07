@@ -99,7 +99,7 @@
                         </a>
                     </li>
                 @endcan
-                @can('trainingeditor')
+                @canany(['administration', 'trainingeditor'])
                     @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_training)
                     <li class="{{active('training.create')}}">
                         <a href="{{ action('TrainingController@create') }}">
@@ -108,7 +108,7 @@
                         </a>
                     </li>
                     @endif
-                @endcan
+                @endcanany
                 @can('administration')
                     <li class="{{active('calendar.create')}}">
                         <a href="{{action('CalendarController@create')}}">
@@ -144,7 +144,7 @@
                         </a>
                     </li>
                 @endcan
-                @can('statisticeditor')
+                @canany(['administration', 'statisticeditor'])
                     @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_statistic)
                         <li class="{{active('statistic.*')}}">
                             <a href="{{ action('StatisticController@index') }}">
@@ -153,7 +153,7 @@
                             </a>
                         </li>
                     @endif
-                @endcan
+                @endcanany
             @endif
 
             @can('superadministration')
