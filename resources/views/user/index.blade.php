@@ -58,11 +58,11 @@
                                 </a>
 
                                 @if(Auth::user()->isSuperAdmin() && \Illuminate\Support\Facades\Route::current()->getPrefix() == '/superadmin')
-                                    {{ Form::open(['url' => '/user/'.$user->id, 'method' => 'delete', 'style'=>'display:inline-block']) }}
+                                    {{ html()->form('DELETE', '/user/'.$user->id)->style('display:inline-block')->open() }}
                                     <button type="submit" class="btn btn-danger waves-effect btn-delete">
                                         <i class="material-icons">delete</i>
                                     </button>
-                                    {{ Form::close() }}
+                                    {{ html()->form()->close() }}
                                 @endif
 
                                 @if($user->clients->contains('id', Auth::user()->currentclient_id) && $user->client_user->contains(
@@ -78,11 +78,11 @@
                                         </button>
                                     </a>
                                 @elseif($user->id != Auth::user()->id)
-                                    {{ Form::open(['url' => '/client/'. Auth::user()->currentclient_id .'/removeuser/'.$user->id, 'method' => 'delete', 'style'=>'display:inline-block']) }}
+                                    {{ html()->form('DELETE', '/client/'. Auth::user()->currentclient_id .'/removeuser/'.$user->id)->style('display:inline-block')->open() }}
                                     <button type="submit" class="btn btn-danger waves-effect btn-delete">
                                         <i class="material-icons">highlight_off</i>
                                     </button>
-                                    {{ Form::close() }}
+                                    {{ html()->form()->close() }}
                                 @endif
 
                             </td>

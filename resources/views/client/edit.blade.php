@@ -55,7 +55,7 @@
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header">
-                    <h2>Fortbildung Editor</h2>
+                    <h2>Fortbildung Editor (zusätzlich zu Admins)</h2>
                 </div>
                 <div class="body">
                     <div class="row">
@@ -76,6 +76,33 @@
                 </div>
             </div>
         </div>
+        @endif
+
+        @if($client->module_statistic)
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>Statistik berechtigte (zusätzlich zu Admins)</h2>
+                    </div>
+                    <div class="body">
+                        <div class="row">
+                            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+                                <div class="row clearfix" style="margin-left: 50px;">
+                                    <select id='client_user_statisticeditorselect' class="ms" multiple='multiple' style="position: absolute; left: -9999px;">
+                                        @foreach($nostatisticeditorsOfClient as $nostatisticeditorOfClient)
+                                            <option value='{{$nostatisticeditorOfClient->id}}' >{{$nostatisticeditorOfClient->name}} {{$nostatisticeditorOfClient->first_name}}</option>
+                                        @endforeach
+
+                                        @foreach($statisticeditorsOfClient as $statisticeditorOfClient)
+                                            <option value='{{$statisticeditorOfClient->id}}' selected>{{$statisticeditorOfClient->name}} {{$statisticeditorOfClient->first_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         @endif
 
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -222,6 +249,56 @@
                         'user_id': value[0],
                         'client_id': "{{$client->id}}",
                         'isTrainingEditor' : 0
+                    },
+                    success : function(data){
+                        if (data == "true") {
+                            showNotification("alert-success", "Zuordnung gelöscht", "top", "center", "", "");
+                        } else {
+                            showNotification("alert-warning", "Fehler beim löschen der zuordnung", "top", "center", "", "");
+                        }
+                    }
+                });
+            }
+        });
+        @endif
+        @if($client->module_statistic)
+        $('#client_user_statisticeditorselect').multiSelect({
+            selectableHeader: "<h6>Benutzer von {{$client->name}}</h6>",
+            selectionHeader: "<h6>Statistik berechtigte von {{$client->name}}</div>",
+            selectableFooter: "<div class='custom-header'></div>",
+            selectionFooter: "<div class='custom-header'></div>",
+
+            afterSelect: function(value){
+                $.ajax({
+                    type: "POST",
+                    url: '/client_user/statisticeditor',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    'data' : {
+                        'user_id': value[0],
+                        'client_id': "{{$client->id}}",
+                        'isStatisticEditor' : 1
+                    },
+                    success : function(data){
+                        if (data == "true") {
+                            showNotification("alert-success", "Zuordnung gespeichert", "top", "center", "", "");
+                        } else {
+                            showNotification("alert-warning", "Fehler beim speichern der Zuordnung", "top", "center", "", "");
+                        }
+                    }
+                });
+            },
+            afterDeselect: function(value){
+                $.ajax({
+                    type: "POST",
+                    url: '/client_user/statisticeditor',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },'data' : {
+                        'user_id': value[0],
+                        'client_id': "{{$client->id}}",
+                        'isStatisticEditor' : 0
                     },
                     success : function(data){
                         if (data == "true") {

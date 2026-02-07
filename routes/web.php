@@ -74,6 +74,7 @@ Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web', 'SurveyHan
 
     Route::post('client_user/admin', 'ClientController@adminClient_User');
     Route::post('client_user/trainingeditor', 'ClientController@trainingeditorClient_User');
+    Route::post('client_user/statisticeditor', 'ClientController@statisticeditorClient_User');
 
     Route::match(['get', 'post'], 'position/{id}/subscribe', 'PositionController@subscribe');
     Route::match(['get', 'post'], 'position/{positionid}/subscribe_user/{userid}', 'PositionController@subscribe_user');

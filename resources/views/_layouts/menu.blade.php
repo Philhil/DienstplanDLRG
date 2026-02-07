@@ -75,7 +75,9 @@
                     <span>Anleitung</span>
                 </a>
             </li>
-            @if(\Illuminate\Support\Facades\Gate::check('administration') || \Illuminate\Support\Facades\Gate::check('trainingeditor'))
+            @if(\Illuminate\Support\Facades\Gate::check('administration')
+                || \Illuminate\Support\Facades\Gate::check('trainingeditor')
+                || \Illuminate\Support\Facades\Gate::check('statisticeditor'))
                 <li class="header {{active('service.edit')}}">Administration</li>
                 @can('administration')
                     <li class=@if(\Illuminate\Support\Facades\Route::current()->getPrefix() != '/superadmin') "{{active('user.*')}}" @endif>
@@ -97,14 +99,16 @@
                         </a>
                     </li>
                 @endcan
-                @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_training)
-                <li class="{{active('training.create')}}">
-                    <a href="{{ action('TrainingController@create') }}">
-                        <i class="material-icons">library_add</i>
-                        <span>Fortbildung anlegen</span>
-                    </a>
-                </li>
-                @endif
+                @can('trainingeditor')
+                    @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_training)
+                    <li class="{{active('training.create')}}">
+                        <a href="{{ action('TrainingController@create') }}">
+                            <i class="material-icons">library_add</i>
+                            <span>Fortbildung anlegen</span>
+                        </a>
+                    </li>
+                    @endif
+                @endcan
                 @can('administration')
                     <li class="{{active('calendar.create')}}">
                         <a href="{{action('CalendarController@create')}}">
@@ -139,6 +143,8 @@
                             <span>Gliederung</span>
                         </a>
                     </li>
+                @endcan
+                @can('statisticeditor')
                     @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_statistic)
                         <li class="{{active('statistic.*')}}">
                             <a href="{{ action('StatisticController@index') }}">
@@ -179,7 +185,7 @@
             Programming: &copy; 2017 - <?php echo date('Y') ?> <a href="https://github.com/Philhil/DienstplanDLRG">Philippe Käufer</a>.
         </div>
         <div class="version">
-            <b>Version: </b> 2022.1
+            <b>Version: </b> 2026.1
         </div>
     </div>
     <!-- #Footer -->

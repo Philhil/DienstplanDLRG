@@ -4,7 +4,9 @@
 @endsection
 
 @section('content')
-
+    @if(count($services) == 0)
+        Aktuell keine Dienste
+    @endif
     @foreach($services as $service)
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <span class="anchor" id="service{{$service->id}}"></span>

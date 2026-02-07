@@ -119,7 +119,7 @@ class HolidayController extends Controller
      * @param  \App\Holiday  $holiday
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Holiday $holiday)
+    public function update(StoreHolidayRequest $request, Holiday $holiday)
     {
         if($holiday->user_id != Auth::user()->id) {
             abort(402, "Nope.");

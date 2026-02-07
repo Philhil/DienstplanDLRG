@@ -27,13 +27,13 @@
                             </div>
                         </div>
                     @else
-                        {{ Form::model($survey_user, ['action' => ['SurveyController@vote', $survey->id], 'method' => 'POST']) }}
+                        {{ html()->modelForm($survey_user, 'POST', action('SurveyController@vote', $survey->id))->open() }}
 
                         @if($survey->passwordConfirmationRequired)
                             <div class="col-sm-2 col-xs-6">
                                 <div class="form-group {{$errors->has('password')  ? 'has-error' : ''}}">
                                     <div class="form-line">
-                                        {{ Form::password('password', ['placeholder' => "Passwort...", 'class' => 'form-control', 'id' => "password", "autocomplete" => "off"]) }}
+                                        {{ html()->password('password')->class('form-control')->id("password")->placeholder("Passwort...")->autocomplete(false) }}
                                         {!! $errors->first('password', '<p class="help-block">:message</p>') !!}
                                     </div>
                                 </div>
@@ -41,16 +41,16 @@
                         @endif
 
                         <div class="col-sm-1 col-xs-3">
-                            {{ Form::button('Zustimmen', ['class' => 'btn btn-success waves-effect', 'type' => "submit", 'id' => 'submit', 'name' => 'submit', 'value' => "accept"]) }}
+                            {{ html()->submit('Zustimmen')->class('btn btn-success waves-effect')->id('submit')->name('submit')->value("accept") }}
                         </div>
 
                         @if(!$survey->mandatory)
                         <div class="col-sm-1 col-xs-3">
-                            {{ Form::button('Ablehnen', ['class' => 'btn btn-danger waves-effect', 'type' => "submit", 'id' => 'submit', 'name' => 'submit', 'value' => "deny"]) }}
+                            {{ html()->submit('Ablehnen')->class('btn btn-dangers waves-effect')->id('submit')->name('submit')->value("deny") }}
                         </div>
                         @endif
 
-                        {{ Form::close() }}
+                        {{ html()->closeModelForm() }}
                     @endif
                 </div>
 

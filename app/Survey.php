@@ -22,9 +22,9 @@ class Survey extends Model
         'qualification_id'
     ];
 
-    protected $dates = [
-        'dateStart',
-        'dateEnd',
+    protected $casts = [
+        'dateStart' => 'datetime',
+        'dateEnd' => 'datetime',
     ];
 
     public function client()

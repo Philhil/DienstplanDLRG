@@ -12,10 +12,10 @@ class Holiday extends Model
         'from', 'to', 'user_id'
     ];
 
-    protected $dates = [
-        'create_at',
-        'from',
-        'to',
+    protected $casts = [
+        'create_at' => 'datetime',
+        'from' => 'datetime',
+        'to' => 'datetime',
     ];
 
     public function user()

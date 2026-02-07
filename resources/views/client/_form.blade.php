@@ -1,64 +1,53 @@
 @if(\Illuminate\Support\Facades\Route::current()->getName() == 'client.create')
-
-    {{ Form::model($client, ['action' => ['ClientController@store', $client->id]]) }}
-
-    <div class="col-md-12">
-        <div class="form-group {{ $errors->has('name') ? 'has-error' : ''}}">
-            <div class="form-line">
-                {{ Form::label('name', 'Name:') }}
-                {{ Form::text('name', null, ['class' => 'form-control', 'placeholder' => 'Client Name']) }}
-                {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
-            </div>
-        </div>
-    </div>
+    {{ html()->modelForm($client, 'POST', action('ClientController@store', $client->id))->open() }}
 @else
-    {{ Form::model($client, ['action' => ['ClientController@update', $client->id], "method" => "PUT"]) }}
-
-    <div class="col-md-12">
-        <div class="form-group {{ $errors->has('name') ? 'has-error' : ''}}">
-            <div class="form-line">
-                {{ Form::label('name', 'Name:') }}
-                {{ Form::text('name', null, ['class' => 'form-control', 'placeholder' => 'Client Name', 'disabled', 'readonly']) }}
-                {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
-            </div>
-        </div>
-    </div>
+    {{ html()->modelForm($client, 'PUT', action('ClientController@update', $client->id))->open() }}
 @endif
 
+<div class="col-md-12">
+    <div class="form-group {{ $errors->has('name') ? 'has-error' : ''}}">
+        <div class="form-line">
+            {{ html()->label('Name:', 'name') }}
+            {{ html()->text('name')->class('form-control')->placeholder('Client Name') }}
+            {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
+        </div>
+    </div>
+</div>
+
 <div class="col-md-4">
-    <b>{{ Form::label('seasonStart', 'Start der Saison:') }}</b>
+    <b>{{ html()->label('Start der Saison:', 'seasonStart') }}</b>
     <div class="input-group {{ $errors->has('seasonStart') ? 'has-error' : ''}}">
         <span class="input-group-addon">
             <i class="material-icons">date_range</i>
         </span>
         <div class="form-line">
-            {{ Form::text('seasonStart', isset($client['seasonStart']) ? $client['seasonStart']->format('d.m') : null, ['class' => 'form-control saison', 'placeholder' => 'z.B: 01.03']) }}
+            {{ html()->text('seasonStart', isset($client['seasonStart']) ? $client['seasonStart']->format('d.m') : null)->class('form-control saison')->placeholder('z.B: 01.03') }}
             {!! $errors->first('seasonStart', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
 </div>
 
 <div class="col-md-4">
-    <b>{{ Form::label('defaultServiceStart', 'Default Dienstbeginn (24 hour):') }}</b>
+    <b>{{ html()->label('Default Dienstbeginn (24 hour):', 'defaultServiceStart') }}</b>
     <div class="input-group {{ $errors->has('defaultServiceStart') ? 'has-error' : ''}}">
         <span class="input-group-addon">
             <i class="material-icons">alarm</i>
         </span>
         <div class="form-line">
-            {{ Form::text('defaultServiceStart', null, ['class' => 'form-control time24', 'placeholder' => 'z.B. 09:30']) }}
+            {{ html()->text('defaultServiceStart')->class('form-control time24')->placeholder('z.B. 09:30') }}
             {!! $errors->first('defaultServiceStart', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
 </div>
 
 <div class="col-md-4">
-    <b>{{ Form::label('defaultServiceEnd', 'Default Dienstende (24 hour):') }}</b>
+    <b>{{ html()->label('Default Dienstende (24 hour):', 'defaultServiceEnd') }}</b>
     <div class="input-group {{ $errors->has('defaultServiceEnd') ? 'has-error' : ''}}">
         <span class="input-group-addon">
             <i class="material-icons">alarm_off</i>
         </span>
         <div class="form-line">
-            {{ Form::text('defaultServiceEnd', null, ['class' => 'form-control time24', 'placeholder' => 'z.B. 19:30']) }}
+            {{ html()->text('defaultServiceEnd')->class('form-control time24')->placeholder('z.B. 19:30') }}
             {!! $errors->first('defaultServiceEnd', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
@@ -66,27 +55,27 @@
 
 
 <div class="col-md-12">
-    <b>{{ Form::label('weeklyServiceviewEmail', 'Automatismen') }}</b>
+    <b>{{ html()->label('Automatismen', 'weeklyServiceviewEmail') }}</b>
     <div class="input-group {{ $errors->has('weeklyServiceviewEmail')  ? 'has-error' : ''}}">
         <span class="input-group-addon pull-left">
-            {{ Form::checkbox('weeklyServiceviewEmail', 1, old('weeklyServiceviewEmail') or $client->weeklyServiceviewEmail != 0 ? true : false, ['class' => 'filled-in', 'id' => "weeklyServiceviewEmail"]) }}
-            {{ Form::label('weeklyServiceviewEmail', 'Wöchentliches versenden des Wachplans') }}
+            {{ html()->checkbox('weeklyServiceviewEmail', old('weeklyServiceviewEmail') or $client->weeklyServiceviewEmail != 0 ? true : false, 1)->class('filled-in')->id("weeklyServiceviewEmail") }}
+            {{ html()->label('Wöchentliches versenden des Wachplans', 'weeklyServiceviewEmail') }}
             {!! $errors->first('weeklyServiceviewEmail', '<p class="help-block">:message</p>') !!}
         </span>
     </div>
 </div>
 
 <div class="col-md-12">
-    <b>{{ Form::label('isMailinglistCommunication', 'E-Mail Verteiler über Mailingliste (News und Wachpläne)') }}</b>
+    <b>{{ html()->label('E-Mail Verteiler über Mailingliste (News und Wachpläne)', 'isMailinglistCommunication') }}</b>
     <div class="input-group {{ $errors->has('isMailinglistCommunication') || $errors->has('mailinglistAddress')  ? 'has-error' : ''}}">
         <span class="input-group-addon">
-            {{ Form::checkbox('isMailinglistCommunication', 1, old('isMailinglistCommunication') or $client->isMailinglistCommunication != 0 ? true : false, ['class' => 'filled-in', 'id' => "isMailinglistCommunication"]) }}
-            {{ Form::label('isMailinglistCommunication', ' ') }}
+            {{ html()->checkbox('isMailinglistCommunication', old('isMailinglistCommunication') or $client->isMailinglistCommunication != 0 ? true : false, 1)->class('filled-in')->id("isMailinglistCommunication") }}
+            {{ html()->label(' ','isMailinglistCommunication') }}
             {!! $errors->first('isMailinglistCommunication', '<p class="help-block">:message</p>') !!}
         </span>
 
         <div class="form-line">
-            {{ Form::text('mailinglistAddress', null, ['class' => 'form-control email', 'placeholder' => 'Mailinglist E-Mail']) }}
+            {{ html()->text('mailinglistAddress')->class('form-control email')->placeholder('Mailinglist E-Mail') }}
             {!! $errors->first('mailinglistAddress', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
@@ -101,7 +90,7 @@
             <i class="material-icons">contact_mail</i>
         </span>
         <div class="form-line">
-            {{ Form::text('mailSenderName', null, ['class' => 'form-control', 'placeholder' => 'Absender Name']) }}
+            {{ html()->text('mailSenderName')->class('form-control')->placeholder('Absender Name') }}
             {!! $errors->first('mailSenderName', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
@@ -113,7 +102,7 @@
             <i class="material-icons">email</i>
         </span>
         <div class="form-line">
-            {{ Form::text('mailReplyAddress', null, ['class' => 'form-control email', 'placeholder' => 'Antworten an E-Mail Adresse']) }}
+            {{ html()->text('mailReplyAddress')->class('form-control email')->placeholder('Antworten an E-Mail Adresse') }}
             {!! $errors->first('mailReplyAddress', '<p class="help-block">:message</p>') !!}
         </div>
     </div>
@@ -121,8 +110,8 @@
 
 <div class="col-sm-10">
     <div class="form-line">
-        {{ Form::button('Speichern', ['class' => 'form-control btn btn-success waves-effect', 'type' => "submit"]) }}
+        {{ html()->button('Speichern', 'submit')->class('form-control btn btn-success waves-effect') }}
     </div>
 </div>
 
-{{ Form::close() }}
+{{ html()->closeModelForm() }}

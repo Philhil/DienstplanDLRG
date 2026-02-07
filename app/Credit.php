@@ -10,8 +10,9 @@ class Credit extends Model
         'position_id', 'qualification_id', 'points'
     ];
 
-    protected $dates = [
-        'create_at', 'updated_at'
+    protected $casts = [
+        'create_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     public function qualification()

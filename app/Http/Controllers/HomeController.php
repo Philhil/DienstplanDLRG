@@ -6,7 +6,7 @@ use App\Mail\WachplanToMail;
 use App\Position;
 use App\Service;
 use App\Training_user;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -82,7 +82,7 @@ class HomeController extends Controller
             'tableheader' => $tableheader,
             'services' => $services,
             'client' => $client
-        ])->setPaper('a3', 'landscape');
+        ])->setPaper('a4', 'landscape');
 
         return $pdf->download('Dienstplan'.Carbon::now()->format('Ymd').'.pdf');
     }

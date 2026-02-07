@@ -26,8 +26,9 @@ class Client extends Model
         'module_survey'
     ];
 
-    protected $dates = [
-        'create_at', 'seasonStart'
+    protected $casts = [
+        'create_at' => 'datetime',
+        'seasonStart' => 'datetime'
     ];
 
     public function user_all()
@@ -75,6 +76,20 @@ class Client extends Model
             ->where('isTrainingEditor', '=', true)->orderBy('name');
     }
 
+    public function noStatisticEditors()
+    {
+        return $this->belongsToMany(User::class, 'client_user')
+            ->where('client_user.approved', '=', true)
+            ->where('isStatisticEditor', '=', false)->orderBy('name');
+    }
+
+    public function StatisticEditors()
+    {
+        return $this->belongsToMany(User::class, 'client_user')
+            ->where('client_user.approved', '=', true)
+            ->where('isStatisticEditor', '=', true)->orderBy('name');
+    }
+
     public function Qualifications()
     {
         return $this->hasMany( Qualification::class)->orderBy('name');
@@ -98,7 +113,7 @@ class Client extends Model
     public function Season()
     {
         $season = $this->seasonStart;
-        $season->year(Carbon::now()->format('Y'));
+        $season->year((int)Carbon::now()->format('Y'));
 
         if ($season->isFuture())
         {

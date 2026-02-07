@@ -15,14 +15,15 @@ class Service extends Model
         'date', 'hastoauthorize', 'comment', 'dateEnd', 'location'
     ];
 
-    protected $dates = [
-        'date', 'dateEnd', 'finalized_at'
+    protected $casts = [
+        'date' => 'datetime',
+        'dateEnd' => 'datetime',
+        'finalized_at' => 'datetime'
     ];
 
     protected $attributes = array(
         'hastoauthorize' => 1,
     );
-
 
     public function positions()
     {

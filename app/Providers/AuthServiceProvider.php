@@ -23,8 +23,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerPolicies();
-
         Gate::define('administration', function($user){
             return $user->isAdmin();
         });
@@ -35,6 +33,10 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('trainingeditor', function($user){
             return $user->isTrainingEditor();
+        });
+
+        Gate::define('statisticeditor', function($user){
+            return $user->isStatisticEditor();
         });
     }
 }
