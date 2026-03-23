@@ -27,7 +27,7 @@ class PositionController extends Controller
         }
 
         $positions = Position::has('candidatures')->join('services', 'services.id', '=', 'service_id')
-            ->where('services.date','>=', DB::raw('CURDATE()'))
+            ->where('services.date','>=', now()->toDateString())
             ->where(['user_id' =>  null, 'services.client_id' => Auth::user()->currentclient_id])
             ->orderby('service_id')->with('qualification')->with('service')
             ->with('candidatures')->with('candidatures.user')->select('positions.*')->get();

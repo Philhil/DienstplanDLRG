@@ -39,13 +39,13 @@ class TrainingController extends Controller
         $isTrainingEditor = Auth::user()->isTrainingEditor();
 
         if($isAdmin || $isTrainingEditor) {
-            $trainings = Training::where('date', '>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+            $trainings = Training::where('date', '>=', now()->toDateString())->where('client_id', '=', Auth::user()->currentclient_id)
                 ->orderBy('date')->with('openpositions')->with('positions.qualification')->with('positions.user')
                 ->with('positions.candidatures')->with('positions.candidatures.user')
                 ->with('training_users')->with('training_users.user')->get();
         } else
         {
-            $trainings = Training::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+            $trainings = Training::where('date','>=', now()->toDateString())->where('client_id', '=', Auth::user()->currentclient_id)
                 ->orderBy('date')->with('openpositions')->with('positions.qualification')->with('positions.user')
                 ->with('positions.candidatures')->with(['positions.candidatures.user'=> function ($query) {
                     $query->where('id', '=', Auth::user()->id);

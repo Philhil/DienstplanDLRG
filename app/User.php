@@ -132,7 +132,7 @@ class User extends Authenticatable
 
     public function authorizedpositions_future()
     {
-        return $this->authorizedpositions()->where('services.date','>=', DB::raw('CURDATE()'));
+        return $this->authorizedpositions()->where('services.date','>=', now()->toDateString());
     }
 
     public function client_user()
@@ -171,7 +171,7 @@ class User extends Authenticatable
 
     public function holidaysInFuture()
     {
-        return $this->hasMany(Holiday::class)->where('to','>=', DB::raw('CURDATE()'));
+        return $this->hasMany(Holiday::class)->where('to','>=', now()->toDateString());
     }
 
     public function services_inHolidayList()
@@ -181,7 +181,7 @@ class User extends Authenticatable
         {
             $from = $holiday->from->startOfDay();
             $to = $holiday->to->endOfDay();
-            $services = Service::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+            $services = Service::where('date','>=', now()->toDateString())->where('client_id', '=', Auth::user()->currentclient_id)
                 ->with(['positions.candidatures.user'=> function ($query) {
                     $query->where('id', '=', Auth::user()->id);
                 }])
@@ -203,7 +203,7 @@ class User extends Authenticatable
         {
             $from = $holiday->from->startOfDay();
             $to = $holiday->to->endOfDay();
-            $trainings = Training::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+            $trainings = Training::where('date','>=', now()->toDateString())->where('client_id', '=', Auth::user()->currentclient_id)
                 ->with(['positions.candidatures.user'=> function ($query) {
                     $query->where('id', '=', Auth::user()->id);
                 }])

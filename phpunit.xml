@@ -9,15 +9,20 @@
     </testsuite>
   </testsuites>
   <php>
-    <server name="APP_ENV" value="local"/>
+    <server name="APP_ENV" value="testing"/>
+    <env name="APP_KEY" value="base64:CqfFW8Qdpl/GEOL0ZJAPgPmT5PLqO8mruc0ZAfr+d/E="/>
+    <env name="NOCAPTCHA_SECRET" value="test-secret"/>
+    <env name="NOCAPTCHA_SITEKEY" value="test-sitekey"/>
+    <env name="TESTING_DISABLE_CAPTCHA" value="true"/>
     <server name="BCRYPT_ROUNDS" value="4"/>
     <server name="CACHE_DRIVER" value="array"/>
-    <server name="DB_CONNECTION" value="mysql"/>
-    <server name="DB_DATABASE" value="test"/>
-    <server name="MAIL_DRIVER" value="log"/>
+    <server name="DB_CONNECTION" value="sqlite"/>
+    <server name="DB_DATABASE" value=":memory:"/>
+    <server name="MAIL_MAILER" value="log"/>
     <server name="QUEUE_CONNECTION" value="sync"/>
     <server name="SESSION_DRIVER" value="array"/>
-    <server name="TELESCOPE_ENABLED" value="true"/>
+    <server name="TELESCOPE_ENABLED" value="false"/>
+    <server name="IS_DEMO" value="true"/>
   </php>
   <source>
     <include>

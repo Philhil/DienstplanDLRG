@@ -35,28 +35,28 @@ class HomeController extends Controller
         $saison = Auth::user()->currentclient()->Season();
 
         $positions_user_past = Position::where('user_id', '=', Auth::user()->id)->whereNull('positions.training_id')->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))
+            ->where('services.date', '<', now()->toDateString())
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
             ->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
         $positions_user_past_training = Training_user::where('user_id', '=', Auth::user()->id)->join('trainings', 'training_users.training_id', '=', 'trainings.id')
-            ->where('trainings.date', '<', DB::raw('CURDATE()'))
+            ->where('trainings.date', '<', now()->toDateString())
             ->whereBetween('trainings.date', [$saison["from"], $saison["to"]])
             ->where('trainings.client_id', '=', Auth::user()->currentclient_id)->count();
         $positions_total_past = Position::whereNotNull('positions.user_id')->whereNull('positions.training_id')->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))
+            ->where('services.date', '<', now()->toDateString())
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
             ->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
         $positions_total_past_training = Training_user::join('trainings', 'training_users.training_id', '=', 'trainings.id')
-            ->where('trainings.date', '<', DB::raw('CURDATE()'))
+            ->where('trainings.date', '<', now()->toDateString())
             ->whereBetween('trainings.date', [$saison["from"], $saison["to"]])
             ->where('trainings.client_id', '=', Auth::user()->currentclient_id)->count();
         $positions_free_required = Position::where('user_id', '=', null)->whereNull('positions.training_id')
             ->where('requiredposition', '=', 1)->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '>=', DB::raw('CURDATE()'))
+            ->where('services.date', '>=', now()->toDateString())
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
             ->where('services.client_id', '=', Auth::user()->currentclient_id)->count();
         $top_users = Position::where('user_id', '!=', null)->whereNotNull('positions.service_id')->with('user')->join('services', 'positions.service_id', '=', 'services.id')
-            ->where('services.date', '<', DB::raw('CURDATE()'))
+            ->where('services.date', '<', now()->toDateString())
             ->whereBetween('services.date', [$saison["from"], $saison["to"]])
             ->where('services.client_id', '=', Auth::user()->currentclient_id)->selectRaw('user_id, count(*) as aggregate')
             ->groupBy('user_id')->limit(10)->orderby('aggregate', 'desc')->get();
@@ -66,7 +66,7 @@ class HomeController extends Controller
 
     public function mailtest(){
         $tableheader = \App\Qualification::where(['isservicedefault' => true, 'client_id' => Auth::user()->currentclient_id])->get();
-        $services = Service::where([['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)], 'services.client_id' => Auth::user()->currentclient_id])->orderBy('date')->with('positions.qualification')->get();
+        $services = Service::where([['date','>=', now()->toDateString()], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)], 'services.client_id' => Auth::user()->currentclient_id])->orderBy('date')->with('positions.qualification')->get();
         $client = Auth::user()->currentclient();
 
         return view('email.serviceslist', compact('tableheader', 'services', 'client'));
@@ -75,7 +75,7 @@ class HomeController extends Controller
     public function generatePDF()
     {
         $tableheader = Auth::user()->currentclient()->Qualifications()->where('isservicedefault', true)->get();
-        $services = \App\Service::where(['client_id' => Auth::user()->currentclient_id,['date','>=', DB::raw('CURDATE()')]])->orderBy('date')->with('positions.qualification')->get();
+        $services = \App\Service::where(['client_id' => Auth::user()->currentclient_id,['date','>=', now()->toDateString()]])->orderBy('date')->with('positions.qualification')->get();
         $client = Auth::user()->currentclient();
 
         $pdf = PDF::loadView('email.serviceslist', [
@@ -93,7 +93,7 @@ class HomeController extends Controller
             abort(402, "Nope.");
         }
 
-        $services_count = Service::where(['client_id' => Auth::user()->currentclient_id, ['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addWeek(2)]])->orderBy('date')->with('positions.qualification')->count();
+        $services_count = Service::where(['client_id' => Auth::user()->currentclient_id, ['date','>=', now()->toDateString()], ['date', '<=', \Carbon\Carbon::today()->addWeek(2)]])->orderBy('date')->with('positions.qualification')->count();
 
         if($services_count > 0) {
             $client = Auth::user()->currentclient();

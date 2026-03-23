@@ -35,7 +35,7 @@ class WachplanToMail extends Mailable
     {
         $tableheader = $this->client->Qualifications()->where('isservicedefault', true)->get();
         //get all services of next 2 month
-        $services = Service::where(['client_id' => $this->client->id,['date','>=', DB::raw('CURDATE()')], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)]])->orderBy('date')->with('positions.qualification')->get();
+        $services = Service::where(['client_id' => $this->client->id,['date','>=', now()->toDateString()], ['date', '<=', \Carbon\Carbon::today()->addMonth(2)]])->orderBy('date')->with('positions.qualification')->get();
 
         if (count($services) > 0)
         {

@@ -13,9 +13,14 @@ class ChangePositionsOnDeleteUserReferences extends Migration
      */
     public function up()
     {
-        Schema::table('positions', function (Blueprint $table) {
-            $table->dropForeign('positions_user_id_foreign');
+        // SQLite does not support dropping foreign keys by name; skip on SQLite (test env)
+        if (config('database.default') !== 'sqlite') {
+            Schema::table('positions', function (Blueprint $table) {
+                $table->dropForeign('positions_user_id_foreign');
+            });
+        }
 
+        Schema::table('positions', function (Blueprint $table) {
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')

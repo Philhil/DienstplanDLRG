@@ -27,7 +27,7 @@ class ServiceController extends Controller
     {
         if(Auth::user()->isAdmin())
         {
-            $services = Service::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+            $services = Service::where('date','>=', now()->toDateString())->where('client_id', '=', Auth::user()->currentclient_id)
                 ->orderBy('date')->with('openpositions')->withCount('openpositions_required')
                 ->with('positions.qualification')
                 ->with('positions.user')
@@ -36,7 +36,7 @@ class ServiceController extends Controller
                 ->get();
         } else
         {
-            $services = Service::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
+            $services = Service::where('date','>=', now()->toDateString())->where('client_id', '=', Auth::user()->currentclient_id)
                 ->orderBy('date')->with('openpositions')
                 ->withCount('openpositions_required')
                 ->with('positions.qualification')

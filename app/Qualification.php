@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class Qualification extends Model
 {
     protected $fillable = [
-        'name', 'short', 'isservicedefault', 'defaultcount', 'defaultrequiredasposition'
+        'name', 'short', 'isservicedefault', 'defaultcount', 'defaultrequiredasposition', 'client_id'
     ];
 
     public function users()
