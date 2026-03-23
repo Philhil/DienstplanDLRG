@@ -61,7 +61,7 @@
                                                         <row>
                                                             <div class="col-md-12">
                                                                 <span class="badge bg-orange">
-                                                                    {{substr ($candidate->user->first_name, 0, 1)}}. {{$candidate->user->name}}
+                                                                    {{$candidate->user->first_name}} {{$candidate->user->name}}
                                                                     <button type="button" class="btn btn-xs bg-green btn-authorize" positionid="{{$position->id}}" candidateid="{{$candidate->id}}"><i class="material-icons">check</i></button>
                                                                 </span>
                                                             </div>
@@ -71,7 +71,7 @@
                                             @endif
                                             @if(isset($position->user))
                                                 <span class="badge @if($position->user->id == $user->id) bg-light-green @else bg-green @endif">
-                                                    {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
+                                                    {{$position->user->first_name}} {{$position->user->name}}
                                                 </span>
                                             @endif
                                             @if($position->comment)
@@ -102,7 +102,7 @@
                                                         <row>
                                                             <div class="col-md-12">
                                                                 <span class="badge bg-orange">
-                                                                    {{substr ($candidate->user->first_name, 0, 1)}}. {{$candidate->user->name}}
+                                                                    {{$candidate->user->first_name}} {{$candidate->user->name}}
                                                                     <button type="button" class="btn btn-xs bg-green btn-authorize" positionid="{{$position->id}}" candidateid="{{$candidate->id}}"><i class="material-icons">check</i></button>
                                                                 </span>
                                                             </div>
@@ -112,7 +112,7 @@
                                             @endif
                                             @if(isset($position->user))
                                                 <span class="badge @if($position->user->id == $user->id) bg-light-green @else bg-green @endif">
-                                                    {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
+                                                    {{$position->user->first_name}} {{$position->user->name}}
                                                 </span>
                                             @endif
                                             @if($position->comment)

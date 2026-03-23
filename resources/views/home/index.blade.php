@@ -159,7 +159,7 @@
                                 <ul class="dashboard-stat-list">
                                     @foreach($top_users as $top_pos)
                                         <li>
-                                            {{substr($top_pos->user->first_name, 0, 1)}}. {{$top_pos->user->name}}
+                                            {{$top_pos->user->first_name}} {{$top_pos->user->name}}
                                             <span class="pull-right"><b>{{$top_pos->aggregate}}</b> <small>Dienste</small></span>
                                         </li>
                                     @endforeach
