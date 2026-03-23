@@ -70,7 +70,7 @@
                                                         <row>
                                                             <div class="col-md-12">
                                                                 <span class="badge bg-orange">
-                                                                    {{substr ($candidate->user->first_name, 0, 1)}}. {{$candidate->user->name}}
+                                                                    {{$candidate->user->first_name}} {{$candidate->user->name}}
                                                                     <button type="button" class="btn btn-xs bg-green btn-authorize" positionid="{{$position->id}}" candidateid="{{$candidate->id}}"><i class="material-icons">check</i></button>
                                                                 </span>
                                                             </div>
@@ -82,7 +82,7 @@
                                             @endif
                                             @if(isset($position->user))
                                                 <span class="badge @if($position->user->id == $user->id) bg-light-green @else bg-green @endif">
-                                                    {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
+                                                    {{$position->user->first_name}} {{$position->user->name}}
                                                 </span>
                                                 {{-- user has a Candidature for that pos --}}
                                             @elseif($position->candidatures->contains('user', Auth::user()))
@@ -131,7 +131,7 @@
                                                         <row>
                                                             <div class="col-md-12">
                                                                 <span class="badge bg-orange">
-                                                                    {{substr ($candidate->user->first_name, 0, 1)}}. {{$candidate->user->name}}
+                                                                    {{$candidate->user->first_name}} {{$candidate->user->name}}
                                                                     <button type="button" class="btn btn-xs bg-green btn-authorize" positionid="{{$position->id}}" candidateid="{{$candidate->id}}"><i class="material-icons">check</i></button>
                                                                 </span>
                                                             </div>
@@ -143,7 +143,7 @@
                                             @endif
                                             @if(isset($position->user))
                                                 <span class="badge @if($position->user->id == $user->id) bg-light-green @else bg-green @endif">
-                                                    {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
+                                                    {{$position->user->first_name}} {{$position->user->name}}
                                                 </span>
                                                 {{-- user has a Candidature for that pos --}}
                                             @elseif($position->candidatures->contains('user', Auth::user()))
@@ -204,7 +204,7 @@
                             $(".btn-subscribe[positionid="+data.id+"]").remove();
 
                             if (data.user_id == "null") {
-                                $(tr).html('<span class="badge bg-light-green">{{substr(\Illuminate\Support\Facades\Auth::user()->first_name, 0, 1)}}. {{\Illuminate\Support\Facades\Auth::user()->name}}</span>');
+                                $(tr).html('<span class="badge bg-light-green">{{\Illuminate\Support\Facades\Auth::user()->first_name}} {{\Illuminate\Support\Facades\Auth::user()->name}}</span>');
                             } else {
                                 $(tr).html('<button type="button" class="btn bg-orange waves-effect btn-unsubscribe" positionid="'+data.id+'"><i class="material-icons">check_circle</i>Meldung zurückziehen</button>');
                             }
