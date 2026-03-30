@@ -19,16 +19,16 @@ class CalendarController extends Controller
         $isAdmin = Auth::user()->isAdmin();
         $isTrainingEditor = Auth::user()->isTrainingEditor();
 
-        $calendars = Calendar::where('date','>=', DB::raw('CURDATE() -INTERVAL 1 YEAR'))->where('client_id', '=', Auth::user()->currentclient_id)
+        $calendars = Calendar::where('date','>=', now()->subYear()->toDateString())->where('client_id', '=', Auth::user()->currentclient_id)
                 ->orderBy('date')->get();
-        $trainings = Training::where('date','>=', DB::raw('CURDATE() -INTERVAL 1 YEAR'))->where('client_id', '=', Auth::user()->currentclient_id)
+        $trainings = Training::where('date','>=', now()->subYear()->toDateString())->where('client_id', '=', Auth::user()->currentclient_id)
             ->orderBy('date')->get();
 
         //user -> user_pos -> pos -> service
-        $services_of_user = Auth::user()->services()->where('services.date','>=', DB::raw('CURDATE() -INTERVAL 1 YEAR'))->where('services.client_id', '=', Auth::user()->currentclient_id)
+        $services_of_user = Auth::user()->services()->where('services.date','>=', now()->subYear()->toDateString())->where('services.client_id', '=', Auth::user()->currentclient_id)
             ->orderBy('date')->get();
 
-        $services = Service::where('services.date','>=', DB::raw('CURDATE() -INTERVAL 1 YEAR'))->where('services.client_id', '=', Auth::user()->currentclient_id)
+        $services = Service::where('services.date','>=', now()->subYear()->toDateString())->where('services.client_id', '=', Auth::user()->currentclient_id)
             ->orderBy('date')->get();
         $services_without_user = $services->diff($services_of_user);
 
