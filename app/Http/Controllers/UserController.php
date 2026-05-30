@@ -167,7 +167,7 @@ class UserController extends Controller
         if (Auth::user()->isSuperAdmin() && Auth::user()->id != $id)
         {
             $user = User::findorFail($id);
-            $user->fill($request->except(['id', '_token']));
+            $user->fill($request->except(['id', '_token', 'ical_token']));
             $user->save();
 
             return redirect(action('UserController@index'));
@@ -175,7 +175,7 @@ class UserController extends Controller
         else if (Auth::user()->isAdmin() && Auth::user()->id != $id)
         {
             $user = User::findorFail($id);
-            $user->fill($request->except(['id', '_token', 'approved', 'role']));
+            $user->fill($request->except(['id', '_token', 'approved', 'role', 'ical_token']));
             $user->save();
 
             return redirect(action('UserController@index'));
@@ -183,7 +183,7 @@ class UserController extends Controller
         else
         {
             $user = Auth::user();
-            $user->fill($request->except(['id', '_token', 'approved', 'role']));
+            $user->fill($request->except(['id', '_token', 'approved', 'role', 'ical_token']));
             $user->save();
 
             return redirect(action('HomeController@index'));
@@ -247,5 +247,18 @@ class UserController extends Controller
 
         $client = Client::find($id);
         return redirect()->back()->with(['errormessage' => 'Dein User ist für ' . empty($client) ? "" : $client->name . ' noch nicht freigegeben']);
+    }
+
+    public function revokeIcalToken($id)
+    {
+        if (Auth::id() != $id) {
+            abort(403);
+        }
+
+        $user = Auth::user();
+        $user->ical_token = \Illuminate\Support\Str::uuid();
+        $user->save();
+
+        return redirect()->route('user.show', $id)->with('successmessage', 'Kalender-Link wurde zurückgesetzt. Bitte abonniere den Kalender mit dem neuen Link.');
     }
 }

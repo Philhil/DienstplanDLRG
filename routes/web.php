@@ -25,6 +25,10 @@ Route::get('/order', 'OrderController@index');
 Route::get('/order/create/{package}', 'OrderController@create');
 Route::post('/order/{package}', 'OrderController@store');
 
+Route::get('/ical/{token}', 'ICalController@feed')
+    ->name('ical.feed')
+    ->middleware('throttle:1,1');
+
 Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web', 'SurveyHandler']], function () {
 
     Route::redirect('/', '/service');
@@ -41,6 +45,7 @@ Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web', 'SurveyHan
 
     Route::resource('user', 'UserController');
     Route::match(['get', 'post'], 'user/approve/{id}', 'UserController@approve_user');
+    Route::post('user/{id}/revoke-ical-token', 'UserController@revokeIcalToken')->name('user.revokeIcalToken');
 
     Route::resource('client', 'ClientController');
     Route::get('/clientapply', 'ClientController@apply')->name('clientapply');
