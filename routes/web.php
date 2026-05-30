@@ -27,7 +27,7 @@ Route::post('/order/{package}', 'OrderController@store');
 
 Route::get('/ical/{token}', 'ICalController@feed')
     ->name('ical.feed')
-    ->middleware('throttle:1,1');
+    ->middleware('throttle:30,60');
 
 Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web', 'SurveyHandler']], function () {
 
