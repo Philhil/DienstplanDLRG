@@ -328,6 +328,7 @@ class RouteCredentialsTest extends TestCase
 
         //act as User
         $user = User::where('name', '=', "User")->first();
+        $position = Position::first();
 
         //Login as User
         //GET|HEAD                               | login
@@ -582,32 +583,32 @@ class RouteCredentialsTest extends TestCase
         $this->actingAs($user)->post('/position/list_notAuthorized', ['_token' => $token])->assertStatus(402); //only as admin
 
         //GET|POST|HEAD                          | position/{id}/authorize
-        $this->actingAs($user)->get('/position/1/authorize')->assertStatus(402);//only as admin
-        $this->actingAs($user)->post('/position/1/authorize', ['_token' => $token])->assertStatus(402); //only as admin
+        $this->actingAs($user)->get('/position/'.$position->id.'/authorize')->assertStatus(402);//only as admin
+        $this->actingAs($user)->post('/position/'.$position->id.'/authorize', ['_token' => $token])->assertStatus(402); //only as admin
 
         //GET|POST|HEAD                          | position/{id}/deauthorize
-        $this->actingAs($user)->get('/position/1/deauthorize')->assertStatus(402);//only as admin
-        $this->actingAs($user)->post('/position/1/deauthorize', ['_token' => $token])->assertStatus(402); //only as admin
+        $this->actingAs($user)->get('/position/'.$position->id.'/deauthorize')->assertStatus(402);//only as admin
+        $this->actingAs($user)->post('/position/'.$position->id.'/deauthorize', ['_token' => $token])->assertStatus(402); //only as admin
 
         //GET|POST|HEAD                          | position/{id}/position_user
-        $this->actingAs($user)->get('/position/1/position_user')->assertStatus(402);//only as admin
-        $this->actingAs($user)->post('/position/1/position_user', ['_token' => $token])->assertStatus(402); //only as admin
+        $this->actingAs($user)->get('/position/'.$position->id.'/position_user')->assertStatus(402);//only as admin
+        $this->actingAs($user)->post('/position/'.$position->id.'/position_user', ['_token' => $token])->assertStatus(402); //only as admin
 
         //GET|POST|HEAD                          | position/{id}/subscribe
-        $this->actingAs($user)->get('/position/1/subscribe')->assertStatus(200);
-        $this->actingAs($user)->post('/position/1/subscribe', ['_token' => $token])->assertStatus(200);
+        $this->actingAs($user)->get('/position/'.$position->id.'/subscribe')->assertStatus(200);
+        $this->actingAs($user)->post('/position/'.$position->id.'/subscribe', ['_token' => $token])->assertStatus(200);
 
         //GET|POST|HEAD                          | position/{id}/unsubscribe
-        $this->actingAs($user)->get('/position/1/unsubscribe')->assertStatus(200);
-        $this->actingAs($user)->post('/position/1/unsubscribe', ['_token' => $token])->assertStatus(200);
+        $this->actingAs($user)->get('/position/'.$position->id.'/unsubscribe')->assertStatus(200);
+        $this->actingAs($user)->post('/position/'.$position->id.'/unsubscribe', ['_token' => $token])->assertStatus(200);
 
         //GET|POST|HEAD                          | position/{positionid}/subscribe_user/{userid}
-        $this->actingAs($user)->get('/position/1/subscribe_user/1')->assertStatus(402);//only as admin
-        $this->actingAs($user)->post('/position/1/subscribe_user/1', ['_token' => $token])->assertStatus(402); //only as admin
+        $this->actingAs($user)->get('/position/'.$position->id.'/subscribe_user/'.$user->id)->assertStatus(402);//only as admin
+        $this->actingAs($user)->post('/position/'.$position->id.'/subscribe_user/'.$user->id, ['_token' => $token])->assertStatus(402); //only as admin
 
         //GET|POST|HEAD                          | position/{positionid}/unsubscribe_user/{userid}
-        $this->actingAs($user)->get('/position/1/subscribe_user/1')->assertStatus(402);//only as admin
-        $this->actingAs($user)->post('/position/1/subscribe_user/1', ['_token' => $token])->assertStatus(402); //only as admin
+        $this->actingAs($user)->get('/position/'.$position->id.'/subscribe_user/'.$user->id)->assertStatus(402);//only as admin
+        $this->actingAs($user)->post('/position/'.$position->id.'/subscribe_user/'.$user->id, ['_token' => $token])->assertStatus(402); //only as admin
 
         //POST                                   | qualification
         $this->actingAs($user)->post('/qualification', ['_token' => $token])->assertStatus(402); //only as admin
