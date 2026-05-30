@@ -96,8 +96,8 @@ class PositionController extends Controller
                 if (($user->hasqualification($position->qualification()->first()->id) && !$position->service->hasUserPositions($user_id))|| Auth::user()->can('administration')) {
                     if ($service->hastoauthorize == false) {
                         $position->user_id = $user_id;
-                        event(new PositionAuthorized($position, null));
                         $position->save();
+                        event(new PositionAuthorized($position, null));
                     }
                     else {
                         //check if user is already Candidate
