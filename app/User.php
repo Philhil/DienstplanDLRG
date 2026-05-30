@@ -299,4 +299,10 @@ class User extends Authenticatable
 
         return $surveys;
     }
+
+    public function revokeIcalToken(): void
+    {
+        $this->ical_token = (string) Str::uuid();
+        $this->save();
+    }
 }
