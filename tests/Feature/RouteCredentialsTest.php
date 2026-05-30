@@ -788,20 +788,20 @@ class RouteCredentialsTest extends TestCase
         //GET|HEAD        survey/create
         $this->actingAs($user)->get('/survey/create')->assertStatus(402); //only if admin of client
         //GET|HEAD        survey/postpone/{surveyid}
-        $this->actingAs($user)->get('/survey/postpone/1')->assertRedirect()->assertCookieMissing('errormessage'); //redirect back on success
+        $survey = Survey::first();
+        $this->actingAs($user)->get('/survey/postpone/'.$survey->id)->assertRedirect()->assertCookieMissing('errormessage'); //redirect back on success
         //POST            survey/vote/{surveyid}
-        $this->actingAs($user)->post('/survey/vote/1', ['_token' => $token, 'value' => "accept"])->assertRedirect('/survey/1');
+        $this->actingAs($user)->post('/survey/vote/'.$survey->id, ['_token' => $token, 'value' => "accept"])->assertRedirect('/survey/'.$survey->id);
         //GET|HEAD        survey/{survey} //set dateStart to yesterday to access a currently activ survey
-        $survey = Survey::find(1);
         $survey->dateStart = Carbon::yesterday();
         $survey->save();
-        $this->actingAs($user)->get('/survey/1')->assertOk();
+        $this->actingAs($user)->get('/survey/'.$survey->id)->assertOk();
         //PUT|PATCH       survey/{survey}
-        $this->actingAs($user)->put('/survey/1', ['_token' => $token])->assertStatus(402); //only if admin of client
+        $this->actingAs($user)->put('/survey/'.$survey->id, ['_token' => $token])->assertStatus(402); //only if admin of client
         //DELETE          survey/{survey}
-        $this->actingAs($user)->delete('/survey/1', ['_token' => $token])->assertStatus(402); //only if admin of client
+        $this->actingAs($user)->delete('/survey/'.$survey->id, ['_token' => $token])->assertStatus(402); //only if admin of client
         //GET|HEAD        survey/{survey}/edit
-        $this->actingAs($user)->get('/survey/1/edit')->assertStatus(402); //only if admin of client
+        $this->actingAs($user)->get('/survey/'.$survey->id.'/edit')->assertStatus(402); //only if admin of client
 
         //POST                                   | logout
         $this->actingAs($user)->followingRedirects()->post('/logout', ['_token' => $token])
