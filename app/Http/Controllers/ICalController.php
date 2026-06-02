@@ -76,7 +76,7 @@ class ICalController extends Controller
                 $training = $trainingUser->training;
                 $qualification = $trainingUser->position->qualification ?? null;
                 $prefix = ($training->title ?? 'Übung') . ($qualification ? ' (' . $qualification->name . ')' : '');
-                $title = $this->serviceTitle($prefix, $training->date, $training->dateEnd ?? null, $training->content ?? null);
+                $title = $this->serviceTitle($prefix, $training->date, $training->dateEnd ?? null);
                 $event = $this->buildEvent($title, $training->date, $training->dateEnd ?? null, $training->location ?? null, $training->content ?? null);
                 $event->setStatus(EventStatus::CONFIRMED());
                 $events[] = $event;
@@ -94,7 +94,7 @@ class ICalController extends Controller
             ->header('Expires', '0');
     }
 
-    private function serviceTitle(string $prefix, $date, $dateEnd, ?string $description): string
+    private function serviceTitle(string $prefix, $date, $dateEnd, ?string $description = null): string
     {
         $title = $prefix . ': ' . $date->format('H:i');
         if (!empty($dateEnd)) {
