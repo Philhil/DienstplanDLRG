@@ -37,7 +37,7 @@ class ICalController extends Controller
             foreach ($servicePositions as $position) {
                 $service = $position->service;
                 $prefix = 'Dienst' . ($position->qualification ? ' (' . $position->qualification->name . ')' : '');
-                $title = $this->serviceTitle($prefix, $service->date, $service->dateEnd ?? null, $service->comment ?? null);
+                $title = $this->serviceTitle($prefix, $service->date, $service->dateEnd ?? null, $position->comment ?? null);
                 $event = $this->buildEvent($title, $service->date, $service->dateEnd ?? null, $service->location ?? null, $service->comment ?? null);
                 $event->setStatus(EventStatus::CONFIRMED());
                 $events[] = $event;
@@ -59,7 +59,7 @@ class ICalController extends Controller
                 }
 
                 $prefix = 'Dienst (nicht bestätigt)' . ($position->qualification ? ' (' . $position->qualification->name . ')' : '');
-                $title = $this->serviceTitle($prefix, $service->date, $service->dateEnd ?? null, $service->comment ?? null);
+                $title = $this->serviceTitle($prefix, $service->date, $service->dateEnd ?? null, $position->comment ?? null);
                 $event = $this->buildEvent($title, $service->date, $service->dateEnd ?? null, $service->location ?? null, $service->comment ?? null);
                 $event->setStatus(EventStatus::TENTATIVE());
                 $events[] = $event;
@@ -94,14 +94,15 @@ class ICalController extends Controller
             ->header('Expires', '0');
     }
 
-    private function serviceTitle(string $prefix, $date, $dateEnd, ?string $description = null): string
+    private function serviceTitle(string $prefix, $date, $dateEnd, ?string $suffix = null): string
     {
         $title = $prefix . ': ' . $date->format('H:i');
         if (!empty($dateEnd)) {
             $title .= ' – ' . $dateEnd->format('H:i');
         }
-        if (!empty($description)) {
-            $title .= ' ' . $description;
+        $title .= ' Uhr';
+        if (!empty($suffix)) {
+            $title .= ' (' . $suffix . ')';
         }
         return $title;
     }
