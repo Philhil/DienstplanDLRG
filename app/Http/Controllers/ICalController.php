@@ -74,8 +74,8 @@ class ICalController extends Controller
 
             foreach ($trainingUsers as $trainingUser) {
                 $training = $trainingUser->training;
-                $qualification = $trainingUser->position->qualification ?? null;
-                $prefix = ($training->title ?? 'Übung') . ($qualification ? ' (' . $qualification->name . ')' : '');
+                $qualification = $trainingUser->position?->qualification ?? null;
+                $prefix = ($training->title ?: 'Übung') . ($qualification ? ' (' . $qualification->name . ')' : '');
                 $title = $this->serviceTitle($prefix, $training->date, $training->dateEnd ?? null);
                 $content = $training->content ? $this->htmlToPlainText($training->content) : null;
                 $event = $this->buildEvent($title, $training->date, $training->dateEnd ?? null, $training->location ?? null, $content);
