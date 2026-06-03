@@ -77,7 +77,8 @@ class ICalController extends Controller
                 $qualification = $trainingUser->position->qualification ?? null;
                 $prefix = ($training->title ?? 'Übung') . ($qualification ? ' (' . $qualification->name . ')' : '');
                 $title = $this->serviceTitle($prefix, $training->date, $training->dateEnd ?? null);
-                $event = $this->buildEvent($title, $training->date, $training->dateEnd ?? null, $training->location ?? null, $training->content ?? null);
+                $content = $training->content ? $this->htmlToPlainText($training->content) : null;
+                $event = $this->buildEvent($title, $training->date, $training->dateEnd ?? null, $training->location ?? null, $content);
                 $event->setStatus(EventStatus::CONFIRMED());
                 $events[] = $event;
             }
@@ -92,6 +93,21 @@ class ICalController extends Controller
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
             ->header('Pragma', 'no-cache')
             ->header('Expires', '0');
+    }
+
+    private function htmlToPlainText(string $html): string
+    {
+        $text = preg_replace('/>\s+</u', '><', $html);
+        $text = preg_replace('/<br[^>]*>/i', "\n", $text);
+        $text = preg_replace('/<\/(p|h[1-6]|div|li|ul|ol)[^>]*>/i', "\n", $text);
+        $text = preg_replace('/<(p|h[1-6]|div|li|ul|ol)[^>]*>/i', '', $text);
+        $text = strip_tags($text);
+        $text = str_replace('&nbsp;', ' ', $text);
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = str_replace("\u{00A0}", ' ', $text);
+        $text = preg_replace('/^[ \t]+$/m', '', $text);
+        $text = preg_replace("/\n{3,}/", "\n\n", $text);
+        return trim($text);
     }
 
     private function serviceTitle(string $prefix, $date, $dateEnd, ?string $suffix = null): string
