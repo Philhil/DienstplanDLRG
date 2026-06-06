@@ -37,7 +37,7 @@ class ICalController extends Controller
             foreach ($servicePositions as $position) {
                 $service = $position->service;
                 $prefix = 'Dienst' . ($position->qualification ? ' (' . $position->qualification->name . ')' : '');
-                $title = $this->serviceTitle($prefix, $service->date, $service->dateEnd ?? null, $service->comment ?? null);
+                $title = $this->serviceTitle($prefix, $service->date, $service->dateEnd ?? null, $position->comment ?? null);
                 $event = $this->buildEvent($title, $service->date, $service->dateEnd ?? null, $service->location ?? null, $service->comment ?? null);
                 $event->setStatus(EventStatus::CONFIRMED());
                 $events[] = $event;
@@ -59,7 +59,7 @@ class ICalController extends Controller
                 }
 
                 $prefix = 'Dienst (nicht bestätigt)' . ($position->qualification ? ' (' . $position->qualification->name . ')' : '');
-                $title = $this->serviceTitle($prefix, $service->date, $service->dateEnd ?? null, $service->comment ?? null);
+                $title = $this->serviceTitle($prefix, $service->date, $service->dateEnd ?? null, $position->comment ?? null);
                 $event = $this->buildEvent($title, $service->date, $service->dateEnd ?? null, $service->location ?? null, $service->comment ?? null);
                 $event->setStatus(EventStatus::TENTATIVE());
                 $events[] = $event;
@@ -74,10 +74,11 @@ class ICalController extends Controller
 
             foreach ($trainingUsers as $trainingUser) {
                 $training = $trainingUser->training;
-                $qualification = $trainingUser->position->qualification ?? null;
-                $prefix = ($training->title ?? 'Übung') . ($qualification ? ' (' . $qualification->name . ')' : '');
-                $title = $this->serviceTitle($prefix, $training->date, $training->dateEnd ?? null, $training->content ?? null);
-                $event = $this->buildEvent($title, $training->date, $training->dateEnd ?? null, $training->location ?? null, $training->content ?? null);
+                $qualification = $trainingUser->position?->qualification ?? null;
+                $prefix = ($training->title ?: 'Übung') . ($qualification ? ' (' . $qualification->name . ')' : '');
+                $title = $this->serviceTitle($prefix, $training->date, $training->dateEnd ?? null);
+                $content = $training->content ? $this->htmlToPlainText($training->content) : null;
+                $event = $this->buildEvent($title, $training->date, $training->dateEnd ?? null, $training->location ?? null, $content);
                 $event->setStatus(EventStatus::CONFIRMED());
                 $events[] = $event;
             }
@@ -94,14 +95,30 @@ class ICalController extends Controller
             ->header('Expires', '0');
     }
 
-    private function serviceTitle(string $prefix, $date, $dateEnd, ?string $description): string
+    private function htmlToPlainText(string $html): string
+    {
+        $text = preg_replace('/>\s+</u', '><', $html);
+        $text = preg_replace('/<br[^>]*>/i', "\n", $text);
+        $text = preg_replace('/<\/(p|h[1-6]|div|li|ul|ol)[^>]*>/i', "\n", $text);
+        $text = preg_replace('/<(p|h[1-6]|div|li|ul|ol)[^>]*>/i', '', $text);
+        $text = strip_tags($text);
+        $text = str_replace('&nbsp;', ' ', $text);
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $text = str_replace("\u{00A0}", ' ', $text);
+        $text = preg_replace('/^[ \t]+$/m', '', $text);
+        $text = preg_replace("/\n{3,}/", "\n\n", $text);
+        return trim($text);
+    }
+
+    private function serviceTitle(string $prefix, $date, $dateEnd, ?string $suffix = null): string
     {
         $title = $prefix . ': ' . $date->format('H:i');
         if (!empty($dateEnd)) {
             $title .= ' – ' . $dateEnd->format('H:i');
         }
-        if (!empty($description)) {
-            $title .= ' ' . $description;
+        $title .= ' Uhr';
+        if (!empty($suffix)) {
+            $title .= ' (' . $suffix . ')';
         }
         return $title;
     }
