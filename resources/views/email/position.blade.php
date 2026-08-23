@@ -19,3 +19,11 @@ Bisher sind mit Dir eingetragen:<br>
 <br><br>
 Viele Grüße,<br>
 @if(isset($authorizedby)){{$authorizedby->first_name}}@endif
+<br><br>
+@if(!is_null($serviceInformation))
+P.S.{{ $informedby->first_name }} {{ $informedby->last_name }} hat zu deinem Dienst stehen schon Informationen zur Verfügung gestellt:
+<br>
+
+{!! html_entity_decode($serviceInformation->content) !!}
+
+@endif

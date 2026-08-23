@@ -43,7 +43,12 @@ class PositionAssigned extends Mailable implements ShouldQueue
             $client = $this->position->service()->first()->client()->first();
             $service = $this->position->service()->first();
             $this->servicepositions = $this->position->service->positions()->whereNotNull('user_id')->with('user')->with('qualification')->get();
-
+            $serviceInformation = $this->position->service()->first()->serviceInformation()->first();
+            $informedby = null;
+            if($serviceInformation != null){
+                $informedby = $serviceInformation->user()->first();
+            }
+           
             if (!empty($service->dateEnd)) {
                 $start = new \Eluceo\iCal\Domain\ValueObject\DateTime(new \DateTime($service->date->toDateTimeString()), true);
                 $end = new \Eluceo\iCal\Domain\ValueObject\DateTime(new \DateTime($service->dateEnd->toDateTimeString()), true);
@@ -70,6 +75,8 @@ class PositionAssigned extends Mailable implements ShouldQueue
                 'position' => $this->position,
                 'servicepositions' => $this->servicepositions,
                 'authorizedby' => $this->authorizedby,
+                'serviceInformation' => $serviceInformation,
+                'informedby' => $informedby
             ])->replyTo($client->mailReplyAddress, $client->mailSenderName)
             ->attachData(((string) $iCalendarComponent), 'dienst'.$service->date->toDateString().'.ics', [
                 'mime' => 'text/calendar;charset=UTF-8;method=REQUEST',
