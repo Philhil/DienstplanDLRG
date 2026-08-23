@@ -95,6 +95,11 @@ class Client extends Model
         return $this->hasMany( Training::class);
     }
 
+    public function ServiceInformation()
+    {
+        return $this->hasMany( ServiceInformation::class);
+    }
+
     public function Season()
     {
         $season = $this->seasonStart;

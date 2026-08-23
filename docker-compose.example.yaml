@@ -1,0 +1,83 @@
+services:
+  database:
+    image: bitnami/mariadb:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_USER: dlrgdienstplan
+      MARIADB_PASSWORD: password
+      MARIADB_DATABASE: dlrgdienstplan
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+      interval: 3s
+      start_period: 10s
+
+  dienstplan:
+    build: .
+    ports: 
+      - "80:8000"
+      - "443:443"
+    environment:
+      DB_HOST: database
+      DB_DATABASE: dlrgdienstplan
+      DB_USERNAME: dlrgdienstplan
+      DB_PASSWORD: password
+      MAIL_DRIVER: smtp
+      MAIL_MAILER: smtp
+      MAIL_HOST: 
+      MAIL_PORT: 
+      MAIL_USERNAME: 
+      MAIL_PASSWORD: 
+      MAIL_FROM_ADDRESS: hello@example.com
+      MAIL_FROM_NAME: Example
+      MAIL_ENCRYPTION: tls
+      APP_KEY: 
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: 
+      ENV: local
+      APP_DEBUG: true
+      IS_DEMO: false
+      SESSION_DRIVER: redis
+      CACHE_DRIVER: redis
+      QUEUE_DRIVER: sync
+
+    volumes:
+      - type: bind
+        source: ./app
+        target: /var/www/DienstplanDLRG/app
+      - type: bind
+        source: ./resources
+        target: /var/www/DienstplanDLRG/resources
+      - type: bind
+        source: ./database
+        target: /var/www/DienstplanDLRG/database
+      - type: bind
+        source: ./public
+        target: /var/www/DienstplanDLRG/public
+      - type: bind
+        source: ./routes
+        target: /var/www/DienstplanDLRG/routes
+    depends_on:
+      database:
+        condition: service_healthy
+    
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_PORT: 6379
+    # volumes:
+    #   - type: bind
+    #     source: ./redis.conf
+    #     target: /usr/local/etc/redis/redis.conf
+    # command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+  
+volumes:
+  db_data:

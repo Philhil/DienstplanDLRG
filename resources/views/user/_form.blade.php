@@ -22,8 +22,8 @@
 <div class="col-sm-10">
     <div class="form-group {{ $errors->has('mobilenumber') ? 'has-error' : ''}}">
         <div class="form-line">
-            {{ Form::label('mobilenumber', 'Handy Nr.:') }}
-            {{ Form::text('mobilenumber', null, ['class' => 'form-control', 'placeholder' => 'Handy Nr.']) }}
+            {{ Form::label('mobilenumber', 'Handynummer (zur Weitergabe an Führungskräfte): ') }}
+            {{ Form::text('mobilenumber', null, ['class' => 'form-control', 'placeholder' => 'Handynummer']) }}
             {!! $errors->first('mobilenumber', '<p class="help-block">:message</p>') !!}
         </div>
     </div>

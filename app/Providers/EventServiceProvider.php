@@ -44,6 +44,10 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\ClientRegistered' => [
             'App\Listeners\ClientRegisteredListener',
         ],
+        
+        'App\Events\OnCreateServiceInformation'=>[
+            'App\Listeners\OnCreateServiceInformation',
+        ]
     ];
 
     /**

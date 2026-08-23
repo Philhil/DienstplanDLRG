@@ -5,7 +5,7 @@
 @endif
 
 <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-
+    
     <div class="row clearfix">
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('date') ? 'has-error' : ''}}">
@@ -108,6 +108,7 @@
                 <th>Person</th>
                 <th>Kommentar</th>
                 <th>Erforderlich</th>
+                <th>Dienstverantwortlicher</th>
                 <th>Aktion</th>
             </tr>
             </thead>
@@ -148,6 +149,12 @@
                             <select class="form-control bootstrap-select show-tick" name="position_required[]">
                                 <option value="0">Optional</option>
                                 <option value="1" {{$position->requiredposition ? "selected" : ""}}>Erforderlich</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control bootstrap-select show-tick" name="service_focal[]">
+                                <option value="0">Nein</option>
+                                <option value="1" {{$position->service_focal ? "selected" : ""}}>Ja</option>
                             </select>
                         </td>
                         <td>
@@ -243,6 +250,11 @@
                     '<option value="0">Optional</option>\n' +
                     '<option value="1">Erforderlich</option>\n' +
                     '</select> </td>';
+                prot += '<td>';
+                prot += '<select class="bootstrap-select show-tick" name="service_focal[]">';
+                prot += '<option value="0">Nein</option>';
+                prot += '<option value="1">Ja</option>';
+                prot += '</select></td>';
                 prot += '<td><button type="button" class="btn btn-danger waves-effect btn-delete delete_position"><i class="material-icons">delete</i></button></td>';
                 prot += '</tr>';
 

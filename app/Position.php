@@ -8,7 +8,7 @@ class Position extends Model
 {
 
     protected $fillable = [
-        'qualification_id', 'service_id', 'requiredposition'
+        'qualification_id', 'service_id', 'requiredposition', 'service_focal'
     ];
 
     protected $dates = [

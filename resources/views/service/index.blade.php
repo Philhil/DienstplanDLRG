@@ -36,6 +36,9 @@
                                 @if(!in_array($service->id, $servicesHoliday))
                                     <li><a href="{{action('HolidayController@storeService', [$service->id])}}" class="bg-grey waves-effect waves-block"><i class="material-icons">beach_access</i>Keine Zeit</a></li>
                                 @endif
+                                @if($isAdmin || $service->is_service_focal)
+                                <li><a href="{{action('ServiceController@createServiceInformation', $service->id) }}" class=" waves-effect waves-block"><i class="material-icons">campaign</i>Helfer informieren</a></li>
+                                @endif
                                 @if($isAdmin)
                                 <li><a href="{{action('ServiceController@edit', $service->id) }}" class=" waves-effect waves-block"><i class="material-icons">mode_edit</i>Bearbeiten</a></li>
                                 <li><a href="{{action('ServiceController@delete', $service->id) }}" class=" waves-effect waves-block"><i class="material-icons">delete</i> Löschen</a></li>
@@ -54,7 +57,12 @@
                             <table class="table">
                                 <tr>
                                     @foreach($service->positions as $position)
-                                        <th @if($position->requiredposition) class="font-underline"@endif>{{$position->qualification->name}}</th>
+                                        <th @if($position->requiredposition) class="font-underline"@endif>
+                                            {{$position->qualification->name}}
+                                            @if($position->service_focal)
+                                                <i class="material-icons" style="font-size: 16px; vertical-align: middle; color: #555;" title="Dienstverantwortlicher">groups_2</i>
+                                            @endif
+                                        </th>
                                     @endforeach
                                 </tr>
                                 <tr>
@@ -82,6 +90,9 @@
                                                 <span class="badge @if($position->user->id == $user->id) bg-light-green @else bg-green @endif">
                                                     {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
                                                 </span>
+                                                @if(($isAdmin || $service->is_service_focal) && !empty($position->user->mobilenumber) && $position->user->id != $user->id )
+                                                    <br><span style="color:#555; font-size:13px; padding-top:3px; display:inline-block;">{{$position->user->mobilenumber}}</span>
+                                                @endif
                                                 {{-- user has a Candidature for that pos --}}
                                             @elseif($position->candidatures->contains('user', Auth::user()))
                                                 <button type="button" class="btn bg-orange waves-effect btn-unsubscribe" positionid="{{$position->id}}"><i class="material-icons">check_circle</i>
@@ -119,7 +130,12 @@
                                 <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
                                     <div class="panel panel-default">
 
-                                        <b @if($position->requiredposition) class="font-underline"@endif>{{$position->qualification->name}}:</b>
+                                        <b @if($position->requiredposition) class="font-underline"@endif>
+                                            {{$position->qualification->name}}
+                                            @if($position->service_focal)
+                                                <i class="material-icons" style="font-size: 16px; vertical-align: middle; color: #FFD700;" title="Dienstverantwortlicher">emoji_events</i>
+                                            @endif
+                                        </b>
                                         <div class="panel-body">
 
                                             {{-- show candidates if nobody is approved --}}
@@ -143,6 +159,9 @@
                                                 <span class="badge @if($position->user->id == $user->id) bg-light-green @else bg-green @endif">
                                                     {{substr ($position->user->first_name, 0, 1)}}. {{$position->user->name}}
                                                 </span>
+                                                @if($isAdmin && !empty($position->user->mobilenumber))
+                                                    <br><span style="color:#555; font-size:13px; padding-top:3px; display:inline-block;">{{$position->user->mobilenumber}}</span>
+                                                @endif
                                                 {{-- user has a Candidature for that pos --}}
                                             @elseif($position->candidatures->contains('user', Auth::user()))
                                                 <button type="button" class="btn bg-orange waves-effect btn-unsubscribe" positionid="{{$position->id}}"><i class="material-icons">check_circle</i>

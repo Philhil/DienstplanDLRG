@@ -216,6 +216,11 @@ class User extends Authenticatable
         return $this->hasManyThrough(Service::class, Position::class, 'user_id', 'id', 'id', 'service_id');
     }
 
+    public function serviceInformation()
+    {
+      return $this->hasMany(ServiceInformation::class);
+    }
+
     //get all SurveyUser of a specific survey
     public function mySurveyUser($surveyId)
     {

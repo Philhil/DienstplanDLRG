@@ -34,6 +34,7 @@ class Service extends Model
         return $this->hasMany(Position::class)->whereNull('user_id');
     }
 
+
     public function openpositions_required()
     {
         return $this->hasMany(Position::class)->whereNull('user_id')
@@ -48,6 +49,16 @@ class Service extends Model
     public function positionwithQualification($qualifiaction_id)
     {
         return $this->positions()->where('qualification_id', $qualifiaction_id);
+    }
+
+    public function userIsServiceFocal($user_id)
+    {
+        return $this->hasMany(Position::class)->where('user_id','=', $user_id)->where('service_focal', '=', 1);
+    }
+
+    public function serviceInformation()
+    {
+        return $this->hasOne(ServiceInformation::class);
     }
 
     public function hasUserPositions($userid)
