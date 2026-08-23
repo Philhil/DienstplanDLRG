@@ -1,7 +1,7 @@
 @if(\Illuminate\Support\Facades\Route::current()->getName() == 'survey.edit')
-    {{ Form::model($survey->toArray(), ['action' => ['SurveyController@update', $survey->id], 'method' => 'PUT']) }}
+    {{ html()->modelForm($survey->toArray(), 'PUT', action('SurveyController@update', $survey->id))->open() }}
 @else
-    {{ Form::model($survey->toArray(), ['action' => ['SurveyController@store', $survey->id]]) }}
+    {{ html()->modelForm($survey->toArray(), 'POST', action('SurveyController@store', $survey->id))->open() }}
 @endif
 
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -10,8 +10,8 @@
         <div class="col-sm-12">
             <div class="form-group {{ $errors->has('title') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('title', 'Titel:') }}
-                    {{ Form::text('title', old('title'), ['placeholder' => "Titel...", 'class' => 'form-control no-resize', 'required'=>"true"]) }}
+                    {{ html()->label('Titel:', 'title') }}
+                    {{ html()->text('title')->class('form-control no-resize')->required()->placeholder("Titel...") }}
                     {!! $errors->first('title', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -22,8 +22,8 @@
     <div class="row clearfix">
         <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
             <div class="form-line">
-                {{ Form::label('content', 'Inhalt:') }}
-                {{ Form::textarea('content', old('content'), ['class' => 'form-control', 'id'=>"tinymce"]) }}
+                {{ html()->label('Inhalt:', 'content') }}
+                {{ html()->textarea('content')->class('form-control')->id("tinymce") }}
                 {!! $errors->first('content', '<p class="help-block">:message</p>') !!}
             </div>
         </div>
@@ -34,10 +34,9 @@
         <div class="col-sm-10">
             <div class="form-group {{$errors->has('dateStart') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{Form::label('dateStart', 'Von:')}}
-                    {{Form::text('dateStart', old('date', !empty($survey->dateStart) ? $survey->dateStart->format('d m Y H:i') : ''),
-                                ['id' => 'date-start', 'class' => 'date-start form-control',
-                                'placeholder'=>'Datum auswählen...'])}}
+                    {{ html()->label('Von:', 'dateStart')}}
+                    {{ html()->text('dateStart', old('date', !empty($survey->dateStart) ? $survey->dateStart->format('d m Y H:i') : ''),
+                                )->class('date-start form-control')->id('date-start')->placeholder('Datum auswählen...')}}
                     {!! $errors->first('dateStart', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -48,10 +47,9 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('dateEnd') ? 'has-error' : '' }}">
                 <div class="form-line">
-                    {{ Form::label('dateEnd', 'Bis:') }}
-                    {{ Form::text('dateEnd', old('dateEnd', !empty($survey->dateEnd) ? $survey->dateEnd->format('d m Y H:i') : ''),
-                                 ['id' => 'date-end', 'class' => 'date-end form-control',
-                                 'placeholder'=>'Datum auswählen...']) }}
+                    {{ html()->label('Bis:', 'dateEnd') }}
+                    {{ html()->text('dateEnd', old('dateEnd', !empty($survey->dateEnd) ? $survey->dateEnd->format('d m Y H:i') : ''),
+                                 )->class('date-end form-control')->id('date-end')->placeholder('Datum auswählen...') }}
                     {!! $errors->first('dateEnd', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -62,8 +60,8 @@
         <div class="col-sm-12">
             <div class="input-group {{ $errors->has('mandatory')  ? 'has-error' : ''}}">
                 <span class="input-group-addon pull-left">
-                    {{ Form::checkbox('mandatory', 1, old('mandatory') or $survey->mandatory != 0 ? true : false, ['class' => 'filled-in', 'id' => "mandatory"]) }}
-                    {{ Form::label('mandatory', 'Abfrage muss zugestimmt werden.') }}
+                    {{ html()->checkbox('mandatory', old('mandatory') or $survey->mandatory != 0 ? true : false, 1)->class('filled-in')->id("mandatory") }}
+                    {{ html()->label('Abfrage muss zugestimmt werden.', 'mandatory') }}
                     {!! $errors->first('mandatory', '<p class="help-block">:message</p>') !!}
                 </span>
             </div>
@@ -74,8 +72,8 @@
         <div class="col-sm-12">
             <div class="input-group {{ $errors->has('passwordConfirmationRequired')  ? 'has-error' : ''}}">
                 <span class="input-group-addon pull-left">
-                    {{ Form::checkbox('passwordConfirmationRequired', 1, old('passwordConfirmationRequired') or $survey->passwordConfirmationRequired != 0 ? true : false, ['class' => 'filled-in', 'id' => "passwordConfirmationRequired"]) }}
-                    {{ Form::label('passwordConfirmationRequired', 'Nutzer müssen Passwort zum zustimmen eingeben.') }}
+                    {{ html()->checkbox('passwordConfirmationRequired', old('passwordConfirmationRequired') or $survey->passwordConfirmationRequired != 0 ? true : false, 1)-> class('filled-in')->id("passwordConfirmationRequired") }}
+                    {{ html()->label('Nutzer müssen Passwort zum zustimmen eingeben.', 'passwordConfirmationRequired') }}
                     {!! $errors->first('passwordConfirmationRequired', '<p class="help-block">:message</p>') !!}
                 </span>
             </div>
@@ -84,11 +82,11 @@
 
     <div class="row clearfix">
         <div class="col-sm-12">
-            <div class="input-group {{ $errors->has('qualification_id')  ? 'has-error' : ''}}">
+            <div class="input-group {{ $errors->has('qualification_id')  ? 'has-error' : '' }}">
                 <span class="input-group-addon pull-left">
-                    {{Form::label('qualification_id', 'Nur für Nutzer mit Qualifikation:')}}
+                    {{ html()->label('Nur für Nutzer mit Qualifikation:', 'qualification_id') }}
                 </span>
-                {{Form::select('qualification_id', $qualifications, $survey->qualification_id, ['class' => 'form-control'])}}
+                {{ html()->select('qualification_id', $qualifications, $survey->qualification_id) ->class('form-control') }}
                 {!! $errors->first('qualification_id', '<p class="help-block">:message</p>') !!}
             </div>
         </div>
@@ -107,7 +105,7 @@
 
     <div class="col-sm-1">
         <div class="form-line">
-            {{ Form::button('Speichern', ['class' => 'form-control btn btn-success waves-effect', 'type' => "submit", 'value' => "submit"]) }}
+            {{ html()->button('Speichern', 'submit')->class('form-control btn btn-success waves-effect') }}
         </div>
     </div>
     @if(\Illuminate\Support\Facades\Route::current()->getName() == 'survey.edit')
@@ -119,7 +117,7 @@
     @endif
 </div>
 
-{{ Form::close() }}
+{{ html()->closeModelForm() }}
 
 
 @section('post_body')

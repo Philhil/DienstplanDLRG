@@ -245,6 +245,7 @@ class UserController extends Controller
             return redirect()->back();
         }
 
-        return redirect()->back()->with(['errormessage' => 'Dein User ist für ' . Client::find($id)->name . ' noch nicht freigegeben']);
+        $client = Client::find($id);
+        return redirect()->back()->with(['errormessage' => 'Dein User ist für ' . empty($client) ? "" : $client->name . ' noch nicht freigegeben']);
     }
 }

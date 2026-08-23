@@ -16,11 +16,11 @@
                         <small>{{$comment}}</small>
                     </h2>
                     <ul class="pull-right header-dropdown m-r--5">
-                        {{ Form::open(['url' => action('TrainingController@index'), 'method' => 'get', 'style'=>'display:inline-block']) }}
+                        {{  html()->form('GET', action('TrainingController@index'))->attribute('style = display:inline-block')->open() }}
                         <button type="submit" class="btn btn-subscribe bg-green waves-effect">
                             <i class="material-icons">save</i>
                         </button>
-                        {{ Form::close() }}
+                        {{ html()->form()->close() }}
                     </ul>
                 </div>
                 <div class="body table-responsive">
@@ -120,7 +120,7 @@
                             $(".btn-subscribe[positionid="+data.id+"]").remove();
 
                             if (data.user_id == "null") {
-                                $(tr).html('<span class="badge bg-light-green">{{substr(\Illuminate\Support\Facades\Auth::user()->first_name, 0, 1)}}. {{\Illuminate\Support\Facades\Auth::user()->name}}</span>');
+                                $(tr).html('<span class="badge bg-light-green">{{\Illuminate\Support\Facades\Auth::user()->first_name}} {{\Illuminate\Support\Facades\Auth::user()->name}}</span>');
                             } else {
                                 $(tr).html('<button type="button" class="btn bg-orange waves-effect btn-unsubscribe" positionid="'+data.id+'"><i class="material-icons">check_circle</i>Meldung zurückziehen</button>');
                             }

@@ -15,8 +15,8 @@ class Survey_user extends Model
         'user_id',
     ];
 
-    protected $dates = [
-        'votedAt',
-        'rememberAt'
+    protected $casts = [
+        'votedAt' => 'datetime',
+        'rememberAt' => 'datetime'
     ];
 }

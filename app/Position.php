@@ -11,8 +11,9 @@ class Position extends Model
         'qualification_id', 'service_id', 'requiredposition', 'service_focal'
     ];
 
-    protected $dates = [
-        'create_at', 'updated_at'
+    protected $casts = [
+        'create_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     public function qualification()

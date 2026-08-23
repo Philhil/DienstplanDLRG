@@ -38,11 +38,11 @@
                                     </button>
                                 </a>
 
-                                {{ Form::open(['url' => '/client/'.$client->id, 'method' => 'delete', 'style'=>'display:inline-block']) }}
+                                {{ html()->form('DELETE', '/client/'.$client->id)->style('display:inline-block')->open() }}
                                 <button type="submit" class="btn btn-danger waves-effect btn-delete">
                                     <i class="material-icons">delete</i>
                                 </button>
-                                {{ Form::close() }}
+                                {{ html()->form()->close() }}
                             </td>
                         </tr>
                     @endforeach

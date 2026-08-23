@@ -252,6 +252,7 @@ class RouteCredentialsTest extends TestCase
         // Client <-> User
         $this->post('/client_user/admin', $session)->assertStatus(419);
         $this->post('/client_user/trainingeditor', $session)->assertStatus(419);
+        $this->post('/client_user/statisticeditor', $session)->assertStatus(419);
 
         //Position
         $this->followingRedirects()->get('/position/1/subscribe')->assertStatus(200)->assertViewIs('auth.login');
@@ -378,7 +379,7 @@ class RouteCredentialsTest extends TestCase
 
         //GET|HEAD                               | changeclient/{client}
         $this->actingAs($user)->followingRedirects()->get('/changeclient/'.($user->currentclient_id))->assertStatus(200);
-        $this->actingAs($user)->followingRedirects()->get('/changeclient/'.($user->currentclient_id+1))->assertStatus(500);
+        $this->actingAs($user)->followingRedirects()->get('/changeclient/'.($user->currentclient_id+1))->assertStatus(200);
 
         //POST                                   | client
         $this->actingAs($user)->followingRedirects()->post('/client', ['_token' => $token])->assertStatus(402); //not allowed in demo mode
@@ -440,6 +441,10 @@ class RouteCredentialsTest extends TestCase
 
         //POST                                   | client_user/trainingeditor
         $this->actingAs($user)->post('/client_user/trainingeditor', ['_token' => $token, 'client_id' => $user->currentclient_id, 'user_id' => $user->id])
+            ->assertStatus(402); //only if admin of client or superadmin
+
+        //POST                                   | client_user/trainingeditor
+        $this->actingAs($user)->post('/client_user/statisticeditor', ['_token' => $token, 'client_id' => $user->currentclient_id, 'user_id' => $user->id])
             ->assertStatus(402); //only if admin of client or superadmin
 
         //GET|HEAD                               | clientapply
@@ -676,8 +681,8 @@ class RouteCredentialsTest extends TestCase
         $this->actingAs($user)->get('/service/1/edit')->assertStatus(402);//only as admin
 
         //GET|POST|HEAD                          | statistic
-        $this->actingAs($user)->get('/statistic')->assertStatus(402);//only as admin
-        $this->actingAs($user)->post('/statistic', ['_token' => $token])->assertStatus(402); //only as admin
+        $this->actingAs($user)->get('/statistic')->assertStatus(402);//only as admin or statisticeditor
+        $this->actingAs($user)->post('/statistic', ['_token' => $token])->assertStatus(402); //only as admin or statisticeditor
 
         //GET|HEAD                               | superadmin/user
         $this->actingAs($user)->get('/superadmin/user')->assertStatus(402);//only as superadmin
