@@ -15,8 +15,8 @@ class News extends Model
         'title', 'content',
     ];
 
-    protected $dates = [
-        'create_at',
+    protected $casts = [
+        'create_at' => 'datetime',
     ];
 
     public function user()

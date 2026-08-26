@@ -14,7 +14,7 @@ class Client_user extends Model
         'isAdmin'
     ];
 
-    protected $dates = [
-        'create_at',
+    protected $casts = [
+        'create_at' => 'datetime'
     ];
 }

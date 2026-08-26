@@ -129,7 +129,7 @@
                                             <i class="material-icons">email</i>
                                         </span>
                                         <div class="form-line">
-                                            <input type="email" id="client_billing" class="form-control" name="client_billing" value="{{ old('client_billing') }}" placeholder="Rechnungs-Email Adresse, muss *@*.dlrg.de sein. (Rechnungen werden digital zugestellt)" required>
+                                            <input type="email" id="client_billing" class="form-control" name="client_billing" value="{{ old('client_billing') }}" placeholder="Rechnungs-Email Adresse (Rechnungen werden digital zugestellt)" required>
                                             @if ($errors->has('client_billing'))
                                                 <span class="help-block">
                                                 <strong>{{ $errors->first('client_billing') }}</strong>
@@ -175,8 +175,8 @@
 
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="module_stats" name="module_stats" id="module_stats" @if(!empty(old('module_stats')) || collect(["support"])->contains($package)) checked @endif @if(collect(["support"])->contains($package)) disabled @endif>
-                                        <label class="form-check-label" for="module_training_credit" @if(!collect(["support"])->contains($package))checked disabled @endif>
-                                            Erweiterte Analyse und Auswertungen (noch nicht verfügbar)(+ 1€)
+                                        <label class="form-check-label" for="module_stats">
+                                            Erweiterte Analyse und Auswertungen (+ 1€)
                                         </label>
                                     </div>
                                     @endif

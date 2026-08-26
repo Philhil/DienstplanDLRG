@@ -25,6 +25,10 @@ Route::get('/order', 'OrderController@index');
 Route::get('/order/create/{package}', 'OrderController@create');
 Route::post('/order/{package}', 'OrderController@store');
 
+Route::get('/ical/{token}', 'ICalController@feed')
+    ->name('ical.feed')
+    ->middleware('throttle:30,60');
+
 Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web', 'SurveyHandler']], function () {
 
     Route::redirect('/', '/service');
@@ -41,6 +45,7 @@ Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web', 'SurveyHan
 
     Route::resource('user', 'UserController');
     Route::match(['get', 'post'], 'user/approve/{id}', 'UserController@approve_user');
+    Route::post('user/{id}/revoke-ical-token', 'UserController@revokeIcalToken')->name('user.revokeIcalToken');
 
     Route::resource('client', 'ClientController');
     Route::get('/clientapply', 'ClientController@apply')->name('clientapply');
@@ -76,6 +81,7 @@ Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web', 'SurveyHan
 
     Route::post('client_user/admin', 'ClientController@adminClient_User');
     Route::post('client_user/trainingeditor', 'ClientController@trainingeditorClient_User');
+    Route::post('client_user/statisticeditor', 'ClientController@statisticeditorClient_User');
 
     Route::match(['get', 'post'], 'position/{id}/subscribe', 'PositionController@subscribe');
     Route::match(['get', 'post'], 'position/{positionid}/subscribe_user/{userid}', 'PositionController@subscribe_user');

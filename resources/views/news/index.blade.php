@@ -19,8 +19,8 @@
                                     <i class="material-icons">more_vert</i>
                                 </a>
                                 <ul class="dropdown-menu pull-right">
-                                    <li><a href="{{ action('NewsController@edit', $news->id) }}" class=" waves-effect waves-block"><i class="material-icons">mode_edit</i>Bearbeiten</a></li>
-                                    <li><a href="{{ action('NewsController@delete', $news->id) }}" class=" waves-effect waves-block"><i class="material-icons">delete</i> Löschen</a></li>
+                                    <li><a href="{{ action('NewsController@edit', $news->id) }}" class="btn-warning waves-effect waves-block"><i class="material-icons">mode_edit</i>Bearbeiten</a></li>
+                                    <li><a href="{{ action('NewsController@delete', $news->id) }}" class="btn-danger waves-effect waves-block"><i class="material-icons">delete</i> Löschen</a></li>
                                 </ul>
                             </li>
                         </ul>

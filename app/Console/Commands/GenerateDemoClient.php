@@ -288,7 +288,7 @@ class GenerateDemoClient extends Command
             $calendar = Calendar::create([
                 'title' => "Demo Kalendereintrag",
                 'client_id' => $client->id,
-                'Verantwortlicher' => $user->Name,
+                'verantwortlicher' => 'Jane Doe',
                 'date' => Carbon::today()->addWeek()->hour(19)->minute(0)->second(0),
                 'dateEnd' => Carbon::today()->addWeek()->hour(21)->minute(0)->second(0),
                 'location' => "An der Demo-Wachstation",

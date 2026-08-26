@@ -5,7 +5,9 @@
 @endsection
 
 @section('content')
-
+    @if(count($trainings) == 0)
+        Aktuell keine Fortbildungen
+    @endif
     @foreach($trainings as $training)
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <span class="anchor" id="training{{$training->id}}"></span>
@@ -70,11 +72,11 @@
                                                 </button>
                                             @endif
                                             @if($isAdmin || $isTrainingEditor)
-                                                {{ Form::open(['url' => '/position/'. $position->id .'/position_user/', 'method' => 'get', 'style'=>'display:inline-block']) }}
+                                                {{ html()->form('GET', '/position/'. $position->id .'/position_user/')->attribute('style = "display:inline-block"')->open() }}
                                                 <button type="submit" class="btn btn-xs bg-deep-orange waves-effect btn-delete">
                                                     <i class="material-icons">playlist_add</i>
                                                 </button>
-                                                {{ Form::close() }}
+                                                {{ html()->form()->close() }}
                                             @endif
 
                                             @if($position->comment)
@@ -87,14 +89,14 @@
                                                 @if($training_users->position_id == $position->id)
                                                     <br>
                                                     <span class="badge @if($training_users->user->id == $user->id) bg-light-green @else bg-green @endif m-t-5">
-                                                        {{substr ($training_users->user->first_name, 0, 1)}}. {{$training_users->user->name}}
+                                                        {{$training_users->user->first_name}} {{$training_users->user->name}}
                                                         {{-- if is user -> possibility to remove him self --}}
                                                         @if(($training_users->user->id == $user->id && !($training_users->training->date)->isToday()) || $isAdmin || $isTrainingEditor)
-                                                            {{ Form::open(['url' => '/training/training_user/'. $training_users->id .'/delete/', 'method' => 'delete', 'style'=>'display:inline-block']) }}
+                                                            {{ html()->form('DELETE', '/training/training_user/'. $training_users->id .'/delete/')->attribute('style = "display:inline-block"')->open() }}
                                                             <button type="submit" class="btn btn-xs btn-warning waves-effect btn-delete">
                                                                 <i class="material-icons">delete</i>
                                                             </button>
-                                                            {{ Form::close() }}
+                                                            {{ html()->form()->close() }}
                                                         @endif
                                                     </span>
                                                 @endif
@@ -131,11 +133,11 @@
                                                 </button>
                                             @endif
                                             @if($isAdmin || $isTrainingEditor)
-                                                {{ Form::open(['url' => '/position/'. $position->id .'/position_user', 'method' => 'get', 'style'=>'display:inline-block']) }}
+                                                {{ html()->form('GET', '/position/'. $position->id .'/position_user')->attribute('style = "display:inline-block"')->open() }}
                                                 <button type="submit" class="btn btn-xs bg-deep-orange waves-effect btn-delete">
                                                     <i class="material-icons">playlist_add</i>
                                                 </button>
-                                                {{ Form::close() }}
+                                                {{ html()->form()->close() }}
                                             @endif
                                             @if($position->comment)
                                                 <br>
@@ -147,14 +149,14 @@
                                                 @if($training_users->position_id == $position->id)
                                                     <br>
                                                     <span class="badge @if($training_users->user->id == $user->id) bg-light-green @else bg-green @endif m-t-5">
-                                                        {{substr ($training_users->user->first_name, 0, 1)}}. {{$training_users->user->name}}
+                                                        {{$training_users->user->first_name}} {{$training_users->user->name}}
                                                         {{-- if is user -> possibility to remove him self --}}
                                                         @if(($training_users->user->id == $user->id && !($training_users->training->date)->isToday()) || $isAdmin || $isTrainingEditor)
-                                                            {{ Form::open(['url' => '/training/training_user/'. $training_users->id .'/delete/', 'method' => 'delete', 'style'=>'display:inline-block']) }}
+                                                           {{ html()->form('DELETE', '/training/training_user/'. $training_users->id .'/delete/')->attribute('style = "display:inline-block"')->open() }}
                                                             <button type="submit" class="btn btn-xs btn-warning waves-effect btn-delete">
                                                                 <i class="material-icons">delete</i>
                                                             </button>
-                                                            {{ Form::close() }}
+                                                            {{ html()->form()->close() }}
                                                         @endif
                                                     </span>
                                                 @endif
@@ -196,7 +198,7 @@
                             $(".btn-subscribe[positionid="+data.id+"]").remove();
 
                             if (data.user_id == "null") {
-                                $(tr).html('<span class="badge bg-light-green">{{substr(\Illuminate\Support\Facades\Auth::user()->first_name, 0, 1)}}. {{\Illuminate\Support\Facades\Auth::user()->name}}</span>');
+                                $(tr).html('<span class="badge bg-light-green">{{\Illuminate\Support\Facades\Auth::user()->first_name}} {{\Illuminate\Support\Facades\Auth::user()->name}}</span>');
                             } else {
                                 $(tr).html('<button type="button" class="btn bg-orange waves-effect btn-unsubscribe" positionid="'+data.id+'"><i class="material-icons">check_circle</i>Meldung zurückziehen</button>');
                             }

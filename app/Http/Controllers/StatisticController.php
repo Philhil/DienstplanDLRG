@@ -31,7 +31,7 @@ class StatisticController extends Controller
      */
     public function index(Request $request)
     {
-        if(!Auth::user()->isAdmin()) {
+        if(!Auth::user()->isAdmin() && !Auth::user()->isStatisticEditor()) {
             abort(402, "Nope.");
         }
         $from = null;

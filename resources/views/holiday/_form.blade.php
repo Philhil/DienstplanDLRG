@@ -1,17 +1,17 @@
 @if(\Illuminate\Support\Facades\Route::current()->getName() == 'holiday.edit')
-    {{ Form::model($holiday, ['action' => ['HolidayController@update', $holiday->id], 'method' => 'PUT']) }}
+    {{ html()->modelForm($holiday, 'PUT', action('HolidayController@update', $holiday->id))->open() }}
 @else
-    {{ Form::model($holiday, ['action' => ['HolidayController@store', $holiday->id]]) }}
+    {{ html()->modelForm($holiday, 'POST', action('HolidayController@store', $holiday->id))->open() }}
 @endif
 
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    {{Form::hidden('id', $holiday->id)}}
+    {{html()->hidden('id', $holiday->id)}}
     <div class="row clearfix">
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('from') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('from', 'Von:') }}
-                    {{ Form::date('from', old('from', !empty($holiday->from) ? $holiday->from : ''), ['placeholder' => "Von...", 'class' => 'form-control no-resize']) }}
+                    {{ html()->label('Von:', 'from') }}
+                    {{ html()->date('from', old('from', !empty($holiday->from) ? $holiday->from : ''))->class('form-control no-resize')->placeholder("Von...") }}
                     {!! $errors->first('from', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -22,8 +22,8 @@
         <div class="col-sm-10">
             <div class="form-group {{ $errors->has('to') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::label('to', 'Bis:') }}
-                    {{ Form::date('to', old('to', !empty($holiday->to) ? $holiday->to : ''), ['placeholder' => "Bis...", 'class' => 'form-control no-resize']) }}
+                    {{ html()->label('Bis:', 'to') }}
+                    {{ html()->date('to', old('to', !empty($holiday->to) ? $holiday->to : ''))->class('form-control no-resize')->placeholder("Bis...") }}
                     {!! $errors->first('to', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -34,11 +34,11 @@
 <div class="row clearfix">
     <div class="col-sm-1 pull-right">
         <div class="form-line">
-            {{ Form::button('Speichern', ['class' => 'form-control btn btn-success waves-effect', 'type' => "submit"]) }}
+            {{ html()->button('Speichern', 'submit')->class('form-control btn btn-success waves-effect') }}
         </div>
     </div>
 </div>
-{{ Form::close() }}
+{{ html()->closeModelForm() }}
 
 
 @section('post_body')

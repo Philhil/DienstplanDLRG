@@ -8,11 +8,23 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
     use Notifiable;
     use HasFactory;
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            if (empty($user->ical_token)) {
+                $user->ical_token = Str::uuid();
+            }
+        });
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -63,6 +75,24 @@ class User extends Authenticatable
     public function isTrainingEditorOfClient($clientID)
     {
         if (Client_user::where(['client_id' => $clientID, 'user_id' => Auth::user()->id, 'isTrainingEditor' => true])->count() > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public function isStatisticEditor()
+    {
+        if (Client_user::where(['client_id' => Auth::user()->currentclient_id, 'user_id' => Auth::user()->id, 'isStatisticEditor' => true])->count() > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public function isStatisticEditorOfClient($clientID)
+    {
+        if (Client_user::where(['client_id' => $clientID, 'user_id' => Auth::user()->id, 'isStatisticEditor' => true])->count() > 0)
         {
             return true;
         }
@@ -273,5 +303,11 @@ class User extends Authenticatable
             ->orderBy('surveys.id');
 
         return $surveys;
+    }
+
+    public function revokeIcalToken(): void
+    {
+        $this->ical_token = (string) Str::uuid();
+        $this->save();
     }
 }

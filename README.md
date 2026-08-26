@@ -1,5 +1,4 @@
 [![Actions Status](https://github.com/philhil/DienstplanDLRG/workflows/Unit-Tests/badge.svg)](https://github.com/philhil/DienstplanDLRG/actions)
-[![Build Status](https://travis-ci.org/Philhil/DienstplanDLRG.svg?branch=master)](https://travis-ci.org/Philhil/DienstplanDLRG)
 
 # DienstplanDLRG
 This Project is a Laravel based web application to manage volunteer services at the German Life Saving Society (DLRG) of Stuttgart.
@@ -96,7 +95,9 @@ FACEBOOK_CLIENTSECRET = 000
 <code>php artisan tinker</code>
 
 ```bash
-\App\User::create(['name' => 'LastName','first_name' => 'FirstName','email' => 'email@domain.de', 'password' => Hash::make('test'), 'role' => 'admin', 'approved' => '1']);
+$client = \App\Client::create(['name' => "InstanceName",'seasonStart' => "2000-01-01", 'isMailinglistCommunication' => false, 'weeklyServiceviewEmail' => false, 'mailinglistAddress' => null, 'mailSenderName' => "Dienstplan", 'mailReplyAddress' => "dienstplan@yourdomain.de", 'module_training' => true, 'module_training_credit' => false, 'module_statistic' => true, 'module_survey' => true]);
+$user = \App\User::create(['name' => 'LastName','first_name' => 'FirstName','email' => 'email@domain.de', 'password' => Hash::make('test'), 'role' => 'admin', 'approved' => '1', 'currentclient_id' => $client->id]);
+\App\Client_user::create(['client_id' => $client->id, 'user_id' => $user->id, 'isAdmin' => 1,'isTrainingEditor' => 1]);
 ```
 
 #### Cron and Autostart

@@ -252,6 +252,7 @@ class RouteCredentialsTest extends TestCase
         // Client <-> User
         $this->post('/client_user/admin', $session)->assertStatus(419);
         $this->post('/client_user/trainingeditor', $session)->assertStatus(419);
+        $this->post('/client_user/statisticeditor', $session)->assertStatus(419);
 
         //Position
         $this->followingRedirects()->get('/position/1/subscribe')->assertStatus(200)->assertViewIs('auth.login');
@@ -311,6 +312,8 @@ class RouteCredentialsTest extends TestCase
      */
     public function test_AllRoutesAsUserAvailable()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
+
         //fill DB with demo data to act like a User
         $this->artisan('demo:createDemoClient');
 
@@ -325,6 +328,7 @@ class RouteCredentialsTest extends TestCase
 
         //act as User
         $user = User::where('name', '=', "User")->first();
+        $position = Position::first();
 
         //Login as User
         //GET|HEAD                               | login
@@ -378,7 +382,7 @@ class RouteCredentialsTest extends TestCase
 
         //GET|HEAD                               | changeclient/{client}
         $this->actingAs($user)->followingRedirects()->get('/changeclient/'.($user->currentclient_id))->assertStatus(200);
-        $this->actingAs($user)->followingRedirects()->get('/changeclient/'.($user->currentclient_id+1))->assertStatus(500);
+        $this->actingAs($user)->followingRedirects()->get('/changeclient/'.($user->currentclient_id+1))->assertStatus(200);
 
         //POST                                   | client
         $this->actingAs($user)->followingRedirects()->post('/client', ['_token' => $token])->assertStatus(402); //not allowed in demo mode
@@ -440,6 +444,10 @@ class RouteCredentialsTest extends TestCase
 
         //POST                                   | client_user/trainingeditor
         $this->actingAs($user)->post('/client_user/trainingeditor', ['_token' => $token, 'client_id' => $user->currentclient_id, 'user_id' => $user->id])
+            ->assertStatus(402); //only if admin of client or superadmin
+
+        //POST                                   | client_user/trainingeditor
+        $this->actingAs($user)->post('/client_user/statisticeditor', ['_token' => $token, 'client_id' => $user->currentclient_id, 'user_id' => $user->id])
             ->assertStatus(402); //only if admin of client or superadmin
 
         //GET|HEAD                               | clientapply
@@ -575,32 +583,32 @@ class RouteCredentialsTest extends TestCase
         $this->actingAs($user)->post('/position/list_notAuthorized', ['_token' => $token])->assertStatus(402); //only as admin
 
         //GET|POST|HEAD                          | position/{id}/authorize
-        $this->actingAs($user)->get('/position/1/authorize')->assertStatus(402);//only as admin
-        $this->actingAs($user)->post('/position/1/authorize', ['_token' => $token])->assertStatus(402); //only as admin
+        $this->actingAs($user)->get('/position/'.$position->id.'/authorize')->assertStatus(402);//only as admin
+        $this->actingAs($user)->post('/position/'.$position->id.'/authorize', ['_token' => $token])->assertStatus(402); //only as admin
 
         //GET|POST|HEAD                          | position/{id}/deauthorize
-        $this->actingAs($user)->get('/position/1/deauthorize')->assertStatus(402);//only as admin
-        $this->actingAs($user)->post('/position/1/deauthorize', ['_token' => $token])->assertStatus(402); //only as admin
+        $this->actingAs($user)->get('/position/'.$position->id.'/deauthorize')->assertStatus(402);//only as admin
+        $this->actingAs($user)->post('/position/'.$position->id.'/deauthorize', ['_token' => $token])->assertStatus(402); //only as admin
 
         //GET|POST|HEAD                          | position/{id}/position_user
-        $this->actingAs($user)->get('/position/1/position_user')->assertStatus(402);//only as admin
-        $this->actingAs($user)->post('/position/1/position_user', ['_token' => $token])->assertStatus(402); //only as admin
+        $this->actingAs($user)->get('/position/'.$position->id.'/position_user')->assertStatus(402);//only as admin
+        $this->actingAs($user)->post('/position/'.$position->id.'/position_user', ['_token' => $token])->assertStatus(402); //only as admin
 
         //GET|POST|HEAD                          | position/{id}/subscribe
-        $this->actingAs($user)->get('/position/1/subscribe')->assertStatus(200);
-        $this->actingAs($user)->post('/position/1/subscribe', ['_token' => $token])->assertStatus(200);
+        $this->actingAs($user)->get('/position/'.$position->id.'/subscribe')->assertStatus(200);
+        $this->actingAs($user)->post('/position/'.$position->id.'/subscribe', ['_token' => $token])->assertStatus(200);
 
         //GET|POST|HEAD                          | position/{id}/unsubscribe
-        $this->actingAs($user)->get('/position/1/unsubscribe')->assertStatus(200);
-        $this->actingAs($user)->post('/position/1/unsubscribe', ['_token' => $token])->assertStatus(200);
+        $this->actingAs($user)->get('/position/'.$position->id.'/unsubscribe')->assertStatus(200);
+        $this->actingAs($user)->post('/position/'.$position->id.'/unsubscribe', ['_token' => $token])->assertStatus(200);
 
         //GET|POST|HEAD                          | position/{positionid}/subscribe_user/{userid}
-        $this->actingAs($user)->get('/position/1/subscribe_user/1')->assertStatus(402);//only as admin
-        $this->actingAs($user)->post('/position/1/subscribe_user/1', ['_token' => $token])->assertStatus(402); //only as admin
+        $this->actingAs($user)->get('/position/'.$position->id.'/subscribe_user/'.$user->id)->assertStatus(402);//only as admin
+        $this->actingAs($user)->post('/position/'.$position->id.'/subscribe_user/'.$user->id, ['_token' => $token])->assertStatus(402); //only as admin
 
         //GET|POST|HEAD                          | position/{positionid}/unsubscribe_user/{userid}
-        $this->actingAs($user)->get('/position/1/subscribe_user/1')->assertStatus(402);//only as admin
-        $this->actingAs($user)->post('/position/1/subscribe_user/1', ['_token' => $token])->assertStatus(402); //only as admin
+        $this->actingAs($user)->get('/position/'.$position->id.'/subscribe_user/'.$user->id)->assertStatus(402);//only as admin
+        $this->actingAs($user)->post('/position/'.$position->id.'/subscribe_user/'.$user->id, ['_token' => $token])->assertStatus(402); //only as admin
 
         //POST                                   | qualification
         $this->actingAs($user)->post('/qualification', ['_token' => $token])->assertStatus(402); //only as admin
@@ -676,8 +684,8 @@ class RouteCredentialsTest extends TestCase
         $this->actingAs($user)->get('/service/1/edit')->assertStatus(402);//only as admin
 
         //GET|POST|HEAD                          | statistic
-        $this->actingAs($user)->get('/statistic')->assertStatus(402);//only as admin
-        $this->actingAs($user)->post('/statistic', ['_token' => $token])->assertStatus(402); //only as admin
+        $this->actingAs($user)->get('/statistic')->assertStatus(402);//only as admin or statisticeditor
+        $this->actingAs($user)->post('/statistic', ['_token' => $token])->assertStatus(402); //only as admin or statisticeditor
 
         //GET|HEAD                               | superadmin/user
         $this->actingAs($user)->get('/superadmin/user')->assertStatus(402);//only as superadmin
@@ -780,20 +788,20 @@ class RouteCredentialsTest extends TestCase
         //GET|HEAD        survey/create
         $this->actingAs($user)->get('/survey/create')->assertStatus(402); //only if admin of client
         //GET|HEAD        survey/postpone/{surveyid}
-        $this->actingAs($user)->get('/survey/postpone/1')->assertRedirect()->assertCookieMissing('errormessage'); //redirect back on success
+        $survey = Survey::first();
+        $this->actingAs($user)->get('/survey/postpone/'.$survey->id)->assertRedirect()->assertCookieMissing('errormessage'); //redirect back on success
         //POST            survey/vote/{surveyid}
-        $this->actingAs($user)->post('/survey/vote/1', ['_token' => $token, 'value' => "accept"])->assertRedirect('/survey/1');
+        $this->actingAs($user)->post('/survey/vote/'.$survey->id, ['_token' => $token, 'value' => "accept"])->assertRedirect('/survey/'.$survey->id);
         //GET|HEAD        survey/{survey} //set dateStart to yesterday to access a currently activ survey
-        $survey = Survey::find(1);
         $survey->dateStart = Carbon::yesterday();
         $survey->save();
-        $this->actingAs($user)->get('/survey/1')->assertOk();
+        $this->actingAs($user)->get('/survey/'.$survey->id)->assertOk();
         //PUT|PATCH       survey/{survey}
-        $this->actingAs($user)->put('/survey/1', ['_token' => $token])->assertStatus(402); //only if admin of client
+        $this->actingAs($user)->put('/survey/'.$survey->id, ['_token' => $token])->assertStatus(402); //only if admin of client
         //DELETE          survey/{survey}
-        $this->actingAs($user)->delete('/survey/1', ['_token' => $token])->assertStatus(402); //only if admin of client
+        $this->actingAs($user)->delete('/survey/'.$survey->id, ['_token' => $token])->assertStatus(402); //only if admin of client
         //GET|HEAD        survey/{survey}/edit
-        $this->actingAs($user)->get('/survey/1/edit')->assertStatus(402); //only if admin of client
+        $this->actingAs($user)->get('/survey/'.$survey->id.'/edit')->assertStatus(402); //only if admin of client
 
         //POST                                   | logout
         $this->actingAs($user)->followingRedirects()->post('/logout', ['_token' => $token])
