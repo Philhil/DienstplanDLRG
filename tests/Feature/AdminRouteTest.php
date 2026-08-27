@@ -60,6 +60,11 @@ class AdminRouteTest extends TestCase
         $this->actingAs($admin)->get('/user/'.$user->id.'/edit')
             ->assertStatus(200)->assertViewIs('user.edit');
 
+        // ── Service Information ───────────────────────────────────────────────
+            
+            $this->actingAs($admin)->get('/service/'.$service->id.'/inform')
+            ->assertStatus(200)->assertViewIs('inform.create');
+            
         // ── Service management ───────────────────────────────────────────────
 
         $this->actingAs($admin)->get('/service/create')
