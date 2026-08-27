@@ -1,10 +1,10 @@
-{{ Form::model($serviceInformation->toArray(), ['action' => ['ServiceController@storeServiceInformation', $serviceInformation->service_id]]) }}  
+{{ html()->form('POST', action('ServiceController@storeServiceInformation', $serviceInformation->service_id))->open() }}
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <!-- TinyMCE -->
         <div class="row clearfix">
             <div class="form-group {{ $errors->has('content') ? 'has-error' : ''}}">
                 <div class="form-line">
-                    {{ Form::textarea('content', old('content'), ['class' => 'form-control', 'id'=>"tinymce"]) }}
+                    {{ html()->textarea('content', old('content', $serviceInformation->content))->class('form-control')->id('tinymce') }}
                     {!! $errors->first('content', '<p class="help-block">:message</p>') !!}
                 </div>
             </div>
@@ -15,11 +15,11 @@
     <div class="row clearfix">
         <div class="col-sm-1 pull-right">
             <div class="form-line">
-                {{ Form::button('Speichern', ['class' => 'form-control btn btn-success waves-effect', 'type' => "submit"]) }}
+                {{ html()->submit('Speichern')->class('form-control btn btn-success waves-effect') }}
             </div>
         </div>
     </div>
-    {{ Form::close() }}
+{{ html()->form()->close() }}
 
 
 @section('post_body')

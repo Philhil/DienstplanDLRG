@@ -1,13 +1,11 @@
-{{ Form::model($serviceInformation->toArray(), ['action' => ['ServiceController@storeServiceInformation', $serviceInformation->service_id]]) }}
 @extends('_layouts.application')
 
 @section('head')
+    <!-- Bootstrap Select Css -->
+    <link href="/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <!-- Bootstrap Material Datetime Picker Css -->
+    <link href="/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
 @endsection
-<!-- Bootstrap Select Css -->
-<link href="/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
-
-<!-- Bootstrap Material Datetime Picker Css -->
-<link href="/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
 
 @section('content')
 <div class="container-fluid">
