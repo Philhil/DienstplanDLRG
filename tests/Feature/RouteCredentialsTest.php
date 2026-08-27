@@ -683,6 +683,9 @@ class RouteCredentialsTest extends TestCase
         //GET|HEAD                               | service/{service}/edit
         $this->actingAs($user)->get('/service/1/edit')->assertStatus(402);//only as admin
 
+        //GET|HEAD                               | service/{service}/inform
+        $this->actingAs($user)->get('/service/1/inform')->assertStatus(402);//only as admin or service focal
+
         //GET|POST|HEAD                          | statistic
         $this->actingAs($user)->get('/statistic')->assertStatus(402);//only as admin or statisticeditor
         $this->actingAs($user)->post('/statistic', ['_token' => $token])->assertStatus(402); //only as admin or statisticeditor

@@ -84,11 +84,23 @@ class GenerateDemoClient extends Command
                 'name' => "User",
                 'first_name' => "User",
                 'email' => "user.demodienstplan@philhil.de",
+                'mobilenumber' => "491234567",
                 'password' => bcrypt("user"),
                 'currentclient_id' => $client->id
             ]);
             $user->approved = 1;
             $user->save();
+
+            $focal_user = User::create([
+                'name' => "FocalUser",
+                'first_name' => "FocalUser",
+                'email' => "focaluser.demodienstplan@philhil.de",
+                'mobilenumber' => "497654321",
+                'password' => bcrypt("user"),
+                'currentclient_id' => $client->id
+            ]);
+            $focal_user->approved = 1;
+            $focal_user->save();
 
             $admin = User::create([
                 'name' => "Admin",
@@ -118,6 +130,16 @@ class GenerateDemoClient extends Command
             ]);
             $client_user->approved = true;
             $client_user->save();
+
+            $client_user = Client_user::create([
+                'client_id' => $client->id,
+                'user_id' => $focal_user->id,
+                'isAdmin' => 0,
+                'isTrainingEditor' => 0
+            ]);
+            $client_user->approved = true;
+            $client_user->save();
+
 
             //create Qualifications
             $bf = Qualification::create([
@@ -239,6 +261,32 @@ class GenerateDemoClient extends Command
             $pos_yesterday_2->user_id = null;
             $pos_yesterday_2->comment = "";
             $pos_yesterday_2->save();
+
+            $service_focal = new Service();
+            $service_focal->date = Carbon::today()->addDays(3)->startOfDay();
+            $service_focal->dateEnd = Carbon::today()->addDays(3)->endOfDay();
+            $service_focal->comment = "Dienst mit Dienstverantwortlichen";
+            $service_focal->hastoauthorize = true;
+            $service_focal->client_id = $client->id;
+            $service_focal->save();
+
+            $pos_focal_true = new Position();
+            $pos_focal_true->service_id = $service_focal->id;
+            $pos_focal_true->qualification_id = $rs->id;
+            $pos_focal_true->requiredposition = true;
+            $pos_focal_true->user_id = $focal_user->id;
+            $pos_focal_true->service_focal = true;
+            $pos_focal_true->comment = "";
+            $pos_focal_true->save();
+
+            $pos_focal_false = new Position();
+            $pos_focal_false->service_id = $service_focal->id;
+            $pos_focal_false->qualification_id = $rs->id;
+            $pos_focal_false->requiredposition = true;
+            $pos_focal_false->user_id = $user->id;
+            $pos_focal_false->service_focal = false;
+            $pos_focal_false->comment = "";
+            $pos_focal_false->save();
 
             //create Trainings & Positions
             $training = Training::create([

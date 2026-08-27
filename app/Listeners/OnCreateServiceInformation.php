@@ -35,7 +35,6 @@ class OnCreateServiceInformation
         $service = $event->service;
         $serviceInformation = $event->serviceInformation;
         foreach ($service->assignpositions()->get() as $position) {
-            $mail = $position->user()->first()->email;
             Mail::to($position->user()->first()->email)->queue(new ServiceInformationMail($serviceInformation, $position));
         }
     }
