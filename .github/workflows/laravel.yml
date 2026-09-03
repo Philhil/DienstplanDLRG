@@ -19,6 +19,8 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: dlrgdienstplan-dev
+          MYSQL_USER: dlrgdienstplan-dev
+          MYSQL_PASSWORD: password
         options: >-
           --health-cmd="mysqladmin ping"
           --health-interval=10s
