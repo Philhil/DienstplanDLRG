@@ -31,8 +31,53 @@ and switch to one by running `git checkout *name*`.
 
 If you run a old version follow the upgrade Guide: [https://github.com/Philhil/DienstplanDLRG/wiki#upgrade-guide](https://github.com/Philhil/DienstplanDLRG/wiki#upgrade-guide)
 
-## License
-The Laravel framework is open-sourced software licensed under the MIT license.
+## Development Setup with Docker
+
+Use Docker Compose for a local development environment with app, MariaDB, and Redis.
+
+### Requirements
+
+* Docker Desktop (or Docker Engine + Compose plugin)
+* A free local port `80` for the app and `3306` for MariaDB (or adjust in `docker-compose.yaml`)
+
+### Start the development stack
+
+```bash
+docker compose build --no-cache dienstplan
+docker compose up -d
+```
+
+Open the app at `http://localhost`.
+
+### Useful commands
+
+```bash
+docker compose logs -f dienstplan
+docker compose exec dienstplan php artisan migrate
+docker compose down
+```
+
+### Corporate proxy / TLS interception (Composer curl error 60)
+
+If build fails with an SSL certificate error while Composer downloads packages from GitHub, your network likely uses a company proxy with TLS interception.
+
+1. Export your company root certificate (for example to `C:\cert\mycert.crt`).
+2. In the same Windows PowerShell shell where you run Docker, set proxy and certificate variables:
+
+```powershell
+$env:HTTPS_PROXY = "http://proxy.company.local:8080"
+$env:CUSTOM_CA_CERT_B64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\cert\mycert.crt"))
+```
+
+3. Rebuild the image from that same shell:
+
+```bash
+docker compose build --no-cache --progress=plain dienstplan
+```
+
+Important: variables must be set in the same shell session as `docker compose build`. If not, Compose resolves `CUSTOM_CA_CERT_B64` as empty and the certificate is not imported.
+
+The Dockerfile imports this certificate into the container trust store before running Composer.
 
 ## Setup on Debian based Linux (Server).
 _People with other Distros like me with Gentoo should know what to do_

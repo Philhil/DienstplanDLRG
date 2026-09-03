@@ -5,27 +5,37 @@ services:
       - "3306:3306"
     environment:
       MARIADB_ROOT_PASSWORD: rootpassword
-      MARIADB_USER: dlrgdienstplan
+      MARIADB_USER: dlrgdienstplan-dev
       MARIADB_PASSWORD: password
-      MARIADB_DATABASE: dlrgdienstplan
+      MARIADB_DATABASE: dlrgdienstplan-dev
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test:
+        [
+          "CMD-SHELL",
+          "MYSQL_PWD=\"$$MARIADB_ROOT_PASSWORD\" mysqladmin ping -h 127.0.0.1 -uroot --silent"
+        ]
       timeout: 20s
       retries: 10
       interval: 3s
       start_period: 10s
 
   dienstplan:
-    build: .
+    build:
+      context: .
+      args:
+        CUSTOM_CA_CERT_B64: ${CUSTOM_CA_CERT_B64-}
+        HTTP_PROXY: ${HTTP_PROXY-}
+        HTTPS_PROXY: ${HTTPS_PROXY-}
+        NO_PROXY: ${NO_PROXY-}
     ports: 
       - "80:8000"
       - "443:443"
     environment:
       DB_HOST: database
-      DB_DATABASE: dlrgdienstplan
-      DB_USERNAME: dlrgdienstplan
+      DB_DATABASE: dlrgdienstplan-dev
+      DB_USERNAME: dlrgdienstplan-dev
       DB_PASSWORD: password
       MAIL_DRIVER: smtp
       MAIL_MAILER: smtp
@@ -40,14 +50,20 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: 
-      ENV: local
+      APP_ENV: local
       APP_DEBUG: true
-      IS_DEMO: false
+      APP_LOG_LEVEL: debug
+      TELESCOPE_ENABLED: false
+      IS_DEMO: true
       SESSION_DRIVER: redis
+      SESSION_CONNECTION: default
       CACHE_DRIVER: redis
       QUEUE_DRIVER: sync
 
     volumes:
+      - type: bind
+        source: ./.env.docker
+        target: /var/www/DienstplanDLRG/.env
       - type: bind
         source: ./app
         target: /var/www/DienstplanDLRG/app
@@ -58,6 +74,9 @@ services:
         source: ./database
         target: /var/www/DienstplanDLRG/database
       - type: bind
+        source: ./config
+        target: /var/www/DienstplanDLRG/config
+      - type: bind
         source: ./public
         target: /var/www/DienstplanDLRG/public
       - type: bind
@@ -66,6 +85,8 @@ services:
     depends_on:
       database:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     
   redis:
     image: redis:latest
@@ -73,6 +94,12 @@ services:
       - "6379:6379"
     environment:
       REDIS_PORT: 6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 5s
+      retries: 20
+      interval: 3s
+      start_period: 5s
     # volumes:
     #   - type: bind
     #     source: ./redis.conf
