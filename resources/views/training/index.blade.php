@@ -33,7 +33,7 @@
                                 @endif
                                 @if($isAdmin || $isTrainingEditor)
                                 <li><a href="{{action('TrainingController@edit', $training->id) }}" class="btn-warning waves-effect"><i class="material-icons">mode_edit</i>Bearbeiten</a></li>
-                                <li><a href="{{action('TrainingController@destroy', $training->id) }}" class="btn-danger waves-effect"><i class="material-icons">delete</i> Löschen</a></li>
+                                <li><a href="{{route('training.delete', $training->id) }}" class="btn-danger waves-effect"><i class="material-icons">delete</i> Löschen</a></li>
                                 @endif
                             </ul>
                         </li>
