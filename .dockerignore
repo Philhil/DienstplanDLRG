@@ -1,0 +1,2 @@
+# Ignore host-created storage symlink/junction that breaks Docker build context on Windows
+public/storage

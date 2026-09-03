@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OnCreateServiceInformation;
 use App\Events\PositionAuthorized;
 use App\Http\Requests\StoreService;
 use App\Position;
 use App\PositionCandidature;
 use App\Qualification;
 use App\Service;
+use App\ServiceInformation;
 use App\Training;
 use App\User;
 use Illuminate\Http\Request;
@@ -34,8 +36,8 @@ class ServiceController extends Controller
                 ->with('positions.candidatures')
                 ->with('positions.candidatures.user')
                 ->get();
-        } else
-        {
+        } else {
+            $userId = Auth::user()->id;
             $services = Service::where('date','>=', DB::raw('CURDATE()'))->where('client_id', '=', Auth::user()->currentclient_id)
                 ->orderBy('date')->with('openpositions')
                 ->withCount('openpositions_required')
@@ -44,6 +46,10 @@ class ServiceController extends Controller
                 ->with('positions.candidatures')
                 ->with(['positions.candidatures.user'=> function ($query) {
                     $query->where('id', '=', Auth::user()->id);
+                }])
+                ->with(['positions'])
+                ->withExists(['positions as is_service_focal' => function ($query) use ($userId) {
+                    $query->where('service_focal', true)->where('user_id', $userId);
                 }])
                 ->get();
         }
@@ -166,6 +172,7 @@ class ServiceController extends Controller
             $users = $request->get('user');
             $position_comment = $request->get('position_comment');
             $position_required = $request->get('position_required');
+            $service_focal = $request->get('service_focal', []);
             for ($i = 0; $i < count($qualifications); $i++ ) {
 
                 if (Qualification::where(['id' => $qualifications[$i], 'client_id' => Auth::user()->currentclient_id])->count() > 0) {
@@ -179,6 +186,7 @@ class ServiceController extends Controller
                         $position->user_id = $users[$i];
                     }
                     $position->comment = $position_comment[$i];
+                    $position->service_focal = !empty($service_focal[$i]) ? 1 : 0;
 
                     $saved = $position->save();
 
@@ -255,6 +263,7 @@ class ServiceController extends Controller
             $users = $request->get('user');
             $position_comment = $request->get('position_comment');
             $position_required = $request->get('position_required');
+            $service_focal = $request->get('service_focal');
             $positions = $request->get('position');
 
             //remove deleted positions (with candidatures)
@@ -284,6 +293,7 @@ class ServiceController extends Controller
                             $newposition->user_id = $users[$i];
                         }
                         $newposition->comment = $position_comment[$i];
+                        $newposition->service_focal = !empty($service_focal[$i]) ? 1 : 0;
 
                         $saved = $newposition->save();
 
@@ -319,6 +329,13 @@ class ServiceController extends Controller
                     //=>Update without inform
                     if($pos->requiredposition != $position_required[$i]) {
                         $pos->requiredposition = $position_required[$i];
+                    }
+
+                    //changed service_focal?
+                    //=>Update without inform
+                    $focal_value = !empty($service_focal[$i]) ? 1 : 0;
+                    if($pos->service_focal != $focal_value) {
+                        $pos->service_focal = $focal_value;
                     }
 
                     //changed qualification and not null?
@@ -440,4 +457,63 @@ class ServiceController extends Controller
 
       return redirect()->back();
     }
+
+    /**
+     * Create Information about a service delivered to the helfer
+     *
+     * @return 
+     */
+    public function createServiceInformation($id)
+    {
+        $service = Service::findOrFail($id);
+
+        $isServiceFocal = $service->positions()
+            ->where('user_id', Auth::user()->id)
+            ->where('service_focal', true)
+            ->exists();
+
+        if(!Auth::user()->isAdmin() && !$isServiceFocal) {
+            abort(402, "Nope.");
+        }
+
+        $serviceInformation = ServiceInformation::firstOrNew(
+            ['service_id' => $id, 'client_id' => Auth::user()->currentclient_id]);
+        
+            
+        return view('inform.create', compact('serviceInformation'));
+    }
+
+    
+    /**
+     * Store the created service information
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeServiceInformation(Request $request, $service_id)
+    {
+        $service = Service::findOrFail($service_id);
+
+        $isServiceFocal = $service->positions()
+            ->where('user_id', Auth::user()->id)
+            ->where('service_focal', true)
+            ->exists();
+
+        if(!Auth::user()->isAdmin() && !$isServiceFocal) {
+            abort(402, "Nope.");
+        }
+        $serviceInformation = ServiceInformation::firstOrNew(
+            ['service_id' => $service_id, 'client_id' => Auth::user()->currentclient_id]
+        );
+        $serviceInformation->fill($request->only('content'));
+        $serviceInformation['user_id'] = Auth::user()->id;
+        $serviceInformation['client_id'] = Auth::user()->currentclient_id;
+        $serviceInformation['service_id'] = $service_id;
+        $serviceInformation->save();
+
+        event(new OnCreateServiceInformation($service));
+
+        return redirect(action('ServiceController@index'));
+    }
+
 }
