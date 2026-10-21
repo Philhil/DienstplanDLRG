@@ -105,6 +105,33 @@
             </div>
         @endif
 
+        @if($client->module_incident)
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>Einsatz Editor: Einsatzleiter / Assistenz (zusätzlich zu Admins)</h2>
+                    </div>
+                    <div class="body">
+                        <div class="row">
+                            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+                                <div class="row clearfix" style="margin-left: 50px;">
+                                    <select id='client_user_incidenteditorselect' class="ms" multiple='multiple' style="position: absolute; left: -9999px;">
+                                        @foreach($noincidenteditorsOfClient as $noincidenteditorOfClient)
+                                            <option value='{{$noincidenteditorOfClient->id}}' >{{$noincidenteditorOfClient->name}} {{$noincidenteditorOfClient->first_name}}</option>
+                                        @endforeach
+
+                                        @foreach($incidenteditorsOfClient as $incidenteditorOfClient)
+                                            <option value='{{$incidenteditorOfClient->id}}' selected>{{$incidenteditorOfClient->name}} {{$incidenteditorOfClient->first_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header">
@@ -163,6 +190,17 @@
                                 <td>
                                     <div class="switch">
                                         <label><input type="checkbox" id="module_statistic" @if($client->module_statistic)checked=""@endif @if(!\Illuminate\Support\Facades\Auth::user()->isSuperAdmin())disabled=""@endif><span class="lever"></span></label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="strikeout">
+                                <td>Einsätze und Übungen</td>
+                                <td>
+                                    <p>Aktiviert die einheitliche Erfassung der Anwesenheit bei Einsätzen und spontanen Übungen. Helfer melden sich selbst, Einsatzleiter und Führungskräfte tragen nach. Anwesenheitslisten werden dauerhaft aufbewahrt.</p>
+                                </td>
+                                <td>
+                                    <div class="switch">
+                                        <label><input type="checkbox" id="module_incident" @if($client->module_incident)checked=""@endif @if(!\Illuminate\Support\Facades\Auth::user()->isSuperAdmin())disabled=""@endif><span class="lever"></span></label>
                                     </div>
                                 </td>
                             </tr>
@@ -299,6 +337,56 @@
                         'user_id': value[0],
                         'client_id': "{{$client->id}}",
                         'isStatisticEditor' : 0
+                    },
+                    success : function(data){
+                        if (data == "true") {
+                            showNotification("alert-success", "Zuordnung gelöscht", "top", "center", "", "");
+                        } else {
+                            showNotification("alert-warning", "Fehler beim löschen der zuordnung", "top", "center", "", "");
+                        }
+                    }
+                });
+            }
+        });
+        @endif
+        @if($client->module_incident)
+        $('#client_user_incidenteditorselect').multiSelect({
+            selectableHeader: "<h6>Benutzer von {{$client->name}}</h6>",
+            selectionHeader: "<h6>Einsatz Editoren von {{$client->name}}</div>",
+            selectableFooter: "<div class='custom-header'></div>",
+            selectionFooter: "<div class='custom-header'></div>",
+
+            afterSelect: function(value){
+                $.ajax({
+                    type: "POST",
+                    url: '/client_user/incidenteditor',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    'data' : {
+                        'user_id': value[0],
+                        'client_id': "{{$client->id}}",
+                        'isIncidentEditor' : 1
+                    },
+                    success : function(data){
+                        if (data == "true") {
+                            showNotification("alert-success", "Zuordnung gespeichert", "top", "center", "", "");
+                        } else {
+                            showNotification("alert-warning", "Fehler beim speichern der Zuordnung", "top", "center", "", "");
+                        }
+                    }
+                });
+            },
+            afterDeselect: function(value){
+                $.ajax({
+                    type: "POST",
+                    url: '/client_user/incidenteditor',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },'data' : {
+                        'user_id': value[0],
+                        'client_id': "{{$client->id}}",
+                        'isIncidentEditor' : 0
                     },
                     success : function(data){
                         if (data == "true") {

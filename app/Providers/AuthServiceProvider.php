@@ -38,5 +38,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('statisticeditor', function($user){
             return $user->isStatisticEditor();
         });
+
+        Gate::define('incidenteditor', function($user){
+            return $user->isIncidentEditor();
+        });
     }
 }

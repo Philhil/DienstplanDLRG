@@ -115,8 +115,10 @@ class ClientController extends Controller
         $trainingeditorsOfClient = $client->TrainingEditors()->get();
         $nostatisticeditorsOfClient = $client->noStatisticEditors()->get();
         $statisticeditorsOfClient = $client->StatisticEditors()->get();
+        $noincidenteditorsOfClient = $client->noIncidentEditors()->get();
+        $incidenteditorsOfClient = $client->IncidentEditors()->get();
 
-        return view('client.edit', compact('client', 'usersOfClient', 'adminsOfClient', 'notrainingeditorsOfClient', 'trainingeditorsOfClient', 'nostatisticeditorsOfClient', 'statisticeditorsOfClient'));
+        return view('client.edit', compact('client', 'usersOfClient', 'adminsOfClient', 'notrainingeditorsOfClient', 'trainingeditorsOfClient', 'nostatisticeditorsOfClient', 'statisticeditorsOfClient', 'noincidenteditorsOfClient', 'incidenteditorsOfClient'));
     }
 
     /**
@@ -149,7 +151,7 @@ class ClientController extends Controller
         ]);
         
         $client = Client::findorfail($id);
-        $client->fill($request->except(['id', 'module_training', 'module_training_credit', 'module_statistic', 'module_survey']));
+        $client->fill($request->except(['id', 'module_training', 'module_training_credit', 'module_statistic', 'module_survey', 'module_incident']));
         $client->seasonStart = Carbon::createFromFormat('d.m', $request->get("seasonStart"));
         $client->weeklyServiceviewEmail = isset($request['weeklyServiceviewEmail']);
         $client->isMailinglistCommunication = isset($request['isMailinglistCommunication']);
@@ -265,6 +267,30 @@ class ClientController extends Controller
         return "false";
     }
 
+    /**
+     * Set IncidentEditor rights to the specified resource and user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool as String :D
+     */
+    public function incidenteditorClient_User(Request $request)
+    {
+        $clientuser = Client_user::where(['client_id' => $request->get('client_id'), 'user_id' => $request->get('user_id')])->first();
+
+        if ( !is_null($clientuser))
+        {
+            //kann nur von admins oder superadmin erfolgen.
+            if(!Auth::user()->isAdminOfClient($request->get('client_id')) && !Auth::user()->isSuperAdmin()) {
+                abort(402, "Nope.");
+            }
+
+            $clientuser->isIncidentEditor = $request->get('isIncidentEditor') == 1 ? true : false;
+            $clientuser->save();
+            return "true";
+        }
+        return "false";
+    }
+
     public function apply()
     {
         $clients = Client::orderBy('name')->with('client_authuser')->get();
@@ -338,6 +364,9 @@ class ClientController extends Controller
                 break;
             case "module_statistic":
                 $client->module_statistic = $request->get('state') == "true" ? 1 : 0;
+                break;
+            case "module_incident":
+                $client->module_incident = $request->get('state') == "true" ? 1 : 0;
                 break;
         }
         $client->save();

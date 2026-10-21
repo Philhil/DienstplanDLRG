@@ -51,6 +51,14 @@
                 </a>
             </li>
             @endif
+            @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_incident)
+            <li class="{{active('incident.index')}} {{active('incident.show')}} {{active('incident.edit')}}">
+                <a href="{{ action('IncidentController@index') }}">
+                    <i class="material-icons">local_hospital</i>
+                    <span>Einsätze</span>
+                </a>
+            </li>
+            @endif
             <li class="{{active('calendar.index')}}">
                 <a href="{{action('CalendarController@index')}}">
                     <i class="material-icons">calendar_today</i>
@@ -77,7 +85,8 @@
             </li>
             @if(\Illuminate\Support\Facades\Gate::check('administration')
                 || \Illuminate\Support\Facades\Gate::check('trainingeditor')
-                || \Illuminate\Support\Facades\Gate::check('statisticeditor'))
+                || \Illuminate\Support\Facades\Gate::check('statisticeditor')
+                || \Illuminate\Support\Facades\Gate::check('incidenteditor'))
                 <li class="header {{active('service.edit')}}">Administration</li>
                 @can('administration')
                     <li class=@if(\Illuminate\Support\Facades\Route::current()->getPrefix() != '/superadmin') "{{active('user.*')}}" @endif>
@@ -109,6 +118,16 @@
                     </li>
                     @endif
                 @endcanany
+                @canany(['administration', 'incidenteditor'])
+                    @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_incident)
+                    <li class="{{active('incident.create')}}">
+                        <a href="{{ action('IncidentController@create') }}">
+                            <i class="material-icons">add_alert</i>
+                            <span>Einsatz anlegen</span>
+                        </a>
+                    </li>
+                    @endif
+                @endcanany
                 @can('administration')
                     <li class="{{active('calendar.create')}}">
                         <a href="{{action('CalendarController@create')}}">
@@ -130,6 +149,14 @@
                             </a>
                         </li>
                     @endif
+                    @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_incident)
+                        <li class="{{active('station.*')}}">
+                            <a href="{{ action('StationController@index') }}">
+                                <i class="material-icons">place</i>
+                                <span>Wachen</span>
+                            </a>
+                        </li>
+                    @endif
                     <li class="{{active('qualification.*')}}">
                         <a href="{{ action('QualificationController@index') }}">
                             <i class="material-icons">local_activity</i>
@@ -144,6 +171,17 @@
                         </a>
                     </li>
                 @endcan
+                @canany(['administration', 'statisticeditor'])
+                    @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_incident
+                        && (\Illuminate\Support\Facades\Gate::check('administration') || \Illuminate\Support\Facades\Auth::user()->currentclient()->module_statistic))
+                        <li class="{{active('incident.statistic')}}">
+                            <a href="{{ action('IncidentStatisticController@index') }}">
+                                <i class="material-icons">insert_chart</i>
+                                <span>Einsatz Statistik</span>
+                            </a>
+                        </li>
+                    @endif
+                @endcanany
                 @canany(['administration', 'statisticeditor'])
                     @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_statistic)
                         <li class="{{active('statistic.*')}}">

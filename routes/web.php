@@ -66,6 +66,20 @@ Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web', 'SurveyHan
     Route::get('training/{training}/delete', 'TrainingController@destroy')->name('training.delete');
     Route::any('/training/training_user/{training_userid}/delete/', 'TrainingController@delete_training_user')->name('delete_training_user');
 
+    Route::get('incident/statistic', 'IncidentStatisticController@index')->name('incident.statistic');
+    Route::resource('incident', 'IncidentController');
+    Route::post('incident/{incident}/finalize', 'IncidentController@finalize')->name('incident.finalize');
+    Route::post('incident/{incident}/reopen', 'IncidentController@reopen')->name('incident.reopen');
+    Route::get('incident/{incident}/pdf', 'IncidentController@pdf')->name('incident.pdf');
+    Route::post('incident/{incident}/report', 'IncidentAttendanceController@report')->name('incident.report');
+    Route::delete('incident/{incident}/report', 'IncidentAttendanceController@withdraw')->name('incident.withdraw');
+    Route::post('incident/{incident}/attendance', 'IncidentAttendanceController@store')->name('incident.attendance.store');
+    Route::post('incident/{incident}/attendance/resolve', 'IncidentAttendanceController@resolve')->name('incident.attendance.resolve');
+    Route::put('incident/{incident}/attendance/{attendance}', 'IncidentAttendanceController@update')->name('incident.attendance.update');
+    Route::delete('incident/{incident}/attendance/{attendance}', 'IncidentAttendanceController@destroy')->name('incident.attendance.destroy');
+    Route::post('station/home', 'StationController@setHome')->name('station.home');
+    Route::resource('station', 'StationController')->only(['index', 'store', 'update', 'destroy']);
+
     Route::resource('calendar', 'CalendarController');
     Route::get('calendar/{calendar}/delete', 'CalendarController@destroy')->name('calendar.delete');
     
@@ -82,6 +96,7 @@ Route::group(['middleware' => ['auth', 'EnsureClientAssigned', 'web', 'SurveyHan
     Route::post('client_user/admin', 'ClientController@adminClient_User');
     Route::post('client_user/trainingeditor', 'ClientController@trainingeditorClient_User');
     Route::post('client_user/statisticeditor', 'ClientController@statisticeditorClient_User');
+    Route::post('client_user/incidenteditor', 'ClientController@incidenteditorClient_User');
 
     Route::match(['get', 'post'], 'position/{id}/subscribe', 'PositionController@subscribe');
     Route::match(['get', 'post'], 'position/{positionid}/subscribe_user/{userid}', 'PositionController@subscribe_user');

@@ -99,6 +99,45 @@ class User extends Authenticatable
         return false;
     }
 
+    /** True if the user has the given role column (isAdmin, isIncidentEditor ...) in the client. */
+    public function hasClientRole($clientId, $column)
+    {
+        return Client_user::where(['client_id' => $clientId, 'user_id' => $this->id, $column => true])->exists();
+    }
+
+    public function isApprovedMemberOfClient($clientId)
+    {
+        return Client_user::where(['client_id' => $clientId, 'user_id' => $this->id, 'approved' => true])->exists();
+    }
+
+    public function isIncidentEditor()
+    {
+        return $this->hasClientRole($this->currentclient_id, 'isIncidentEditor');
+    }
+
+    public function isIncidentEditorOfClient($clientId)
+    {
+        return $this->hasClientRole($clientId, 'isIncidentEditor');
+    }
+
+    /** Member of the client with a qualification that is allowed to record incident attendance. */
+    public function canRecordIncidentOfClient($clientId)
+    {
+        if (!$this->isApprovedMemberOfClient($clientId)) {
+            return false;
+        }
+
+        return Qualification::where(['client_id' => $clientId, 'can_record_incident' => true])
+            ->whereHas('users', function ($query) {
+                $query->where('users.id', '=', $this->id);
+            })->exists();
+    }
+
+    public function homeStationId($clientId)
+    {
+        return Client_user::where(['client_id' => $clientId, 'user_id' => $this->id])->value('home_station_id');
+    }
+
     public function qualifications()
     {
         return $this->belongsToMany(Qualification::class, 'qualification_users')->where('client_id', '=', Auth::user()->currentclient_id)->orderBy('name');

@@ -11,7 +11,9 @@ class Client_user extends Model
     protected $fillable = [
         'client_id',
         'user_id',
-        'isAdmin'
+        'isAdmin',
+        'isIncidentEditor',
+        'home_station_id'
     ];
 
     protected $casts = [

@@ -61,6 +61,21 @@
                         </div>
                     </div>
 
+                    @if(\Illuminate\Support\Facades\Auth::user()->currentclient()->module_incident)
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <div class="form-group {{ $errors->has('can_record_incident') ? 'has-error' : ''}}">
+                                <div class="form-line">
+                                    {{ html()->hidden('can_record_incident', 0)->id("") }}
+                                    {{ html()->checkbox('can_record_incident', old('can_record_incident', $qualification->can_record_incident) ? true : false, 1)->class('filled-in')->id('can_record_incident') }}
+                                    {{ html()->label('Führungskraft: Darf bei Einsätzen die Anwesenheit anderer Helfer erfassen?', 'can_record_incident') }}
+                                    {!! $errors->first('can_record_incident', '<p class="help-block">:message</p>') !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
                     <div class="row clearfix">
                         <div class="col-sm-1">
                             <div class="form-group">

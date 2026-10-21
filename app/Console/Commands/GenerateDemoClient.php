@@ -7,11 +7,14 @@ use App\Client;
 use App\Client_user;
 use App\Credit;
 use App\Holiday;
+use App\Incident;
+use App\Incident_attendance;
 use App\News;
 use App\Position;
 use App\Qualification;
 use App\Qualification_user;
 use App\Service;
+use App\Station;
 use App\Survey;
 use App\Training;
 use App\Training_user;
@@ -61,6 +64,13 @@ class GenerateDemoClient extends Command
             {
                 foreach(News::all() as $news) {$news->Delete();}
                 foreach(User::all() as $user) {$user->Delete();}
+                //incidents, attendances and stations are kept without foreign keys, so remove the old demo ones explicitly
+                $oldClientId = Client::first()->id;
+                foreach(Incident::where('client_id', $oldClientId)->get() as $oldIncident) {
+                    $oldIncident->attendances()->delete();
+                    $oldIncident->delete();
+                }
+                Station::where('client_id', $oldClientId)->delete();
                 Client::first()->Delete();
             }
 
@@ -76,7 +86,8 @@ class GenerateDemoClient extends Command
                 'module_training' => true,
                 'module_training_credit' => true,
                 'module_statistic' => true,
-                'module_survey' => true
+                'module_survey' => true,
+                'module_incident' => true
             ]);
 
             //create Users
@@ -172,12 +183,25 @@ class GenerateDemoClient extends Command
             $prakti->client_id = $client->id;
             $prakti->save();
 
+            $gf = Qualification::create([
+                'name' => "Gruppenführer",
+                'short' => "GF",
+                'isservicedefault' => false,
+                'defaultcount' => "0",
+                'defaultrequiredasposition' => false
+            ]);
+            $gf->client_id = $client->id;
+            $gf->can_record_incident = true;
+            $gf->save();
+
             Qualification_user::create(['qualification_id' => $bf->id, 'user_id' => $user->id]);
             Qualification_user::create(['qualification_id' => $rs->id, 'user_id' => $user->id]);
             Qualification_user::create(['qualification_id' => $prakti->id, 'user_id' => $user->id]);
 
             Qualification_user::create(['qualification_id' => $rs->id, 'user_id' => $admin->id]);
             Qualification_user::create(['qualification_id' => $prakti->id, 'user_id' => $admin->id]);
+
+            Qualification_user::create(['qualification_id' => $gf->id, 'user_id' => $focal_user->id]);
 
             //create Services & Positions (in past and future)
             $service_yesterday = new Service();
@@ -316,6 +340,46 @@ class GenerateDemoClient extends Command
                 'user_id' => $admin->id,
                 'position_id' => $pos_training->id
             ]);
+
+            //create stations and incidents
+            $station_mitte = Station::create(['client_id' => $client->id, 'name' => "Wache Mitte"]);
+            $station_nord = Station::create(['client_id' => $client->id, 'name' => "Wache Nord"]);
+
+            $incident_done = Incident::create([
+                'client_id' => $client->id,
+                'type' => Incident::TYPE_INCIDENT,
+                'title' => "Demo Einsatz: Person im Wasser",
+                'keyword' => "Wasserrettung",
+                'location' => "Demo-Strand",
+                'start' => Carbon::yesterday()->hour(14)->minute(0)->second(0),
+                'end' => Carbon::yesterday()->hour(16)->minute(30)->second(0),
+                'leader_user_id' => $admin->id,
+                'created_by' => $admin->id,
+            ]);
+            Incident_attendance::create(['incident_id' => $incident_done->id, 'user_id' => $user->id, 'station_id' => $station_mitte->id,
+                'status' => Incident_attendance::STATUS_PRESENT, 'reported_at' => Carbon::yesterday()->hour(14)->minute(10),
+                'source' => Incident_attendance::SOURCE_SELF, 'confirmed_at' => Carbon::yesterday()->hour(17)]);
+            Incident_attendance::create(['incident_id' => $incident_done->id, 'user_id' => $admin->id, 'station_id' => $station_nord->id,
+                'status' => Incident_attendance::STATUS_PRESENT, 'reported_at' => Carbon::yesterday()->hour(14)->minute(5),
+                'source' => Incident_attendance::SOURCE_RECORDED, 'recorded_by' => $admin->id, 'confirmed_at' => Carbon::yesterday()->hour(17)]);
+            Incident_attendance::create(['incident_id' => $incident_done->id, 'guest_name' => "Gast Mustermann", 'station_id' => $station_nord->id,
+                'status' => Incident_attendance::STATUS_PRESENT, 'reported_at' => Carbon::yesterday()->hour(14)->minute(20),
+                'source' => Incident_attendance::SOURCE_RECORDED, 'recorded_by' => $admin->id, 'confirmed_at' => Carbon::yesterday()->hour(17)]);
+            $incident_done->finalized_at = Carbon::yesterday()->hour(17);
+            $incident_done->finalized_by = $admin->id;
+            $incident_done->save();
+
+            $incident_open = Incident::create([
+                'client_id' => $client->id,
+                'type' => Incident::TYPE_EXERCISE,
+                'title' => "Demo Spontanübung",
+                'location' => "Demo-Wachstation",
+                'start' => Carbon::now()->subHour(),
+                'created_by' => $admin->id,
+            ]);
+            Incident_attendance::create(['incident_id' => $incident_open->id, 'user_id' => $focal_user->id, 'station_id' => $station_mitte->id,
+                'status' => Incident_attendance::STATUS_ON_THE_WAY, 'reported_at' => Carbon::now()->subMinutes(20),
+                'source' => Incident_attendance::SOURCE_SELF]);
 
             //create news
             $news = new News();

@@ -23,7 +23,8 @@ class Client extends Model
         'module_training',
         'module_training_credit',
         'module_statistic',
-        'module_survey'
+        'module_survey',
+        'module_incident'
     ];
 
     protected $casts = [
@@ -136,5 +137,29 @@ class Client extends Model
     public function Surveys()
     {
         return $this->hasMany( Survey::class);
+    }
+
+    public function Stations()
+    {
+        return $this->hasMany( Station::class)->orderBy('name');
+    }
+
+    public function Incidents()
+    {
+        return $this->hasMany( Incident::class);
+    }
+
+    public function noIncidentEditors()
+    {
+        return $this->belongsToMany(User::class, 'client_user')
+            ->where('client_user.approved', '=', true)
+            ->where('isIncidentEditor', '=', false)->orderBy('name');
+    }
+
+    public function IncidentEditors()
+    {
+        return $this->belongsToMany(User::class, 'client_user')
+            ->where('client_user.approved', '=', true)
+            ->where('isIncidentEditor', '=', true)->orderBy('name');
     }
 }
