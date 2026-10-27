@@ -1,4 +1,4 @@
-FROM php:8.3-cli-bookworm
+FROM php:8.5-fpm-bookworm
 
 ARG CUSTOM_CA_CERT_B64=
 ARG HTTP_PROXY=
@@ -36,21 +36,38 @@ RUN apt-get update \
 		libjpeg62-turbo-dev \
 		libfreetype6-dev \
 		default-mysql-client \
+		nginx \
+		supervisor \
 	&& docker-php-ext-configure gd --with-freetype --with-jpeg \
-	&& docker-php-ext-install -j"$(nproc)" pdo_mysql mbstring zip intl gd \
+	&& docker-php-ext-install -j"$(nproc)" pdo_mysql mbstring zip intl gd pcntl \
 	&& rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-WORKDIR /var/www/DienstplanDLRG
-COPY ./ /var/www/DienstplanDLRG
-
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader \
-	&& php artisan key:generate \
-	&& chmod -R 777 storage bootstrap/cache
+WORKDIR /var/www/html
 
-EXPOSE 8000
+# Abhängigkeiten zuerst installieren (Layer-Cache bleibt bei Codeänderungen erhalten)
+COPY composer.json composer.lock ./
+RUN composer install --no-interaction --prefer-dist --no-scripts --no-autoloader
 
-CMD php artisan migrate --force && php artisan queue:work --tries=3 & php artisan serve --host=0.0.0.0 --port=8000
+COPY . .
+
+# Autoloader + package:discover. Laravel bootet dabei die Config,
+# spatie/laravel-backup verlangt eine gültige MAIL_FROM_ADDRESS.
+RUN MAIL_FROM_ADDRESS=build@example.com composer dump-autoload --optimize \
+	&& mkdir -p storage/app/public storage/framework/cache/data storage/framework/sessions \
+		storage/framework/views storage/framework/testing storage/logs storage/debugbar bootstrap/cache \
+	&& chown -R www-data:www-data storage bootstrap/cache
+
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/supervisord.conf /etc/supervisor/supervisord.conf
+COPY docker/php.ini /usr/local/etc/php/conf.d/zz-app.ini
+COPY docker/php-fpm.conf /usr/local/etc/php-fpm.d/zz-app.conf
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint
+RUN chmod +x /usr/local/bin/entrypoint
+
+EXPOSE 8080
+
+ENTRYPOINT ["entrypoint"]
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]

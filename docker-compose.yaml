@@ -1,0 +1,99 @@
+# Lokale Test-/Entwicklungsinstanz
+#   docker compose up -d --build
+#   App:     http://localhost:8080
+#   Mailpit: http://localhost:8025 (fängt alle ausgehenden Mails ab)
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        CUSTOM_CA_CERT_B64: ${CUSTOM_CA_CERT_B64-}
+        HTTP_PROXY: ${HTTP_PROXY-}
+        HTTPS_PROXY: ${HTTPS_PROXY-}
+        NO_PROXY: ${NO_PROXY-}
+    image: dienstplan-dlrg:local
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    environment:
+      APP_NAME: DLRGDienstplan
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:${APP_PORT:-8080}
+      # APP_KEY wird beim ersten Start erzeugt und im storage-Volume gespeichert.
+      # Für feste Keys: APP_KEY: base64:...
+      LOG_CHANNEL: stderr
+      APP_LOG_LEVEL: debug
+
+      DB_CONNECTION: mysql
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_DATABASE: dlrgdienstplan-dev
+      DB_USERNAME: dlrgdienstplan-dev
+      DB_PASSWORD: password
+
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+
+      MAIL_MAILER: smtp
+      MAIL_HOST: mailpit
+      MAIL_PORT: 1025
+      MAIL_ENCRYPTION: "null"
+      MAIL_FROM_ADDRESS: dienstplan@example.com
+      MAIL_FROM_NAME: DLRG Dienstplan
+
+      TELESCOPE_ENABLED: "false"
+      IS_DEMO: "true"
+      DEMO_DATA_ON_START: "true"
+      RUN_MIGRATIONS: "true"
+    volumes:
+      - app-storage:/var/www/html/storage
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    restart: unless-stopped
+
+  mariadb:
+    image: mariadb:11.8
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: dlrgdienstplan-dev
+      MARIADB_USER: dlrgdienstplan-dev
+      MARIADB_PASSWORD: password
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    ports:
+      - "127.0.0.1:${DB_FORWARD_PORT:-3306}:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 20s
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "127.0.0.1:${MAILPIT_PORT:-8025}:8025"
+    restart: unless-stopped
+
+volumes:
+  app-storage:
+  mariadb-data:

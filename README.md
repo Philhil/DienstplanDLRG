@@ -33,28 +33,44 @@ If you run a old version follow the upgrade Guide: [https://github.com/Philhil/D
 
 ## Development Setup with Docker
 
-Use Docker Compose for a local development environment with app, MariaDB, and Redis.
+Use Docker Compose for a local test/development instance. The stack consists of:
+
+| Service   | Purpose                                                        | URL / Port              |
+|-----------|----------------------------------------------------------------|-------------------------|
+| `app`     | nginx + php-fpm + queue worker + scheduler (via supervisord)   | http://localhost:8080   |
+| `mariadb` | Database                                                       | `127.0.0.1:3306`        |
+| `redis`   | Cache, sessions, queue                                         | internal only           |
+| `mailpit` | Catches all outgoing mails                                     | http://localhost:8025   |
+
+The image contains no `.env` and no `APP_KEY`. All configuration is passed as environment variables in
+`docker-compose.yaml`. If `APP_KEY` is not set, a key is generated on first start and stored in the `app-storage` volume.
+On start the container runs the migrations and (with `IS_DEMO=true` and `DEMO_DATA_ON_START=true`) creates the demo client if the database is empty.
 
 ### Requirements
 
-* Docker Desktop (or Docker Engine + Compose plugin)
-* A free local port `80` for the app and `3306` for MariaDB (or adjust in `docker-compose.yaml`)
+* Docker Engine + Compose plugin (or Docker Desktop)
+* Free local ports `8080`, `8025` and `3306` (override with `APP_PORT`, `MAILPIT_PORT`, `DB_FORWARD_PORT`)
 
-### Start the development stack
+### Start
 
 ```bash
-docker compose build --no-cache dienstplan
-docker compose up -d
+docker compose up -d --build
 ```
 
-Open the app at `http://localhost`.
+Login with the demo accounts:
+
+* Admin: `admin.demodienstplan@philhil.de` / `admin`
+* User: `user.demodienstplan@philhil.de` / `user`
 
 ### Useful commands
 
 ```bash
-docker compose logs -f dienstplan
-docker compose exec dienstplan php artisan migrate
-docker compose down
+docker compose logs -f app                          # logs of nginx, php-fpm, queue, scheduler
+docker compose exec app php artisan migrate:status
+docker compose exec app php artisan demo:createDemoClient   # reset demo data
+docker compose up -d --build                        # apply code changes
+docker compose down                                 # stop
+docker compose down -v                              # stop and delete database + storage
 ```
 
 ### Corporate proxy / TLS interception (Composer curl error 60)
@@ -72,7 +88,7 @@ $env:CUSTOM_CA_CERT_B64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\
 3. Rebuild the image from that same shell:
 
 ```bash
-docker compose build --no-cache --progress=plain dienstplan
+docker compose build --no-cache --progress=plain app
 ```
 
 Important: variables must be set in the same shell session as `docker compose build`. If not, Compose resolves `CUSTOM_CA_CERT_B64` as empty and the certificate is not imported.
